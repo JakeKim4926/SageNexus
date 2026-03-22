@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SageNexus</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- 초기화 로딩 오버레이 -->
+<div id="loading-overlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-text" id="loading-text">초기화 중...</div>
+</div>
+
+<!-- 앱 셸 -->
+<div id="app">
+
+    <!-- Top Bar -->
+    <div id="topbar">
+        <span class="app-logo">SageNexus</span>
+        <span class="breadcrumb" id="breadcrumb">대시보드</span>
+        <div class="topbar-actions">
+            <!-- Phase 2+에서 액션 버튼 추가 -->
+        </div>
+    </div>
+
+    <!-- Body -->
+    <div id="body">
+
+        <!-- Sidebar Navigation -->
+        <nav id="sidebar">
+            <div class="nav-section">
+                <div class="nav-section-label">메인</div>
+                <div class="nav-item active" data-page="dashboard">
+                    <span class="nav-icon">⊞</span>
+                    <span class="nav-label">대시보드</span>
+                </div>
+                <div class="nav-item" data-page="data-viewer">
+                    <span class="nav-icon">⊟</span>
+                    <span class="nav-label">데이터 뷰어</span>
+                </div>
+                <div class="nav-item" data-page="transform">
+                    <span class="nav-icon">⇌</span>
+                    <span class="nav-label">변환</span>
+                </div>
+                <div class="nav-item" data-page="export">
+                    <span class="nav-icon">↑</span>
+                    <span class="nav-label">내보내기</span>
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-label">관리</div>
+                <div class="nav-item" data-page="history">
+                    <span class="nav-icon">◷</span>
+                    <span class="nav-label">실행 이력</span>
+                </div>
+            </div>
+
+            <div class="nav-spacer"></div>
+
+            <div class="nav-section">
+                <div class="nav-item" data-page="settings">
+                    <span class="nav-icon">⚙</span>
+                    <span class="nav-label">설정</span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main id="content">
+
+            <!-- Dashboard Page -->
+            <div class="page active" id="page-dashboard">
+                <div class="page-header">
+                    <div class="page-title">대시보드</div>
+                    <div class="page-subtitle">업무 자동화 현황을 확인합니다.</div>
+                </div>
+                <div class="dashboard-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">총 실행 횟수</div>
+                        <div class="stat-value" id="stat-total-runs">—</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">오늘 실행</div>
+                        <div class="stat-value" id="stat-today-runs">—</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">성공률</div>
+                        <div class="stat-value" id="stat-success-rate">—</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">마지막 실행</div>
+                        <div class="stat-value" id="stat-last-run">—</div>
+                    </div>
+                </div>
+                <div class="empty-state" id="dashboard-empty">
+                    <div class="empty-icon">⊞</div>
+                    <div class="empty-title">아직 실행된 작업이 없습니다</div>
+                    <div class="empty-desc">데이터 뷰어에서 파일을 불러와 작업을 시작하세요.</div>
+                </div>
+            </div>
+
+            <!-- Data Viewer Page (Phase 2) -->
+            <div class="page" id="page-data-viewer">
+                <div class="page-header">
+                    <div class="page-title">데이터 뷰어</div>
+                    <div class="page-subtitle">파일을 불러와 데이터를 확인합니다.</div>
+                </div>
+                <div class="empty-state">
+                    <div class="empty-icon">⊟</div>
+                    <div class="empty-title">불러온 파일이 없습니다</div>
+                    <div class="empty-desc">Phase 2에서 구현 예정입니다.</div>
+                </div>
+            </div>
+
+            <!-- Transform Page (Phase 2) -->
+            <div class="page" id="page-transform">
+                <div class="page-header">
+                    <div class="page-title">변환</div>
+                    <div class="page-subtitle">데이터를 정리하고 변환합니다.</div>
+                </div>
+                <div class="empty-state">
+                    <div class="empty-icon">⇌</div>
+                    <div class="empty-title">변환할 데이터가 없습니다</div>
+                    <div class="empty-desc">Phase 2에서 구현 예정입니다.</div>
+                </div>
+            </div>
+
+            <!-- Export Page (Phase 2) -->
+            <div class="page" id="page-export">
+                <div class="page-header">
+                    <div class="page-title">내보내기</div>
+                    <div class="page-subtitle">처리된 데이터를 파일로 내보냅니다.</div>
+                </div>
+                <div class="empty-state">
+                    <div class="empty-icon">↑</div>
+                    <div class="empty-title">내보낼 데이터가 없습니다</div>
+                    <div class="empty-desc">Phase 2에서 구현 예정입니다.</div>
+                </div>
+            </div>
+
+            <!-- History Page (Phase 2) -->
+            <div class="page" id="page-history">
+                <div class="page-header">
+                    <div class="page-title">실행 이력</div>
+                    <div class="page-subtitle">이전 실행 결과를 확인합니다.</div>
+                </div>
+                <div class="empty-state">
+                    <div class="empty-icon">◷</div>
+                    <div class="empty-title">실행 이력이 없습니다</div>
+                    <div class="empty-desc">Phase 2에서 구현 예정입니다.</div>
+                </div>
+            </div>
+
+            <!-- Settings Page -->
+            <div class="page" id="page-settings">
+                <div class="page-header">
+                    <div class="page-title">설정</div>
+                    <div class="page-subtitle">앱 설정을 관리합니다.</div>
+                </div>
+                <div class="empty-state">
+                    <div class="empty-icon">⚙</div>
+                    <div class="empty-title">설정 화면</div>
+                    <div class="empty-desc">Phase 2에서 구현 예정입니다.</div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Status Bar -->
+    <div id="statusbar">
+        <div class="status-item">
+            <div class="status-dot" id="status-dot"></div>
+            <span id="status-text">초기화 중</span>
+        </div>
+        <div class="status-spacer"></div>
+        <div class="status-item" id="status-profile">프로필: 기본</div>
+    </div>
+
+</div>
+
+<script src="bridge.js"></script>
+<script>
+(function () {
+    // =========================================================
+    // Navigation
+    // =========================================================
+    const PAGE_TITLES = {
+        'dashboard':   '대시보드',
+        'data-viewer': '데이터 뷰어',
+        'transform':   '변환',
+        'export':      '내보내기',
+        'history':     '실행 이력',
+        'settings':    '설정'
+    };
+
+    function navigateTo(pageId) {
+        document.querySelectorAll('.nav-item').forEach(function (el) {
+            el.classList.toggle('active', el.dataset.page === pageId);
+        });
+        document.querySelectorAll('.page').forEach(function (el) {
+            el.classList.toggle('active', el.id === 'page-' + pageId);
+        });
+        const breadcrumb = document.getElementById('breadcrumb');
+        if (breadcrumb) breadcrumb.textContent = PAGE_TITLES[pageId] || pageId;
+    }
+
+    document.querySelectorAll('.nav-item[data-page]').forEach(function (el) {
+        el.addEventListener('click', function () {
+            navigateTo(el.dataset.page);
+        });
+    });
+
+    // =========================================================
+    // Status Bar
+    // =========================================================
+    function setStatus(dotClass, text) {
+        const dot  = document.getElementById('status-dot');
+        const span = document.getElementById('status-text');
+        if (dot)  { dot.className = 'status-dot ' + dotClass; }
+        if (span) { span.textContent = text; }
+    }
+
+    // =========================================================
+    // Bridge Events
+    // =========================================================
+    window.addEventListener('bridge:appReady', function (e) {
+        const overlay = document.getElementById('loading-overlay');
+        if (overlay) overlay.classList.add('hidden');
+        setStatus('ready', '준비됨');
+
+        const detail = e.detail || {};
+        if (detail.profileName) {
+            const el = document.getElementById('status-profile');
+            if (el) el.textContent = '프로필: ' + detail.profileName;
+        }
+    });
+
+    // =========================================================
+    // 초기화
+    // =========================================================
+    setStatus('loading', '초기화 중');
+})();
+</script>
+
+</body>
+</html>

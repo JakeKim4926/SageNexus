@@ -1,10 +1,8 @@
 #pragma once
 #include "pch.h"
 #include "WebViewHost.h"
+#include "app/infrastructure/bridge/ImportBridgeHandler.h"
 
-// Win32 메인 창
-// WebView2 호스팅, 창 리사이즈, 메시지 처리를 담당한다.
-// 비즈니스 로직 수행 금지.
 class MainWindow
 {
 public:
@@ -24,8 +22,9 @@ private:
     void OnDestroy();
 
     void NavigateToShell();
-    void SendAppReadyEvent();
+    void RegisterBridgeHandlers();
 
-    HWND          m_hWnd;
-    WebViewHost*  m_pWebViewHost;
+    HWND                 m_hWnd;
+    WebViewHost*         m_pWebViewHost;
+    ImportBridgeHandler  m_importBridgeHandler;
 };

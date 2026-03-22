@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="SageNexus/SageNexus.vcxproj" Id="aca1619e-ec1f-4b9c-a344-03c7c929f074" />
+</Solution>

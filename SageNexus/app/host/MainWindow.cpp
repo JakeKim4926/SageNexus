@@ -1,6 +1,6 @@
 #include "pch.h"
-#include "MainWindow.h"
-#include "App/SageApp.h"
+#include "app/host/MainWindow.h"
+#include "app/application/SageApp.h"
 #include "Define.h"
 
 MainWindow::MainWindow()
@@ -143,7 +143,6 @@ void MainWindow::OnWebViewReady(BOOL bSuccess)
 
     NavigateToShell();
 
-    // WebView2 로드 후 창 크기 동기화
     RECT rcClient = {};
     GetClientRect(m_hWnd, &rcClient);
     m_pWebViewHost->Resize(rcClient.right, rcClient.bottom);
@@ -152,12 +151,8 @@ void MainWindow::OnWebViewReady(BOOL bSuccess)
 void MainWindow::NavigateToShell()
 {
     CString strUrl = L"file:///" + sageMgr.GetAppDir() + L"\\" + WEB_ENTRY_FILE;
-    // 경로 구분자를 URL 형식으로 변환
     strUrl.Replace(L'\\', L'/');
     m_pWebViewHost->Navigate(strUrl);
-
-    // 네비게이션 완료 후 appReady 이벤트는 JavaScript 로드 완료 시점에 발송
-    // NavigationCompleted 이벤트 등록은 Phase 1에서 WM_WEBVIEW_READY 이후 처리
 }
 
 void MainWindow::OnDestroy()

@@ -115,10 +115,13 @@ Desktop.ini
 #claude
 .claude/
 
+# Solution format: .slnx only (VS 2022 17.x+)
+*.sln
+
 # =========================
 # Keep these in Git
 # =========================
-#!*.sln
+#!*.slnx
 #!*.vcxproj
 #!*.vcxproj.filters
 #!*.rc

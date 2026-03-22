@@ -1,6 +1,6 @@
 #include "pch.h"
-#include "App/SageApp.h"
-#include "Host/MainWindow.h"
+#include "app/application/SageApp.h"
+#include "app/host/MainWindow.h"
 
 int APIENTRY wWinMain(
     _In_     HINSTANCE hInstance,
@@ -11,7 +11,6 @@ int APIENTRY wWinMain(
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
-    // WebView2는 COM STA(Single-Threaded Apartment) 초기화 필요
     HRESULT hrCom = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
     if (FAILED(hrCom))
         return -1;

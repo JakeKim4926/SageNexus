@@ -9,3 +9,9 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 - **변경 내용**: MainWindow, WebViewHost, BridgeDispatcher, SageApp, FileLogger, JsonConfigStore, DataTable, SolutionProfile, Web UI 셸(index.html/bridge.js/styles.css), vcxproj 전체 구성
 - **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/2
 - **결과**: merged
+
+## [2026-03-22] refactor/project-folder-structure
+- **목적**: coding-rules 표준 폴더 구조로 전체 소스 파일 재배치 및 VS Solution Explorer 필터 재구성
+- **변경 내용**: App/Host/Domain/Infrastructure/Web → app/host, app/application, app/domain/model, app/infrastructure/logging, app/infrastructure/config, webui 구조로 이동. vcxproj, vcxproj.filters, Define.h, index.html 업데이트
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/3
+- **결과**: pending

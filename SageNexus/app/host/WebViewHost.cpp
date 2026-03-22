@@ -1,7 +1,7 @@
 #include "pch.h"
-#include "WebViewHost.h"
-#include "App/SageApp.h"
-#include "Domain/SolutionProfile.h"
+#include "app/host/WebViewHost.h"
+#include "app/application/SageApp.h"
+#include "app/domain/model/SolutionProfile.h"
 #include "Define.h"
 
 using namespace Microsoft::WRL;
@@ -115,12 +115,10 @@ void WebViewHost::OnControllerCreated(HRESULT hrResult, ICoreWebView2Controller*
         return;
     }
 
-    // 부모 창 크기에 맞게 초기 배치
     RECT rcClient = {};
     GetClientRect(m_hParentWnd, &rcClient);
     m_pController->put_Bounds(rcClient);
 
-    // Web → Native 메시지 수신 등록
     m_pWebView->add_WebMessageReceived(
         Callback<ICoreWebView2WebMessageReceivedEventHandler>(
             [this](ICoreWebView2* pSender, ICoreWebView2WebMessageReceivedEventArgs* pArgs) -> HRESULT
@@ -141,13 +139,11 @@ void WebViewHost::OnControllerCreated(HRESULT hrResult, ICoreWebView2Controller*
     m_eState = WebViewState::Ready;
     sageMgr.GetLogger().LogInfo(L"WebViewHost: Ready");
 
-    // 완료 알림 (WPARAM=1: 성공)
     PostMessageW(m_hParentWnd, WM_WEBVIEW_READY, 1, 0);
 }
 
 void WebViewHost::RegisterBridgeHandlers()
 {
-    // Phase 1: ping 핸들러 (연결 확인용)
     m_dispatcher.RegisterHandler(L"app", L"ping",
         [](const BridgeMessage& msg) -> CString
         {
@@ -171,7 +167,6 @@ void WebViewHost::Navigate(const CString& strUrl)
     if (!m_pWebView)
         return;
 
-    // 첫 번째 NavigationCompleted 시 appReady 이벤트 전송
     m_pWebView->add_NavigationCompleted(
         Callback<ICoreWebView2NavigationCompletedEventHandler>(
             [this](ICoreWebView2* pSender, ICoreWebView2NavigationCompletedEventArgs* pArgs) -> HRESULT
@@ -189,7 +184,6 @@ void WebViewHost::Navigate(const CString& strUrl)
 
                 m_bAppReadySent = TRUE;
 
-                // appReady 이벤트: 프로필 정보 포함
                 const SolutionProfile& profile = sageMgr.GetProfile();
                 CString strPayload;
                 strPayload.Format(

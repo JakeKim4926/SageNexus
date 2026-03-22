@@ -1,11 +1,9 @@
 #pragma once
 #include "pch.h"
-#include "Infrastructure/FileLogger.h"
-#include "Infrastructure/JsonConfigStore.h"
-#include "Domain/SolutionProfile.h"
+#include "app/infrastructure/logging/FileLogger.h"
+#include "app/infrastructure/config/JsonConfigStore.h"
+#include "app/domain/model/SolutionProfile.h"
 
-// 앱 공통 인프라 서비스 싱글톤
-// 로거, 설정, 공통 경로, 프로필에 접근하는 단일 진입점
 #define sageMgr SageApp::GetInstance()
 
 class SageApp

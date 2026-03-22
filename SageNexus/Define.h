@@ -21,7 +21,7 @@ constexpr const wchar_t* WINDOW_TITLE      = L"SageNexus";
 // WebView2
 // ============================================================
 constexpr const wchar_t* WEBVIEW_USER_DATA_FOLDER = L"WebViewData";
-constexpr const wchar_t* WEB_ENTRY_FILE           = L"Web\\index.html";
+constexpr const wchar_t* WEB_ENTRY_FILE           = L"webui\\public\\index.html";
 
 // ============================================================
 // Config / Log

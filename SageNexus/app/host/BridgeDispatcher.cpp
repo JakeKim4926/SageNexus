@@ -1,6 +1,6 @@
 #include "pch.h"
-#include "BridgeDispatcher.h"
-#include "App/SageApp.h"
+#include "app/host/BridgeDispatcher.h"
+#include "app/application/SageApp.h"
 
 BridgeDispatcher::BridgeDispatcher()
 {
@@ -26,7 +26,7 @@ void BridgeDispatcher::DispatchMessage(const CString& strJson, ICoreWebView2* pW
     }
 
     if (msg.m_eType != BridgeMessageType::Command)
-        return; // response/event는 Web→Native 방향으로 오지 않음
+        return;
 
     CString strLogMsg;
     strLogMsg.Format(L"Bridge command: %s::%s (reqId=%s)",
@@ -49,7 +49,6 @@ void BridgeDispatcher::DispatchMessage(const CString& strJson, ICoreWebView2* pW
 
     CString strResult = it->second(msg);
 
-    // 핸들러가 비어있는 응답을 반환하면 기본 success 전송
     if (strResult.IsEmpty())
         SendSuccessResponse(msg.m_strRequestId, L"{}", pWebView);
     else
@@ -128,7 +127,6 @@ BridgeMessage BridgeDispatcher::ParseMessage(const CString& strJson) const
     msg.m_strAction      = ExtractJsonField(strJson, L"action");
     msg.m_strName        = ExtractJsonField(strJson, L"name");
 
-    // payload 필드: 문자열 또는 오브젝트 형태 그대로 보존
     int nPayloadStart = strJson.Find(L"\"payload\"");
     if (nPayloadStart >= 0)
     {
@@ -142,7 +140,6 @@ BridgeMessage BridgeDispatcher::ParseMessage(const CString& strJson) const
 
 CString BridgeDispatcher::ExtractJsonField(const CString& strJson, const CString& strKey) const
 {
-    // 단순 문자열 값만 추출: "key": "value"
     CString strSearch = L"\"" + strKey + L"\"";
     int nPos = strJson.Find(strSearch);
     if (nPos < 0)
@@ -152,7 +149,6 @@ CString BridgeDispatcher::ExtractJsonField(const CString& strJson, const CString
     if (nColon < 0)
         return L"";
 
-    // 값 시작 위치 탐색 (공백 건너뜀)
     int nValueStart = nColon + 1;
     while (nValueStart < strJson.GetLength() && strJson[nValueStart] == L' ')
         ++nValueStart;
@@ -161,7 +157,7 @@ CString BridgeDispatcher::ExtractJsonField(const CString& strJson, const CString
         return L"";
 
     if (strJson[nValueStart] != L'"')
-        return L""; // 숫자/bool/오브젝트는 별도 처리 필요 시 확장
+        return L"";
 
     int nValueEnd = strJson.Find(L'"', nValueStart + 1);
     if (nValueEnd < 0)

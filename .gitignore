@@ -1,41 +1,128 @@
-# Prerequisites
-*.d
+# =========================
+# Visual Studio / C++ / MFC
+# =========================
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
+# User-specific files
+.vs/
+*.VC.db
+*.VC.opendb
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+Debug_x64/
+Release_x64/
+Debug_x32/
+Release_x32/
+ARM/
+ARM64/
+Win32/
+out/
+build/
+[Bb]in/
+[Oo]bj/
+
+# Intermediate / compiler files
 *.obj
-
-# Precompiled Headers
-*.gch
+*.iobj
+*.ipdb
 *.pch
-
-# Linker files
-*.ilk
-
-# Debugger Files
 *.pdb
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
+*.ilk
+*.idb
+*.exp
 *.lib
-
-# Executables
+*.dll
 *.exe
-*.out
-*.app
+*.appx
+*.aps
+*.ncb
+*.opendb
+*.tlog
+*.lastbuildstate
+*.unsuccessfulbuild
+*.cache
+*.log
 
-# debug information files
-*.dwo
+# Visual C++ generated
+*.sdf
+*.opensdf
+*.tmp
+*.temp
+
+# CMake (혹시 같이 쓰게 될 경우)
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+compile_commands.json
+CTestTestfile.cmake
+Makefile
+
+# Ninja
+.ninja_deps
+.ninja_log
+
+# MSBuild
+*.vcxproj.user
+*.vcxproj.filters.user
+
+# NuGet / packages
+packages/
+*.nupkg
+
+# Test / coverage
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+# Crash / profiling
+*.dmp
+*.mdmp
+
+# ReSharper / Rider / VS extensions
+_ReSharper*/
+*.DotSettings.user
+
+# Generated docs / local exports
+*.pdf
+*.xlsx
+*.xls
+*.csv
+*.bak
+
+# SQLite / local DB / temp data
+*.db
+*.sqlite
+*.sqlite3
+
+# Local config / secret
+.env
+.env.*
+*.local.json
+secrets.json
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+#claude
+.claude/
+
+# =========================
+# Keep these in Git
+# =========================
+#!*.sln
+#!*.vcxproj
+#!*.vcxproj.filters
+#!*.rc
+#!*.ico
+#!*.bmp
+#!*.png
+#!res/**

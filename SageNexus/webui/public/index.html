@@ -103,16 +103,38 @@
                 </div>
             </div>
 
-            <!-- Data Viewer Page (Phase 2) -->
+            <!-- Data Viewer Page -->
             <div class="page" id="page-data-viewer">
                 <div class="page-header">
                     <div class="page-title">데이터 뷰어</div>
                     <div class="page-subtitle">파일을 불러와 데이터를 확인합니다.</div>
                 </div>
-                <div class="empty-state">
-                    <div class="empty-icon">⊟</div>
-                    <div class="empty-title">불러온 파일이 없습니다</div>
-                    <div class="empty-desc">Phase 2에서 구현 예정입니다.</div>
+                <div class="page-toolbar">
+                    <button class="btn btn-primary" id="btn-open-file">파일 열기</button>
+                    <span class="file-info-name" id="dv-filename"></span>
+                    <span class="file-info-meta" id="dv-meta"></span>
+                </div>
+                <div class="page-body">
+                    <div class="empty-state" id="dv-state-empty">
+                        <div class="empty-icon">⊟</div>
+                        <div class="empty-title">불러온 파일이 없습니다</div>
+                        <div class="empty-desc">파일 열기 버튼을 눌러 CSV 파일을 선택하세요.</div>
+                    </div>
+                    <div class="loading-state hidden" id="dv-state-loading">
+                        <div class="loading-spinner"></div>
+                        <div class="loading-text">파일을 불러오는 중...</div>
+                    </div>
+                    <div class="error-state hidden" id="dv-state-error">
+                        <div class="error-icon">⚠</div>
+                        <div class="error-title">파일을 불러오지 못했습니다</div>
+                        <div class="error-desc" id="dv-error-message"></div>
+                    </div>
+                    <div class="table-wrapper hidden" id="dv-state-data">
+                        <table class="data-table">
+                            <thead id="dv-table-head"></thead>
+                            <tbody id="dv-table-body"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -240,10 +262,73 @@
         }
     });
 
-    // =========================================================
-    // 초기화
-    // =========================================================
     setStatus('loading', '초기화 중');
+})();
+
+(function () {
+    function setDvState(state, info) {
+        document.getElementById('dv-state-empty').classList.toggle('hidden', state !== 'empty');
+        document.getElementById('dv-state-loading').classList.toggle('hidden', state !== 'loading');
+        document.getElementById('dv-state-error').classList.toggle('hidden', state !== 'error');
+        document.getElementById('dv-state-data').classList.toggle('hidden', state !== 'data');
+
+        if (state === 'error') {
+            var msgEl = document.getElementById('dv-error-message');
+            if (msgEl) msgEl.textContent = (info && info.message) ? info.message : '';
+        }
+    }
+
+    function renderTable(tableData) {
+        var thead = document.getElementById('dv-table-head');
+        var tbody = document.getElementById('dv-table-body');
+        thead.innerHTML = '';
+        tbody.innerHTML = '';
+
+        var tr = document.createElement('tr');
+        tableData.columns.forEach(function (col) {
+            var th = document.createElement('th');
+            th.textContent = col.displayName || col.internalName;
+            tr.appendChild(th);
+        });
+        thead.appendChild(tr);
+
+        tableData.rows.forEach(function (row) {
+            var tr = document.createElement('tr');
+            row.forEach(function (cell) {
+                var td = document.createElement('td');
+                td.textContent = cell;
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+        });
+
+        var nameEl = document.getElementById('dv-filename');
+        if (nameEl) nameEl.textContent = tableData.sourceName || '';
+
+        var metaEl = document.getElementById('dv-meta');
+        if (metaEl) metaEl.textContent = tableData.rowCount + '행  ·  ' + tableData.columnCount + '열';
+    }
+
+    document.getElementById('btn-open-file').addEventListener('click', function () {
+        setDvState('loading');
+
+        bridgeClient.sendCommand('data.import', 'openFileDialog', {})
+            .then(function (result) {
+                if (!result.filePath) {
+                    setDvState('empty');
+                    return Promise.resolve(null);
+                }
+                return bridgeClient.sendCommand('data.import', 'loadFile', { filePath: result.filePath });
+            })
+            .then(function (tableData) {
+                if (!tableData) return;
+                renderTable(tableData);
+                setDvState('data');
+            })
+            .catch(function (err) {
+                setDvState('error', { message: err.message });
+            });
+    });
 })();
 </script>
 

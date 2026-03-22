@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <!-- Root -->
     <Filter Include="소스 파일">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
     </Filter>
@@ -11,91 +10,89 @@
     <Filter Include="리소스 파일">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
     </Filter>
-    <!-- app/host -->
+    <Filter Include="app">
+      <UniqueIdentifier>{B0000001-0000-0000-0000-000000000001}</UniqueIdentifier>
+    </Filter>
     <Filter Include="app\host">
-      <UniqueIdentifier>{A1B2C3D4-0001-0001-0001-000000000001}</UniqueIdentifier>
+      <UniqueIdentifier>{B0000001-0001-0000-0000-000000000001}</UniqueIdentifier>
     </Filter>
     <Filter Include="app\host\헤더 파일">
-      <UniqueIdentifier>{A1B2C3D4-0001-0001-0001-000000000002}</UniqueIdentifier>
+      <UniqueIdentifier>{B0000001-0001-0000-0000-000000000002}</UniqueIdentifier>
     </Filter>
     <Filter Include="app\host\소스 파일">
-      <UniqueIdentifier>{A1B2C3D4-0001-0001-0001-000000000003}</UniqueIdentifier>
+      <UniqueIdentifier>{B0000001-0001-0000-0000-000000000003}</UniqueIdentifier>
     </Filter>
-    <!-- app/application -->
     <Filter Include="app\application">
-      <UniqueIdentifier>{A1B2C3D4-0002-0001-0001-000000000001}</UniqueIdentifier>
+      <UniqueIdentifier>{B0000002-0000-0000-0000-000000000001}</UniqueIdentifier>
     </Filter>
     <Filter Include="app\application\헤더 파일">
-      <UniqueIdentifier>{A1B2C3D4-0002-0001-0001-000000000002}</UniqueIdentifier>
+      <UniqueIdentifier>{B0000002-0000-0000-0000-000000000002}</UniqueIdentifier>
     </Filter>
     <Filter Include="app\application\소스 파일">
-      <UniqueIdentifier>{A1B2C3D4-0002-0001-0001-000000000003}</UniqueIdentifier>
+      <UniqueIdentifier>{B0000002-0000-0000-0000-000000000003}</UniqueIdentifier>
     </Filter>
-    <!-- app/domain/model -->
     <Filter Include="app\domain">
-      <UniqueIdentifier>{A1B2C3D4-0003-0001-0001-000000000001}</UniqueIdentifier>
+      <UniqueIdentifier>{B0000003-0000-0000-0000-000000000001}</UniqueIdentifier>
     </Filter>
     <Filter Include="app\domain\model">
-      <UniqueIdentifier>{A1B2C3D4-0003-0002-0001-000000000001}</UniqueIdentifier>
+      <UniqueIdentifier>{B0000003-0001-0000-0000-000000000001}</UniqueIdentifier>
     </Filter>
     <Filter Include="app\domain\model\헤더 파일">
-      <UniqueIdentifier>{A1B2C3D4-0003-0002-0001-000000000002}</UniqueIdentifier>
+      <UniqueIdentifier>{B0000003-0001-0000-0000-000000000002}</UniqueIdentifier>
     </Filter>
     <Filter Include="app\domain\model\소스 파일">
-      <UniqueIdentifier>{A1B2C3D4-0003-0002-0001-000000000003}</UniqueIdentifier>
+      <UniqueIdentifier>{B0000003-0001-0000-0000-000000000003}</UniqueIdentifier>
     </Filter>
-    <!-- app/infrastructure -->
     <Filter Include="app\infrastructure">
-      <UniqueIdentifier>{A1B2C3D4-0004-0001-0001-000000000001}</UniqueIdentifier>
+      <UniqueIdentifier>{B0000004-0000-0000-0000-000000000001}</UniqueIdentifier>
     </Filter>
     <Filter Include="app\infrastructure\logging">
-      <UniqueIdentifier>{A1B2C3D4-0004-0002-0001-000000000001}</UniqueIdentifier>
+      <UniqueIdentifier>{B0000004-0001-0000-0000-000000000001}</UniqueIdentifier>
     </Filter>
     <Filter Include="app\infrastructure\logging\헤더 파일">
-      <UniqueIdentifier>{A1B2C3D4-0004-0002-0001-000000000002}</UniqueIdentifier>
+      <UniqueIdentifier>{B0000004-0001-0000-0000-000000000002}</UniqueIdentifier>
     </Filter>
     <Filter Include="app\infrastructure\logging\소스 파일">
-      <UniqueIdentifier>{A1B2C3D4-0004-0002-0001-000000000003}</UniqueIdentifier>
+      <UniqueIdentifier>{B0000004-0001-0000-0000-000000000003}</UniqueIdentifier>
     </Filter>
     <Filter Include="app\infrastructure\config">
-      <UniqueIdentifier>{A1B2C3D4-0004-0003-0001-000000000001}</UniqueIdentifier>
+      <UniqueIdentifier>{B0000004-0002-0000-0000-000000000001}</UniqueIdentifier>
     </Filter>
     <Filter Include="app\infrastructure\config\헤더 파일">
-      <UniqueIdentifier>{A1B2C3D4-0004-0003-0001-000000000002}</UniqueIdentifier>
+      <UniqueIdentifier>{B0000004-0002-0000-0000-000000000002}</UniqueIdentifier>
     </Filter>
     <Filter Include="app\infrastructure\config\소스 파일">
-      <UniqueIdentifier>{A1B2C3D4-0004-0003-0001-000000000003}</UniqueIdentifier>
+      <UniqueIdentifier>{B0000004-0002-0000-0000-000000000003}</UniqueIdentifier>
     </Filter>
-    <!-- webui -->
     <Filter Include="webui">
-      <UniqueIdentifier>{A1B2C3D4-0005-0001-0001-000000000001}</UniqueIdentifier>
+      <UniqueIdentifier>{B0000005-0000-0000-0000-000000000001}</UniqueIdentifier>
     </Filter>
     <Filter Include="webui\public">
-      <UniqueIdentifier>{A1B2C3D4-0005-0002-0001-000000000001}</UniqueIdentifier>
+      <UniqueIdentifier>{B0000005-0001-0000-0000-000000000001}</UniqueIdentifier>
     </Filter>
     <Filter Include="webui\src">
-      <UniqueIdentifier>{A1B2C3D4-0005-0003-0001-000000000001}</UniqueIdentifier>
+      <UniqueIdentifier>{B0000005-0002-0000-0000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="webui\src\core">
+      <UniqueIdentifier>{B0000005-0003-0000-0000-000000000001}</UniqueIdentifier>
     </Filter>
     <Filter Include="webui\src\core\bridge">
-      <UniqueIdentifier>{A1B2C3D4-0005-0004-0001-000000000001}</UniqueIdentifier>
+      <UniqueIdentifier>{B0000005-0003-0000-0000-000000000002}</UniqueIdentifier>
     </Filter>
     <Filter Include="webui\src\styles">
-      <UniqueIdentifier>{A1B2C3D4-0005-0005-0001-000000000001}</UniqueIdentifier>
+      <UniqueIdentifier>{B0000005-0004-0000-0000-000000000001}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <!-- Root source files -->
     <ClCompile Include="pch.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <!-- app/application -->
     <ClCompile Include="app\application\SageApp.cpp">
       <Filter>app\application\소스 파일</Filter>
     </ClCompile>
-    <!-- app/host -->
     <ClCompile Include="app\host\MainWindow.cpp">
       <Filter>app\host\소스 파일</Filter>
     </ClCompile>
@@ -105,24 +102,20 @@
     <ClCompile Include="app\host\BridgeDispatcher.cpp">
       <Filter>app\host\소스 파일</Filter>
     </ClCompile>
-    <!-- app/domain/model -->
     <ClCompile Include="app\domain\model\DataTable.cpp">
       <Filter>app\domain\model\소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="app\domain\model\SolutionProfile.cpp">
       <Filter>app\domain\model\소스 파일</Filter>
     </ClCompile>
-    <!-- app/infrastructure/logging -->
     <ClCompile Include="app\infrastructure\logging\FileLogger.cpp">
       <Filter>app\infrastructure\logging\소스 파일</Filter>
     </ClCompile>
-    <!-- app/infrastructure/config -->
     <ClCompile Include="app\infrastructure\config\JsonConfigStore.cpp">
       <Filter>app\infrastructure\config\소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <!-- Root header files -->
     <ClInclude Include="pch.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -132,11 +125,9 @@
     <ClInclude Include="EnumDefine.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <!-- app/application -->
     <ClInclude Include="app\application\SageApp.h">
       <Filter>app\application\헤더 파일</Filter>
     </ClInclude>
-    <!-- app/host -->
     <ClInclude Include="app\host\MainWindow.h">
       <Filter>app\host\헤더 파일</Filter>
     </ClInclude>
@@ -146,18 +137,15 @@
     <ClInclude Include="app\host\BridgeDispatcher.h">
       <Filter>app\host\헤더 파일</Filter>
     </ClInclude>
-    <!-- app/domain/model -->
     <ClInclude Include="app\domain\model\DataTable.h">
       <Filter>app\domain\model\헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="app\domain\model\SolutionProfile.h">
       <Filter>app\domain\model\헤더 파일</Filter>
     </ClInclude>
-    <!-- app/infrastructure/logging -->
     <ClInclude Include="app\infrastructure\logging\FileLogger.h">
       <Filter>app\infrastructure\logging\헤더 파일</Filter>
     </ClInclude>
-    <!-- app/infrastructure/config -->
     <ClInclude Include="app\infrastructure\config\JsonConfigStore.h">
       <Filter>app\infrastructure\config\헤더 파일</Filter>
     </ClInclude>

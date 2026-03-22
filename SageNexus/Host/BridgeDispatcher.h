@@ -1,6 +1,6 @@
 #pragma once
 #include "pch.h"
-#include "../EnumDefine.h"
+#include "EnumDefine.h"
 
 // 파싱된 브릿지 메시지 구조
 struct BridgeMessage

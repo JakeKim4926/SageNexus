@@ -1,6 +1,6 @@
 #pragma once
 #include "pch.h"
-#include "../EnumDefine.h"
+#include "EnumDefine.h"
 
 class FileLogger
 {

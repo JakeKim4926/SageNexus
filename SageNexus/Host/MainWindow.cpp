@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "MainWindow.h"
-#include "../App/SageApp.h"
-#include "../Define.h"
+#include "App/SageApp.h"
+#include "Define.h"
 
 MainWindow::MainWindow()
     : m_hWnd(nullptr)

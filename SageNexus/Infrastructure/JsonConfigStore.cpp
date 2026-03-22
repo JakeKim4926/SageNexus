@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "JsonConfigStore.h"
-#include "../Define.h"
+#include "Define.h"
 
 JsonConfigStore::JsonConfigStore(const CString& strConfigDir)
     : m_strConfigDir(strConfigDir)

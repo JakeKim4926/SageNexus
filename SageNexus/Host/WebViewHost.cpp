@@ -1,16 +1,19 @@
 #include "pch.h"
 #include "WebViewHost.h"
-#include "../App/SageApp.h"
-#include "../Define.h"
+#include "App/SageApp.h"
+#include "Domain/SolutionProfile.h"
+#include "Define.h"
 
 using namespace Microsoft::WRL;
 
 WebViewHost::WebViewHost(HWND hParentWnd)
     : m_hParentWnd(hParentWnd)
     , m_eState(WebViewState::NotCreated)
+    , m_bAppReadySent(FALSE)
     , m_pEnvironment(nullptr)
     , m_pController(nullptr)
     , m_pWebView(nullptr)
+    , m_tokenNavigationCompleted({})
 {
 }
 
@@ -167,6 +170,39 @@ void WebViewHost::Navigate(const CString& strUrl)
 {
     if (!m_pWebView)
         return;
+
+    // 첫 번째 NavigationCompleted 시 appReady 이벤트 전송
+    m_pWebView->add_NavigationCompleted(
+        Callback<ICoreWebView2NavigationCompletedEventHandler>(
+            [this](ICoreWebView2* pSender, ICoreWebView2NavigationCompletedEventArgs* pArgs) -> HRESULT
+            {
+                if (m_bAppReadySent)
+                    return S_OK;
+
+                BOOL bSuccess = FALSE;
+                pArgs->get_IsSuccess(&bSuccess);
+                if (!bSuccess)
+                {
+                    sageMgr.GetLogger().LogError(L"WebViewHost: NavigationCompleted with failure");
+                    return S_OK;
+                }
+
+                m_bAppReadySent = TRUE;
+
+                // appReady 이벤트: 프로필 정보 포함
+                const SolutionProfile& profile = sageMgr.GetProfile();
+                CString strPayload;
+                strPayload.Format(
+                    L"{\"profileName\":\"%s\",\"interfaceLanguage\":\"%s\",\"outputLanguage\":\"%s\"}",
+                    (LPCWSTR)profile.GetProfileName(),
+                    (LPCWSTR)profile.GetDefaultInterfaceLanguage(),
+                    (LPCWSTR)profile.GetDefaultOutputLanguage());
+
+                m_dispatcher.SendEvent(L"appReady", strPayload, m_pWebView);
+                sageMgr.GetLogger().LogInfo(L"WebViewHost: appReady event sent");
+                return S_OK;
+            }).Get(),
+        &m_tokenNavigationCompleted);
 
     m_pWebView->Navigate(strUrl);
 }

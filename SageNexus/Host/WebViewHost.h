@@ -1,6 +1,6 @@
 #pragma once
 #include "pch.h"
-#include "../EnumDefine.h"
+#include "EnumDefine.h"
 #include "BridgeDispatcher.h"
 
 // WebView2 생성/소멸/리사이즈/메시지 수신을 담당한다.
@@ -35,10 +35,12 @@ private:
 
     HWND                    m_hParentWnd;
     WebViewState            m_eState;
+    BOOL                    m_bAppReadySent; // appReady 이벤트를 한 번만 보내기 위한 플래그
 
     ICoreWebView2Environment* m_pEnvironment;
     ICoreWebView2Controller*  m_pController;
     ICoreWebView2*            m_pWebView;
 
+    EventRegistrationToken m_tokenNavigationCompleted;
     BridgeDispatcher m_dispatcher;
 };

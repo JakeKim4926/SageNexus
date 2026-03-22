@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "BridgeDispatcher.h"
-#include "../App/SageApp.h"
+#include "App/SageApp.h"
 
 BridgeDispatcher::BridgeDispatcher()
 {

@@ -1,5 +1,5 @@
 #pragma once
-#include "../pch.h"
+#include "pch.h"
 
 // 활성화된 기능 모듈 목록
 struct PluginConfig

@@ -1,4 +1,4 @@
-#include "../pch.h"
+#include "pch.h"
 #include "FileLogger.h"
 
 FileLogger::FileLogger(const CString& strLogDir)

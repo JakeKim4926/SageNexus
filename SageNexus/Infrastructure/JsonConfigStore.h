@@ -1,5 +1,5 @@
 #pragma once
-#include "../pch.h"
+#include "pch.h"
 
 // Phase 1: 단순 flat JSON 오브젝트 읽기/쓰기
 // {"key": "value", "key2": 42, "key3": true} 형태만 지원

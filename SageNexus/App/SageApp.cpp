@@ -1,4 +1,4 @@
-#include "../pch.h"
+#include "pch.h"
 #include "SageApp.h"
 #include "../Infrastructure/FileLogger.h"
 #include "../Infrastructure/JsonConfigStore.h"

@@ -1,4 +1,4 @@
-#include "../pch.h"
+#include "pch.h"
 #include "BridgeDispatcher.h"
 #include "../App/SageApp.h"
 

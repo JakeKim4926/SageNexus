@@ -1,5 +1,5 @@
 #pragma once
-#include "../pch.h"
+#include "pch.h"
 
 // 컬럼 메타 정보
 struct DataColumn

@@ -1,4 +1,4 @@
-#include "../pch.h"
+#include "pch.h"
 #include "JsonConfigStore.h"
 #include "../Define.h"
 

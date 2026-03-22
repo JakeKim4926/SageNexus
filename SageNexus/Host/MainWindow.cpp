@@ -1,4 +1,4 @@
-#include "../pch.h"
+#include "pch.h"
 #include "MainWindow.h"
 #include "../App/SageApp.h"
 #include "../Define.h"

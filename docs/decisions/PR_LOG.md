@@ -10,6 +10,12 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 - **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/2
 - **결과**: merged
 
+## [2026-03-22] develop → main (Phase 1 완료)
+- **목적**: Phase 1 완료 시점 main 반영
+- **변경 내용**: PR #2 (phase1-shell), PR #3 (project-folder-structure) 포함
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/4
+- **결과**: merged
+
 ## [2026-03-22] refactor/project-folder-structure
 - **목적**: coding-rules 표준 폴더 구조로 전체 소스 파일 재배치 및 VS Solution Explorer 필터 재구성
 - **변경 내용**: App/Host/Domain/Infrastructure/Web → app/host, app/application, app/domain/model, app/infrastructure/logging, app/infrastructure/config, webui 구조로 이동. vcxproj, vcxproj.filters, Define.h, index.html 업데이트

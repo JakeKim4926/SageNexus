@@ -1,9 +1,8 @@
 #pragma once
 #include "pch.h"
-#include "../Domain/SolutionProfile.h"
-
-class FileLogger;
-class JsonConfigStore;
+#include "Infrastructure/FileLogger.h"
+#include "Infrastructure/JsonConfigStore.h"
+#include "Domain/SolutionProfile.h"
 
 // 앱 공통 인프라 서비스 싱글톤
 // 로거, 설정, 공통 경로, 프로필에 접근하는 단일 진입점

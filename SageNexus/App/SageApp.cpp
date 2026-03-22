@@ -1,8 +1,6 @@
 #include "pch.h"
 #include "SageApp.h"
-#include "../Infrastructure/FileLogger.h"
-#include "../Infrastructure/JsonConfigStore.h"
-#include "../Define.h"
+#include "Define.h"
 
 SageApp& SageApp::GetInstance()
 {

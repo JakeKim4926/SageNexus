@@ -188,6 +188,8 @@
     <ClCompile Include="app\domain\model\SolutionProfile.cpp" />
     <ClCompile Include="app\infrastructure\logging\FileLogger.cpp" />
     <ClCompile Include="app\infrastructure\config\JsonConfigStore.cpp" />
+    <ClCompile Include="app\infrastructure\readers\CsvReader.cpp" />
+    <ClCompile Include="app\application\services\ImportService.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -201,6 +203,9 @@
     <ClInclude Include="app\domain\model\SolutionProfile.h" />
     <ClInclude Include="app\infrastructure\logging\FileLogger.h" />
     <ClInclude Include="app\infrastructure\config\JsonConfigStore.h" />
+    <ClInclude Include="app\infrastructure\readers\CsvReader.h" />
+    <ClInclude Include="app\domain\interfaces\IDataReader.h" />
+    <ClInclude Include="app\application\services\ImportService.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

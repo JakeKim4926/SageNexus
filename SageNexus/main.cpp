@@ -25,6 +25,7 @@ int APIENTRY wWinMain(
     if (!mainWindow.Create(nCmdShow))
     {
         sageMgr.Shutdown();
+        CoUninitialize();
         return -1;
     }
 

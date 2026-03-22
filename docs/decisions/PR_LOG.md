@@ -16,6 +16,12 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 - **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/4
 - **결과**: merged
 
+## [2026-03-23] feature/csv-reader
+- **목적**: Phase 2 Step 1 — CsvReader, ImportService, IDataReader 구현 및 앱 즉시 종료 버그 수정
+- **변경 내용**: IDataReader 인터페이스, CsvReader(UTF-8/ANSI 폴백·쿼트 처리), ImportService(확장자 기반 분기), main.cpp MainWindow::Create 호출 누락 버그 수정
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/5
+- **결과**: pending
+
 ## [2026-03-22] refactor/project-folder-structure
 - **목적**: coding-rules 표준 폴더 구조로 전체 소스 파일 재배치 및 VS Solution Explorer 필터 재구성
 - **변경 내용**: App/Host/Domain/Infrastructure/Web → app/host, app/application, app/domain/model, app/infrastructure/logging, app/infrastructure/config, webui 구조로 이동. vcxproj, vcxproj.filters, Define.h, index.html 업데이트

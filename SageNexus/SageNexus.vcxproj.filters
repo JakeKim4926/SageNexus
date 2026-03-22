@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\app">
+      <UniqueIdentifier>{C0000001-0000-0000-0000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\app\host">
+      <UniqueIdentifier>{C0000001-0001-0000-0000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\app\application">
+      <UniqueIdentifier>{C0000001-0002-0000-0000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\app\domain">
+      <UniqueIdentifier>{C0000001-0003-0000-0000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\app\domain\model">
+      <UniqueIdentifier>{C0000001-0003-0001-0000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\app\infrastructure">
+      <UniqueIdentifier>{C0000001-0004-0000-0000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\app\infrastructure\logging">
+      <UniqueIdentifier>{C0000001-0004-0001-0000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\app\infrastructure\config">
+      <UniqueIdentifier>{C0000001-0004-0002-0000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\app">
+      <UniqueIdentifier>{C0000002-0000-0000-0000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\app\host">
+      <UniqueIdentifier>{C0000002-0001-0000-0000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\app\application">
+      <UniqueIdentifier>{C0000002-0002-0000-0000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\app\domain">
+      <UniqueIdentifier>{C0000002-0003-0000-0000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\app\domain\model">
+      <UniqueIdentifier>{C0000002-0003-0001-0000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\app\infrastructure">
+      <UniqueIdentifier>{C0000002-0004-0000-0000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\app\infrastructure\logging">
+      <UniqueIdentifier>{C0000002-0004-0001-0000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\app\infrastructure\config">
+      <UniqueIdentifier>{C0000002-0004-0002-0000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="webui">
+      <UniqueIdentifier>{C0000005-0000-0000-0000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="webui\public">
+      <UniqueIdentifier>{C0000005-0001-0000-0000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="webui\src">
+      <UniqueIdentifier>{C0000005-0002-0000-0000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="webui\src\core">
+      <UniqueIdentifier>{C0000005-0003-0000-0000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="webui\src\core\bridge">
+      <UniqueIdentifier>{C0000005-0003-0001-0000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="webui\src\styles">
+      <UniqueIdentifier>{C0000005-0004-0000-0000-000000000001}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="app\application\SageApp.cpp">
+      <Filter>소스 파일\app\application</Filter>
+    </ClCompile>
+    <ClCompile Include="app\host\MainWindow.cpp">
+      <Filter>소스 파일\app\host</Filter>
+    </ClCompile>
+    <ClCompile Include="app\host\WebViewHost.cpp">
+      <Filter>소스 파일\app\host</Filter>
+    </ClCompile>
+    <ClCompile Include="app\host\BridgeDispatcher.cpp">
+      <Filter>소스 파일\app\host</Filter>
+    </ClCompile>
+    <ClCompile Include="app\domain\model\DataTable.cpp">
+      <Filter>소스 파일\app\domain\model</Filter>
+    </ClCompile>
+    <ClCompile Include="app\domain\model\SolutionProfile.cpp">
+      <Filter>소스 파일\app\domain\model</Filter>
+    </ClCompile>
+    <ClCompile Include="app\infrastructure\logging\FileLogger.cpp">
+      <Filter>소스 파일\app\infrastructure\logging</Filter>
+    </ClCompile>
+    <ClCompile Include="app\infrastructure\config\JsonConfigStore.cpp">
+      <Filter>소스 파일\app\infrastructure\config</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Define.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="EnumDefine.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="app\application\SageApp.h">
+      <Filter>헤더 파일\app\application</Filter>
+    </ClInclude>
+    <ClInclude Include="app\host\MainWindow.h">
+      <Filter>헤더 파일\app\host</Filter>
+    </ClInclude>
+    <ClInclude Include="app\host\WebViewHost.h">
+      <Filter>헤더 파일\app\host</Filter>
+    </ClInclude>
+    <ClInclude Include="app\host\BridgeDispatcher.h">
+      <Filter>헤더 파일\app\host</Filter>
+    </ClInclude>
+    <ClInclude Include="app\domain\model\DataTable.h">
+      <Filter>헤더 파일\app\domain\model</Filter>
+    </ClInclude>
+    <ClInclude Include="app\domain\model\SolutionProfile.h">
+      <Filter>헤더 파일\app\domain\model</Filter>
+    </ClInclude>
+    <ClInclude Include="app\infrastructure\logging\FileLogger.h">
+      <Filter>헤더 파일\app\infrastructure\logging</Filter>
+    </ClInclude>
+    <ClInclude Include="app\infrastructure\config\JsonConfigStore.h">
+      <Filter>헤더 파일\app\infrastructure\config</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="webui\public\index.html">
+      <Filter>webui\public</Filter>
+    </None>
+    <None Include="webui\src\core\bridge\bridge.js">
+      <Filter>webui\src\core\bridge</Filter>
+    </None>
+    <None Include="webui\src\styles\styles.css">
+      <Filter>webui\src\styles</Filter>
+    </None>
+  </ItemGroup>
+</Project>

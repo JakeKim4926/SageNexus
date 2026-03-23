@@ -34,6 +34,12 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 - **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/5
 - **결과**: merged
 
+## [2026-03-24] feature/xlsx-reader
+- **목적**: Phase 2 Step 5 — XLSX 파일 읽기 지원 (XlsxReader)
+- **변경 내용**: XlsxReader(PowerShell Expand-Archive ZIP 추출·sharedStrings·sheet1 XML 파싱·희소 컬럼 처리), ImportService XLSX 라우팅 추가, ImportBridgeHandler 파일 필터 업데이트(csv+xlsx), vcxproj/filters 등록
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/10
+- **결과**: merged
+
 ## [2026-03-23] feature/csv-export
 - **목적**: Phase 2 Step 4 — CSV Export (저장 다이얼로그 + CsvWriter + Export 페이지)
 - **변경 내용**: CsvWriter(UTF-8 BOM·RFC4180 쿼팅), ExportService, ExportBridgeHandler(artifact.export::exportCsv), MainWindow 핸들러 등록, Export 페이지 UI(요약 카드·완료/에러 상태)

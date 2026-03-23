@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "app/application/services/ImportService.h"
 #include "app/infrastructure/readers/CsvReader.h"
+#include "app/infrastructure/readers/XlsxReader.h"
 
 ImportService::ImportService()
 {
@@ -45,6 +46,12 @@ BOOL ImportService::LoadFromFile(const CString& strFilePath, DataTable& outTable
     if (strExt == L"csv")
     {
         CsvReader reader;
+        return reader.Read(strFilePath, outTable, strError);
+    }
+
+    if (strExt == L"xlsx")
+    {
+        XlsxReader reader;
         return reader.Read(strFilePath, outTable, strError);
     }
 

@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "app/infrastructure/bridge/ExportBridgeHandler.h"
 #include "app/application/services/ExportService.h"
+#include "app/infrastructure/history/ExecutionHistoryStore.h"
 #include <commdlg.h>
 
 ExportBridgeHandler::ExportBridgeHandler()
@@ -64,11 +65,33 @@ CString ExportBridgeHandler::HandleExportCsv(const BridgeMessage& msg, HWND hPar
 
     if (!exportService.ExportToCsv(*m_pSharedTable, strFilePath, strError))
     {
+        ExecutionHistoryStore historyStore;
+        ExecutionRecord histRecord;
+        histRecord.m_strOperationType = L"export";
+        histRecord.m_strSourceName    = m_pSharedTable->GetSourceName();
+        histRecord.m_nRowCount        = m_pSharedTable->GetRowCount();
+        histRecord.m_nColumnCount     = m_pSharedTable->GetColumnCount();
+        histRecord.m_bSuccess         = FALSE;
+        histRecord.m_strErrorMessage  = strError;
+        CString strHistError;
+        historyStore.SaveRecord(histRecord, strHistError);
+
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
                L"\",\"success\":false,\"payload\":null,"
                L"\"error\":{\"code\":\"SNX_EX_003\",\"message\":\"" +
                EscapeJsonString(strError) + L"\"}}";
     }
+
+    ExecutionHistoryStore historyStore;
+    ExecutionRecord histRecord;
+    histRecord.m_strOperationType = L"export";
+    histRecord.m_strSourceName    = m_pSharedTable->GetSourceName();
+    histRecord.m_nRowCount        = m_pSharedTable->GetRowCount();
+    histRecord.m_nColumnCount     = m_pSharedTable->GetColumnCount();
+    histRecord.m_strOutputPath    = strFilePath;
+    histRecord.m_bSuccess         = TRUE;
+    CString strHistError;
+    historyStore.SaveRecord(histRecord, strHistError);
 
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
            L"\",\"success\":true,\"payload\":{\"filePath\":\"" +

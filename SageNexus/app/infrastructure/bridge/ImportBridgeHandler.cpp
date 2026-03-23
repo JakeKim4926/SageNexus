@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "app/infrastructure/bridge/ImportBridgeHandler.h"
 #include "app/application/services/ImportService.h"
+#include "app/infrastructure/history/ExecutionHistoryStore.h"
 #include "Define.h"
 #include <commdlg.h>
 
@@ -71,6 +72,18 @@ CString ImportBridgeHandler::HandleLoadFile(const BridgeMessage& msg)
 
     if (!importService.LoadFromFile(strFilePath, table, strError))
     {
+        int nSlash = strFilePath.ReverseFind(L'\\');
+        CString strFileName = (nSlash >= 0) ? strFilePath.Mid(nSlash + 1) : strFilePath;
+
+        ExecutionHistoryStore historyStore;
+        ExecutionRecord histRecord;
+        histRecord.m_strOperationType = L"import";
+        histRecord.m_strSourceName    = strFileName;
+        histRecord.m_bSuccess         = FALSE;
+        histRecord.m_strErrorMessage  = strError;
+        CString strHistError;
+        historyStore.SaveRecord(histRecord, strHistError);
+
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
                L"\",\"success\":false,\"payload\":null,"
                L"\"error\":{\"code\":\"SNX_FILE_002\",\"message\":\"" +
@@ -78,6 +91,16 @@ CString ImportBridgeHandler::HandleLoadFile(const BridgeMessage& msg)
     }
 
     *m_pSharedTable = table;
+
+    ExecutionHistoryStore historyStore;
+    ExecutionRecord histRecord;
+    histRecord.m_strOperationType = L"import";
+    histRecord.m_strSourceName    = m_pSharedTable->GetSourceName();
+    histRecord.m_nRowCount        = m_pSharedTable->GetRowCount();
+    histRecord.m_nColumnCount     = m_pSharedTable->GetColumnCount();
+    histRecord.m_bSuccess         = TRUE;
+    CString strHistError;
+    historyStore.SaveRecord(histRecord, strHistError);
 
     CString strTableJson = SerializeTableToJson(*m_pSharedTable, strTableId);
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +

@@ -197,6 +197,9 @@
     <ClCompile Include="app\application\services\ExportService.cpp" />
     <ClCompile Include="app\infrastructure\bridge\ExportBridgeHandler.cpp" />
     <ClCompile Include="app\infrastructure\readers\XlsxReader.cpp" />
+    <ClCompile Include="app\infrastructure\history\ExecutionHistoryStore.cpp" />
+    <ClCompile Include="app\application\services\HistoryService.cpp" />
+    <ClCompile Include="app\infrastructure\bridge\HistoryBridgeHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -221,6 +224,10 @@
     <ClInclude Include="app\application\services\ExportService.h" />
     <ClInclude Include="app\infrastructure\bridge\ExportBridgeHandler.h" />
     <ClInclude Include="app\infrastructure\readers\XlsxReader.h" />
+    <ClInclude Include="app\domain\model\ExecutionRecord.h" />
+    <ClInclude Include="app\infrastructure\history\ExecutionHistoryStore.h" />
+    <ClInclude Include="app\application\services\HistoryService.h" />
+    <ClInclude Include="app\infrastructure\bridge\HistoryBridgeHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

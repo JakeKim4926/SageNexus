@@ -16,6 +16,12 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 - **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/4
 - **결과**: merged
 
+## [2026-03-23] feature/ui-design-tokens
+- **목적**: sagenexus-ui 기준 디자인 토큰 교체 (웜 베이지/브라운 Light Mode)
+- **변경 내용**: styles.css 전체 토큰 교체, Pretendard 폰트 적용, 0.5px 보더, 10px 카드 라운딩
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/7
+- **결과**: merged
+
 ## [2026-03-23] feature/data-viewer-mvp
 - **목적**: Phase 2 Step 2 — Import 브릿지 + Data Viewer MVP
 - **변경 내용**: ImportBridgeHandler(openFileDialog/loadFile), MainWindow 핸들러 등록, Data Viewer 페이지(4상태·테이블 렌더링), 버튼/테이블/툴바 CSS

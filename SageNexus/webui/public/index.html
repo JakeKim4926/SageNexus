@@ -260,16 +260,43 @@
                 </div>
             </div>
 
-            <!-- History Page (Phase 2) -->
+            <!-- History Page -->
             <div class="page" id="page-history">
                 <div class="page-header">
                     <div class="page-title">실행 이력</div>
                     <div class="page-subtitle">이전 실행 결과를 확인합니다.</div>
                 </div>
-                <div class="empty-state">
+                <div class="loading-state hidden" id="hs-state-loading">
+                    <div class="loading-spinner"></div>
+                    <div class="loading-text">이력을 불러오는 중...</div>
+                </div>
+                <div class="empty-state hidden" id="hs-state-empty">
                     <div class="empty-icon">◷</div>
                     <div class="empty-title">실행 이력이 없습니다</div>
-                    <div class="empty-desc">Phase 2에서 구현 예정입니다.</div>
+                    <div class="empty-desc">데이터를 가져오거나 변환, 내보내기를 실행하면 이력이 쌓입니다.</div>
+                </div>
+                <div class="error-state hidden" id="hs-state-error">
+                    <div class="error-icon">⚠</div>
+                    <div class="error-title">이력을 불러오지 못했습니다</div>
+                    <div class="error-desc" id="hs-error-message"></div>
+                </div>
+                <div class="page-body">
+                    <div class="table-wrapper hidden" id="hs-state-data">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>시간</th>
+                                    <th>유형</th>
+                                    <th>소스</th>
+                                    <th>행</th>
+                                    <th>열</th>
+                                    <th>결과</th>
+                                    <th>출력 경로</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hs-table-body"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -642,6 +669,91 @@
                 document.getElementById('ex-error-message').textContent = err.message || '';
                 document.getElementById('ex-state-error').classList.remove('hidden');
             });
+    });
+})();
+
+(function () {
+    var OP_LABELS = {
+        'import':    '가져오기',
+        'transform': '변환',
+        'export':    '내보내기'
+    };
+
+    function setHistoryState(state, info) {
+        document.getElementById('hs-state-loading').classList.toggle('hidden', state !== 'loading');
+        document.getElementById('hs-state-empty').classList.toggle('hidden', state !== 'empty');
+        document.getElementById('hs-state-error').classList.toggle('hidden', state !== 'error');
+        document.getElementById('hs-state-data').classList.toggle('hidden', state !== 'data');
+        if (state === 'error') {
+            var msgEl = document.getElementById('hs-error-message');
+            if (msgEl) msgEl.textContent = (info && info.message) ? info.message : '';
+        }
+    }
+
+    function renderHistory(records) {
+        var tbody = document.getElementById('hs-table-body');
+        tbody.innerHTML = '';
+        var reversed = records.slice().reverse();
+        reversed.forEach(function (rec) {
+            var tr = document.createElement('tr');
+
+            var tdTime = document.createElement('td');
+            tdTime.textContent = rec.timestamp || '';
+            tr.appendChild(tdTime);
+
+            var tdOp = document.createElement('td');
+            tdOp.textContent = OP_LABELS[rec.operationType] || rec.operationType;
+            tr.appendChild(tdOp);
+
+            var tdSrc = document.createElement('td');
+            tdSrc.textContent = rec.sourceName || '';
+            tr.appendChild(tdSrc);
+
+            var tdRow = document.createElement('td');
+            tdRow.textContent = rec.rowCount > 0 ? rec.rowCount : '—';
+            tr.appendChild(tdRow);
+
+            var tdCol = document.createElement('td');
+            tdCol.textContent = rec.columnCount > 0 ? rec.columnCount : '—';
+            tr.appendChild(tdCol);
+
+            var tdResult = document.createElement('td');
+            tdResult.innerHTML = rec.success
+                ? '<span style="color:var(--ok);">✓ 성공</span>'
+                : '<span style="color:var(--error, #e74c3c);">✕ 실패</span>';
+            tr.appendChild(tdResult);
+
+            var tdPath = document.createElement('td');
+            tdPath.textContent = rec.outputPath || '';
+            tdPath.style.cssText = 'max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;';
+            tr.appendChild(tdPath);
+
+            tbody.appendChild(tr);
+        });
+    }
+
+    function loadHistory() {
+        setHistoryState('loading');
+        bridgeClient.sendCommand('history.query', 'getHistory', {})
+            .then(function (result) {
+                if (!result.records || result.records.length === 0) {
+                    setHistoryState('empty');
+                } else {
+                    renderHistory(result.records);
+                    setHistoryState('data');
+                }
+            })
+            .catch(function (err) {
+                setHistoryState('error', { message: err.message });
+            });
+    }
+
+    document.querySelectorAll('.nav-item[data-page]').forEach(function (el) {
+        el.addEventListener('click', function () {
+            if (el.dataset.page === 'history') {
+                loadHistory();
+            }
+        });
     });
 })();
 </script>

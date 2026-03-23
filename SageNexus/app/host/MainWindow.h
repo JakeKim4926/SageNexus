@@ -5,6 +5,7 @@
 #include "app/infrastructure/bridge/ImportBridgeHandler.h"
 #include "app/infrastructure/bridge/TransformBridgeHandler.h"
 #include "app/infrastructure/bridge/ExportBridgeHandler.h"
+#include "app/infrastructure/bridge/HistoryBridgeHandler.h"
 
 class MainWindow
 {
@@ -33,4 +34,5 @@ private:
     ImportBridgeHandler     m_importBridgeHandler;
     TransformBridgeHandler  m_transformBridgeHandler;
     ExportBridgeHandler     m_exportBridgeHandler;
+    HistoryBridgeHandler    m_historyBridgeHandler;
 };

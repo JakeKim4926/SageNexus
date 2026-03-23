@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "app/infrastructure/bridge/TransformBridgeHandler.h"
 #include "app/application/services/TransformService.h"
+#include "app/infrastructure/history/ExecutionHistoryStore.h"
 #include "Define.h"
 
 TransformBridgeHandler::TransformBridgeHandler()
@@ -49,11 +50,32 @@ CString TransformBridgeHandler::HandleApplySteps(const BridgeMessage& msg)
     CString strError;
     if (!service.ApplySteps(*m_pSharedTable, arrSteps, strError))
     {
+        ExecutionHistoryStore historyStore;
+        ExecutionRecord histRecord;
+        histRecord.m_strOperationType = L"transform";
+        histRecord.m_strSourceName    = m_pSharedTable->GetSourceName();
+        histRecord.m_nRowCount        = m_pSharedTable->GetRowCount();
+        histRecord.m_nColumnCount     = m_pSharedTable->GetColumnCount();
+        histRecord.m_bSuccess         = FALSE;
+        histRecord.m_strErrorMessage  = strError;
+        CString strHistError;
+        historyStore.SaveRecord(histRecord, strHistError);
+
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
                L"\",\"success\":false,\"payload\":null,"
                L"\"error\":{\"code\":\"SNX_TF_004\",\"message\":\"" +
                EscapeJsonString(strError) + L"\"}}";
     }
+
+    ExecutionHistoryStore historyStore;
+    ExecutionRecord histRecord;
+    histRecord.m_strOperationType = L"transform";
+    histRecord.m_strSourceName    = m_pSharedTable->GetSourceName();
+    histRecord.m_nRowCount        = m_pSharedTable->GetRowCount();
+    histRecord.m_nColumnCount     = m_pSharedTable->GetColumnCount();
+    histRecord.m_bSuccess         = TRUE;
+    CString strHistError;
+    historyStore.SaveRecord(histRecord, strHistError);
 
     CString strTableJson = SerializeTableToJson(*m_pSharedTable);
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +

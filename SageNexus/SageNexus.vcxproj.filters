@@ -40,6 +40,9 @@
     <Filter Include="소스 파일\app\infrastructure\writers">
       <UniqueIdentifier>{C0000001-0004-0005-0000-000000000001}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\app\infrastructure\history">
+      <UniqueIdentifier>{C0000001-0004-0006-0000-000000000001}</UniqueIdentifier>
+    </Filter>
     <Filter Include="헤더 파일">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
     </Filter>
@@ -81,6 +84,9 @@
     </Filter>
     <Filter Include="헤더 파일\app\infrastructure\writers">
       <UniqueIdentifier>{C0000002-0004-0005-0000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\app\infrastructure\history">
+      <UniqueIdentifier>{C0000002-0004-0006-0000-000000000001}</UniqueIdentifier>
     </Filter>
     <Filter Include="리소스 파일">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
@@ -162,6 +168,15 @@
     <ClCompile Include="app\infrastructure\readers\XlsxReader.cpp">
       <Filter>소스 파일\app\infrastructure\readers</Filter>
     </ClCompile>
+    <ClCompile Include="app\infrastructure\history\ExecutionHistoryStore.cpp">
+      <Filter>소스 파일\app\infrastructure\history</Filter>
+    </ClCompile>
+    <ClCompile Include="app\application\services\HistoryService.cpp">
+      <Filter>소스 파일\app\application\services</Filter>
+    </ClCompile>
+    <ClCompile Include="app\infrastructure\bridge\HistoryBridgeHandler.cpp">
+      <Filter>소스 파일\app\infrastructure\bridge</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -229,6 +244,18 @@
     </ClInclude>
     <ClInclude Include="app\infrastructure\readers\XlsxReader.h">
       <Filter>헤더 파일\app\infrastructure\readers</Filter>
+    </ClInclude>
+    <ClInclude Include="app\domain\model\ExecutionRecord.h">
+      <Filter>헤더 파일\app\domain\model</Filter>
+    </ClInclude>
+    <ClInclude Include="app\infrastructure\history\ExecutionHistoryStore.h">
+      <Filter>헤더 파일\app\infrastructure\history</Filter>
+    </ClInclude>
+    <ClInclude Include="app\application\services\HistoryService.h">
+      <Filter>헤더 파일\app\application\services</Filter>
+    </ClInclude>
+    <ClInclude Include="app\infrastructure\bridge\HistoryBridgeHandler.h">
+      <Filter>헤더 파일\app\infrastructure\bridge</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

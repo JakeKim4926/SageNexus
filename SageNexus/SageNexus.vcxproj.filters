@@ -37,6 +37,9 @@
     <Filter Include="소스 파일\app\infrastructure\bridge">
       <UniqueIdentifier>{C0000001-0004-0004-0000-000000000001}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\app\infrastructure\writers">
+      <UniqueIdentifier>{C0000001-0004-0005-0000-000000000001}</UniqueIdentifier>
+    </Filter>
     <Filter Include="헤더 파일">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
     </Filter>
@@ -75,6 +78,9 @@
     </Filter>
     <Filter Include="헤더 파일\app\infrastructure\bridge">
       <UniqueIdentifier>{C0000002-0004-0004-0000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\app\infrastructure\writers">
+      <UniqueIdentifier>{C0000002-0004-0005-0000-000000000001}</UniqueIdentifier>
     </Filter>
     <Filter Include="리소스 파일">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
@@ -144,6 +150,15 @@
     <ClCompile Include="app\infrastructure\bridge\TransformBridgeHandler.cpp">
       <Filter>소스 파일\app\infrastructure\bridge</Filter>
     </ClCompile>
+    <ClCompile Include="app\infrastructure\writers\CsvWriter.cpp">
+      <Filter>소스 파일\app\infrastructure\writers</Filter>
+    </ClCompile>
+    <ClCompile Include="app\application\services\ExportService.cpp">
+      <Filter>소스 파일\app\application\services</Filter>
+    </ClCompile>
+    <ClCompile Include="app\infrastructure\bridge\ExportBridgeHandler.cpp">
+      <Filter>소스 파일\app\infrastructure\bridge</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -198,6 +213,15 @@
       <Filter>헤더 파일\app\application\services</Filter>
     </ClInclude>
     <ClInclude Include="app\infrastructure\bridge\TransformBridgeHandler.h">
+      <Filter>헤더 파일\app\infrastructure\bridge</Filter>
+    </ClInclude>
+    <ClInclude Include="app\infrastructure\writers\CsvWriter.h">
+      <Filter>헤더 파일\app\infrastructure\writers</Filter>
+    </ClInclude>
+    <ClInclude Include="app\application\services\ExportService.h">
+      <Filter>헤더 파일\app\application\services</Filter>
+    </ClInclude>
+    <ClInclude Include="app\infrastructure\bridge\ExportBridgeHandler.h">
       <Filter>헤더 파일\app\infrastructure\bridge</Filter>
     </ClInclude>
   </ItemGroup>

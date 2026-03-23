@@ -37,6 +37,9 @@ public:
     const DataColumn& GetColumn(int nIndex) const;
     const DataRow&    GetRow(int nIndex) const;
 
+    DataColumn& GetColumnMutable(int nIndex);
+    DataRow&    GetRowMutable(int nIndex);
+
     // 컬럼 인덱스 조회 (-1: 없음)
     int FindColumnIndex(const CString& strInternalName) const;
 

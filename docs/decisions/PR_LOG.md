@@ -34,6 +34,12 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 - **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/5
 - **결과**: merged
 
+## [2026-03-24] feature/xlsx-date-format-dashboard
+- **목적**: Phase 2 Step 7 — XLSX 날짜 포맷 정규화 및 Dashboard 통계 표시
+- **변경 내용**: XlsxReader에 styles.xml 파싱·IsDateNumFmtId·SerialToDate 추가(Excel serial → YYYY-MM-DD), Dashboard stat cards를 getHistory로 실제 이력 통계 표시
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/12
+- **결과**: merged ✅
+
 ## [2026-03-24] feature/execution-history
 - **목적**: Phase 2 Step 6 — 실행 이력 기록 및 History 페이지 구현
 - **변경 내용**: ExecutionRecord 도메인 모델, ExecutionHistoryStore(JSON 파일 저장/로드), HistoryService, HistoryBridgeHandler(history.query::getHistory), Import/Transform/Export 핸들러 이력 기록 추가, History 페이지 UI(4상태)

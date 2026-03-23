@@ -36,7 +36,7 @@ CString ImportBridgeHandler::HandleOpenFileDialog(const BridgeMessage& msg, HWND
     ofn.hwndOwner     = hParentWnd;
     ofn.lpstrFile     = szFile;
     ofn.nMaxFile      = MAX_PATH;
-    ofn.lpstrFilter   = L"CSV 파일\0*.csv\0모든 파일\0*.*\0";
+    ofn.lpstrFilter   = L"지원 파일\0*.csv;*.xlsx\0CSV 파일\0*.csv\0Excel 파일\0*.xlsx\0모든 파일\0*.*\0";
     ofn.lpstrTitle    = L"파일 선택";
     ofn.Flags         = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 

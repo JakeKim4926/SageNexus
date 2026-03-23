@@ -196,6 +196,7 @@
     <ClCompile Include="app\infrastructure\writers\CsvWriter.cpp" />
     <ClCompile Include="app\application\services\ExportService.cpp" />
     <ClCompile Include="app\infrastructure\bridge\ExportBridgeHandler.cpp" />
+    <ClCompile Include="app\infrastructure\readers\XlsxReader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -219,6 +220,7 @@
     <ClInclude Include="app\infrastructure\writers\CsvWriter.h" />
     <ClInclude Include="app\application\services\ExportService.h" />
     <ClInclude Include="app\infrastructure\bridge\ExportBridgeHandler.h" />
+    <ClInclude Include="app\infrastructure\readers\XlsxReader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

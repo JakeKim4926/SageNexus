@@ -159,6 +159,9 @@
     <ClCompile Include="app\infrastructure\bridge\ExportBridgeHandler.cpp">
       <Filter>소스 파일\app\infrastructure\bridge</Filter>
     </ClCompile>
+    <ClCompile Include="app\infrastructure\readers\XlsxReader.cpp">
+      <Filter>소스 파일\app\infrastructure\readers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -223,6 +226,9 @@
     </ClInclude>
     <ClInclude Include="app\infrastructure\bridge\ExportBridgeHandler.h">
       <Filter>헤더 파일\app\infrastructure\bridge</Filter>
+    </ClInclude>
+    <ClInclude Include="app\infrastructure\readers\XlsxReader.h">
+      <Filter>헤더 파일\app\infrastructure\readers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -37,8 +37,8 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 ## [2026-03-23] feature/csv-export
 - **목적**: Phase 2 Step 4 — CSV Export (저장 다이얼로그 + CsvWriter + Export 페이지)
 - **변경 내용**: CsvWriter(UTF-8 BOM·RFC4180 쿼팅), ExportService, ExportBridgeHandler(artifact.export::exportCsv), MainWindow 핸들러 등록, Export 페이지 UI(요약 카드·완료/에러 상태)
-- **PR 링크**: (pending)
-- **결과**: pending
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/9
+- **결과**: merged
 
 ## [2026-03-23] feature/transform-basic
 - **목적**: Phase 2 Step 3 — 기본 변환 기능 (trim / renameColumn / replaceValue)

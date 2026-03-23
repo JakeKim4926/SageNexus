@@ -1,7 +1,9 @@
 #pragma once
 #include "pch.h"
 #include "WebViewHost.h"
+#include "app/domain/model/DataTable.h"
 #include "app/infrastructure/bridge/ImportBridgeHandler.h"
+#include "app/infrastructure/bridge/TransformBridgeHandler.h"
 
 class MainWindow
 {
@@ -24,7 +26,9 @@ private:
     void NavigateToShell();
     void RegisterBridgeHandlers();
 
-    HWND                 m_hWnd;
-    WebViewHost*         m_pWebViewHost;
-    ImportBridgeHandler  m_importBridgeHandler;
+    HWND                    m_hWnd;
+    WebViewHost*            m_pWebViewHost;
+    DataTable               m_currentTable;
+    ImportBridgeHandler     m_importBridgeHandler;
+    TransformBridgeHandler  m_transformBridgeHandler;
 };

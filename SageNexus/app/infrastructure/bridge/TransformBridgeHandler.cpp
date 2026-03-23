@@ -1,0 +1,327 @@
+#include "pch.h"
+#include "app/infrastructure/bridge/TransformBridgeHandler.h"
+#include "app/application/services/TransformService.h"
+#include "Define.h"
+
+TransformBridgeHandler::TransformBridgeHandler()
+    : m_pSharedTable(nullptr)
+{
+}
+
+void TransformBridgeHandler::RegisterHandlers(BridgeDispatcher& dispatcher, DataTable* pSharedTable)
+{
+    m_pSharedTable = pSharedTable;
+
+    dispatcher.RegisterHandler(L"data.transform", L"applySteps",
+        [this](const BridgeMessage& msg) -> CString
+        {
+            return HandleApplySteps(msg);
+        });
+}
+
+CString TransformBridgeHandler::HandleApplySteps(const BridgeMessage& msg)
+{
+    if (!m_pSharedTable || m_pSharedTable->IsEmpty())
+    {
+        return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+               L"\",\"success\":false,\"payload\":null,"
+               L"\"error\":{\"code\":\"SNX_TF_001\",\"message\":\"변환할 데이터가 없습니다.\"}}";
+    }
+
+    std::vector<TransformStep> arrSteps;
+    CString strParseError;
+    if (!ParseSteps(msg.m_strPayloadJson, arrSteps, strParseError))
+    {
+        return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+               L"\",\"success\":false,\"payload\":null,"
+               L"\"error\":{\"code\":\"SNX_TF_002\",\"message\":\"" +
+               EscapeJsonString(strParseError) + L"\"}}";
+    }
+
+    if (arrSteps.empty())
+    {
+        return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+               L"\",\"success\":false,\"payload\":null,"
+               L"\"error\":{\"code\":\"SNX_TF_003\",\"message\":\"변환 단계가 없습니다.\"}}";
+    }
+
+    TransformService service;
+    CString strError;
+    if (!service.ApplySteps(*m_pSharedTable, arrSteps, strError))
+    {
+        return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+               L"\",\"success\":false,\"payload\":null,"
+               L"\"error\":{\"code\":\"SNX_TF_004\",\"message\":\"" +
+               EscapeJsonString(strError) + L"\"}}";
+    }
+
+    CString strTableJson = SerializeTableToJson(*m_pSharedTable);
+    return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+           L"\",\"success\":true,\"payload\":" + strTableJson + L"}";
+}
+
+BOOL TransformBridgeHandler::ParseSteps(const CString& strPayloadJson, std::vector<TransformStep>& arrSteps, CString& strError)
+{
+    CString strArrayContent = ExtractArrayContent(strPayloadJson, L"steps");
+    if (strArrayContent.IsEmpty())
+    {
+        strError = L"steps 배열을 찾을 수 없습니다.";
+        return FALSE;
+    }
+
+    std::vector<CString> arrObjects = SplitJsonObjects(strArrayContent);
+    for (const CString& strObj : arrObjects)
+    {
+        if (strObj.IsEmpty())
+            continue;
+
+        TransformStep step;
+        step.m_strType    = UnescapeJsonString(ExtractField(strObj, L"type"));
+        step.m_strColumn  = UnescapeJsonString(ExtractField(strObj, L"column"));
+        step.m_strParam1  = UnescapeJsonString(ExtractField(strObj, L"param1"));
+        step.m_strParam2  = UnescapeJsonString(ExtractField(strObj, L"param2"));
+
+        if (step.m_strType.IsEmpty())
+        {
+            strError = L"변환 단계에 type이 없습니다.";
+            return FALSE;
+        }
+
+        arrSteps.push_back(step);
+    }
+    return TRUE;
+}
+
+CString TransformBridgeHandler::ExtractArrayContent(const CString& strJson, const CString& strKey) const
+{
+    CString strSearch = L"\"" + strKey + L"\"";
+    int nPos = strJson.Find(strSearch);
+    if (nPos < 0)
+        return L"";
+
+    int nColon = strJson.Find(L':', nPos + strSearch.GetLength());
+    if (nColon < 0)
+        return L"";
+
+    int nStart = nColon + 1;
+    while (nStart < strJson.GetLength() && strJson[nStart] == L' ')
+        ++nStart;
+
+    if (nStart >= strJson.GetLength() || strJson[nStart] != L'[')
+        return L"";
+
+    int nDepth = 0;
+    int nEnd = nStart;
+    while (nEnd < strJson.GetLength())
+    {
+        if (strJson[nEnd] == L'[')
+            ++nDepth;
+        else if (strJson[nEnd] == L']')
+        {
+            --nDepth;
+            if (nDepth == 0)
+                break;
+        }
+        else if (strJson[nEnd] == L'"')
+        {
+            ++nEnd;
+            while (nEnd < strJson.GetLength())
+            {
+                if (strJson[nEnd] == L'\\')
+                    ++nEnd;
+                else if (strJson[nEnd] == L'"')
+                    break;
+                ++nEnd;
+            }
+        }
+        ++nEnd;
+    }
+
+    return strJson.Mid(nStart + 1, nEnd - nStart - 1);
+}
+
+std::vector<CString> TransformBridgeHandler::SplitJsonObjects(const CString& strArrayContent) const
+{
+    std::vector<CString> arrResult;
+    int nDepth = 0;
+    int nStart = -1;
+
+    for (int i = 0; i < strArrayContent.GetLength(); ++i)
+    {
+        wchar_t ch = strArrayContent[i];
+
+        if (ch == L'"')
+        {
+            ++i;
+            while (i < strArrayContent.GetLength())
+            {
+                if (strArrayContent[i] == L'\\')
+                    ++i;
+                else if (strArrayContent[i] == L'"')
+                    break;
+                ++i;
+            }
+            continue;
+        }
+
+        if (ch == L'{')
+        {
+            if (nDepth == 0)
+                nStart = i;
+            ++nDepth;
+        }
+        else if (ch == L'}')
+        {
+            --nDepth;
+            if (nDepth == 0 && nStart >= 0)
+            {
+                arrResult.push_back(strArrayContent.Mid(nStart, i - nStart + 1));
+                nStart = -1;
+            }
+        }
+    }
+    return arrResult;
+}
+
+CString TransformBridgeHandler::ExtractField(const CString& strJson, const CString& strKey) const
+{
+    CString strSearch = L"\"" + strKey + L"\"";
+    int nPos = strJson.Find(strSearch);
+    if (nPos < 0)
+        return L"";
+
+    int nColon = strJson.Find(L':', nPos + strSearch.GetLength());
+    if (nColon < 0)
+        return L"";
+
+    int nValueStart = nColon + 1;
+    while (nValueStart < strJson.GetLength() && strJson[nValueStart] == L' ')
+        ++nValueStart;
+
+    if (nValueStart >= strJson.GetLength() || strJson[nValueStart] != L'"')
+        return L"";
+
+    int nEnd = nValueStart + 1;
+    while (nEnd < strJson.GetLength())
+    {
+        if (strJson[nEnd] == L'\\')
+        {
+            nEnd += 2;
+            continue;
+        }
+        if (strJson[nEnd] == L'"')
+            break;
+        ++nEnd;
+    }
+
+    if (nEnd >= strJson.GetLength())
+        return L"";
+
+    return strJson.Mid(nValueStart + 1, nEnd - nValueStart - 1);
+}
+
+CString TransformBridgeHandler::UnescapeJsonString(const CString& str) const
+{
+    CString strResult;
+    for (int i = 0; i < str.GetLength(); ++i)
+    {
+        if (str[i] == L'\\' && i + 1 < str.GetLength())
+        {
+            ++i;
+            switch (str[i])
+            {
+            case L'"':  strResult += L'"';  break;
+            case L'\\': strResult += L'\\'; break;
+            case L'/':  strResult += L'/';  break;
+            case L'n':  strResult += L'\n'; break;
+            case L'r':  strResult += L'\r'; break;
+            case L't':  strResult += L'\t'; break;
+            default:    strResult += str[i]; break;
+            }
+        }
+        else
+        {
+            strResult += str[i];
+        }
+    }
+    return strResult;
+}
+
+CString TransformBridgeHandler::SerializeTableToJson(const DataTable& table) const
+{
+    std::wstring json;
+    json.reserve(64 * 1024);
+    json += L"{";
+
+    json += L"\"sourceName\":\"";
+    json += (LPCWSTR)EscapeJsonString(table.GetSourceName());
+    json += L"\",";
+
+    wchar_t buf[32];
+    swprintf_s(buf, 32, L"%d", table.GetRowCount());
+    json += L"\"rowCount\":";
+    json += buf;
+    json += L",";
+
+    swprintf_s(buf, 32, L"%d", table.GetColumnCount());
+    json += L"\"columnCount\":";
+    json += buf;
+    json += L",";
+
+    json += L"\"columns\":[";
+    for (int i = 0; i < table.GetColumnCount(); ++i)
+    {
+        if (i > 0) json += L",";
+        const DataColumn& col = table.GetColumn(i);
+        json += L"{\"internalName\":\"";
+        json += (LPCWSTR)EscapeJsonString(col.m_strInternalName);
+        json += L"\",\"displayName\":\"";
+        CString strDisplay = col.m_strDisplayNameKo.IsEmpty() ? col.m_strInternalName : col.m_strDisplayNameKo;
+        json += (LPCWSTR)EscapeJsonString(strDisplay);
+        json += L"\"}";
+    }
+    json += L"],";
+
+    int nMaxRows = table.GetRowCount();
+    if (nMaxRows > CSV_MAX_PREVIEW_ROWS)
+        nMaxRows = CSV_MAX_PREVIEW_ROWS;
+
+    json += L"\"rows\":[";
+    for (int i = 0; i < nMaxRows; ++i)
+    {
+        if (i > 0) json += L",";
+        const DataRow& row = table.GetRow(i);
+        json += L"[";
+        for (int j = 0; j < (int)row.m_arrCells.size(); ++j)
+        {
+            if (j > 0) json += L",";
+            json += L"\"";
+            json += (LPCWSTR)EscapeJsonString(row.m_arrCells[j]);
+            json += L"\"";
+        }
+        json += L"]";
+    }
+    json += L"]";
+
+    json += L"}";
+    return CString(json.c_str());
+}
+
+CString TransformBridgeHandler::EscapeJsonString(const CString& str) const
+{
+    CString strResult;
+    for (int i = 0; i < str.GetLength(); ++i)
+    {
+        wchar_t ch = str[i];
+        switch (ch)
+        {
+        case L'"':  strResult += L"\\\""; break;
+        case L'\\': strResult += L"\\\\"; break;
+        case L'\n': strResult += L"\\n";  break;
+        case L'\r': strResult += L"\\r";  break;
+        case L'\t': strResult += L"\\t";  break;
+        default:    strResult += ch;      break;
+        }
+    }
+    return strResult;
+}

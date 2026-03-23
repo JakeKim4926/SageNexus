@@ -191,6 +191,8 @@
     <ClCompile Include="app\infrastructure\readers\CsvReader.cpp" />
     <ClCompile Include="app\application\services\ImportService.cpp" />
     <ClCompile Include="app\infrastructure\bridge\ImportBridgeHandler.cpp" />
+    <ClCompile Include="app\application\services\TransformService.cpp" />
+    <ClCompile Include="app\infrastructure\bridge\TransformBridgeHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -208,6 +210,9 @@
     <ClInclude Include="app\domain\interfaces\IDataReader.h" />
     <ClInclude Include="app\application\services\ImportService.h" />
     <ClInclude Include="app\infrastructure\bridge\ImportBridgeHandler.h" />
+    <ClInclude Include="app\domain\model\TransformStep.h" />
+    <ClInclude Include="app\application\services\TransformService.h" />
+    <ClInclude Include="app\infrastructure\bridge\TransformBridgeHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

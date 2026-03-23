@@ -51,6 +51,16 @@ const DataRow& DataTable::GetRow(int nIndex) const
     return m_arrRows[nIndex];
 }
 
+DataColumn& DataTable::GetColumnMutable(int nIndex)
+{
+    return m_arrColumns[nIndex];
+}
+
+DataRow& DataTable::GetRowMutable(int nIndex)
+{
+    return m_arrRows[nIndex];
+}
+
 int DataTable::FindColumnIndex(const CString& strInternalName) const
 {
     for (int i = 0; i < static_cast<int>(m_arrColumns.size()); ++i)

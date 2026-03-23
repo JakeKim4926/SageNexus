@@ -5,12 +5,15 @@
 #include <commdlg.h>
 
 ImportBridgeHandler::ImportBridgeHandler()
-    : m_nTableIdCounter(0)
+    : m_pSharedTable(nullptr)
+    , m_nTableIdCounter(0)
 {
 }
 
-void ImportBridgeHandler::RegisterHandlers(BridgeDispatcher& dispatcher, HWND hParentWnd)
+void ImportBridgeHandler::RegisterHandlers(BridgeDispatcher& dispatcher, HWND hParentWnd, DataTable* pSharedTable)
 {
+    m_pSharedTable = pSharedTable;
+
     dispatcher.RegisterHandler(L"data.import", L"openFileDialog",
         [this, hParentWnd](const BridgeMessage& msg) -> CString
         {
@@ -74,9 +77,9 @@ CString ImportBridgeHandler::HandleLoadFile(const BridgeMessage& msg)
                EscapeJsonString(strError) + L"\"}}";
     }
 
-    m_currentTable = table;
+    *m_pSharedTable = table;
 
-    CString strTableJson = SerializeTableToJson(m_currentTable, strTableId);
+    CString strTableJson = SerializeTableToJson(*m_pSharedTable, strTableId);
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
            L"\",\"success\":true,\"payload\":" + strTableJson + L"}";
 }

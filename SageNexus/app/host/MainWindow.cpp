@@ -151,7 +151,9 @@ void MainWindow::OnWebViewReady(BOOL bSuccess)
 
 void MainWindow::RegisterBridgeHandlers()
 {
-    m_importBridgeHandler.RegisterHandlers(m_pWebViewHost->GetDispatcher(), m_hWnd);
+    BridgeDispatcher& dispatcher = m_pWebViewHost->GetDispatcher();
+    m_importBridgeHandler.RegisterHandlers(dispatcher, m_hWnd, &m_currentTable);
+    m_transformBridgeHandler.RegisterHandlers(dispatcher, &m_currentTable);
 }
 
 void MainWindow::NavigateToShell()

@@ -34,6 +34,12 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 - **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/5
 - **결과**: merged
 
+## [2026-03-23] feature/transform-basic
+- **목적**: Phase 2 Step 3 — 기본 변환 기능 (trim / renameColumn / replaceValue)
+- **변경 내용**: TransformStep 도메인 모델, TransformService(3개 변환 규칙), TransformBridgeHandler(data.transform::applySteps), DataTable 뮤터블 접근자 추가, ImportBridgeHandler 공유 DataTable*로 전환, MainWindow DataTable 소유, Transform 페이지 UI(단계 빌더 + 결과 테이블)
+- **PR 링크**: (pending)
+- **결과**: pending
+
 ## [2026-03-22] refactor/project-folder-structure
 - **목적**: coding-rules 표준 폴더 구조로 전체 소스 파일 재배치 및 VS Solution Explorer 필터 재구성
 - **변경 내용**: App/Host/Domain/Infrastructure/Web → app/host, app/application, app/domain/model, app/infrastructure/logging, app/infrastructure/config, webui 구조로 이동. vcxproj, vcxproj.filters, Define.h, index.html 업데이트

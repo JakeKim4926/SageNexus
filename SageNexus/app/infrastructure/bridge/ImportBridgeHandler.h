@@ -8,7 +8,7 @@ class ImportBridgeHandler
 public:
     ImportBridgeHandler();
 
-    void RegisterHandlers(BridgeDispatcher& dispatcher, HWND hParentWnd);
+    void RegisterHandlers(BridgeDispatcher& dispatcher, HWND hParentWnd, DataTable* pSharedTable);
 
 private:
     CString HandleOpenFileDialog(const BridgeMessage& msg, HWND hParentWnd);
@@ -19,6 +19,6 @@ private:
     CString UnescapeJsonString(const CString& str) const;
     CString ExtractPayloadField(const CString& strPayloadJson, const CString& strKey) const;
 
-    DataTable m_currentTable;
-    int       m_nTableIdCounter;
+    DataTable* m_pSharedTable;
+    int        m_nTableIdCounter;
 };

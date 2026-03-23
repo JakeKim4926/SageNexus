@@ -20,7 +20,7 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 - **목적**: Phase 2 Step 2 — Import 브릿지 + Data Viewer MVP
 - **변경 내용**: ImportBridgeHandler(openFileDialog/loadFile), MainWindow 핸들러 등록, Data Viewer 페이지(4상태·테이블 렌더링), 버튼/테이블/툴바 CSS
 - **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/6
-- **결과**: pending
+- **결과**: merged
 
 ## [2026-03-23] feature/csv-reader
 - **목적**: Phase 2 Step 1 — CsvReader, ImportService, IDataReader 구현 및 앱 즉시 종료 버그 수정

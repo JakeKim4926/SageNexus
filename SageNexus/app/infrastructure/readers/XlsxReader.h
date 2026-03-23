@@ -11,7 +11,9 @@ public:
 private:
     BOOL ExtractZip(const CString& strZipPath, const CString& strDestDir, CString& strError) const;
     BOOL ParseSharedStrings(const CString& strPath, std::vector<CString>& arrStrings) const;
+    BOOL ParseStyles(const CString& strPath, std::vector<BOOL>& arrIsDateXf) const;
     BOOL ParseSheet(const CString& strPath, const std::vector<CString>& arrShared,
+                    const std::vector<BOOL>& arrIsDateXf,
                     DataTable& outTable, CString& strError) const;
     void CleanupDir(const CString& strDir) const;
 
@@ -24,5 +26,9 @@ private:
     CString              UnescapeXml(const CString& str) const;
     int                  ColRefToIndex(const CString& strCellRef) const;
     CString              GetCellValue(const CString& strCellXml,
-                                      const std::vector<CString>& arrShared) const;
+                                      const std::vector<CString>& arrShared,
+                                      BOOL bIsDateFmt) const;
+    BOOL                 IsDateNumFmtId(int nId) const;
+    BOOL                 IsDateFormatCode(const CString& strCode) const;
+    CString              SerialToDate(int nSerial) const;
 };

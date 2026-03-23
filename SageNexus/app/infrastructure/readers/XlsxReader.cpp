@@ -34,6 +34,11 @@ BOOL XlsxReader::Read(const CString& strFilePath, DataTable& outTable, CString& 
     if (GetFileAttributesW(strSS) != INVALID_FILE_ATTRIBUTES)
         ParseSharedStrings(strSS, arrShared);
 
+    std::vector<BOOL> arrIsDateXf;
+    CString strStyles = strExtract + L"\\xl\\styles.xml";
+    if (GetFileAttributesW(strStyles) != INVALID_FILE_ATTRIBUTES)
+        ParseStyles(strStyles, arrIsDateXf);
+
     CString strSheet = strExtract + L"\\xl\\worksheets\\sheet1.xml";
     if (GetFileAttributesW(strSheet) == INVALID_FILE_ATTRIBUTES)
     {
@@ -42,7 +47,7 @@ BOOL XlsxReader::Read(const CString& strFilePath, DataTable& outTable, CString& 
         return FALSE;
     }
 
-    if (!ParseSheet(strSheet, arrShared, outTable, strError))
+    if (!ParseSheet(strSheet, arrShared, arrIsDateXf, outTable, strError))
     {
         CleanupDir(strTempDir);
         return FALSE;
@@ -127,6 +132,7 @@ BOOL XlsxReader::ParseSharedStrings(const CString& strPath, std::vector<CString>
 }
 
 BOOL XlsxReader::ParseSheet(const CString& strPath, const std::vector<CString>& arrShared,
+                             const std::vector<BOOL>& arrIsDateXf,
                              DataTable& outTable, CString& strError) const
 {
     CString strXml = ReadXmlFile(strPath);
@@ -159,7 +165,7 @@ BOOL XlsxReader::ParseSheet(const CString& strPath, const std::vector<CString>& 
     {
         int nIdx = ColRefToIndex(GetAttribute(strCell, L"r"));
         if (nIdx >= 0 && nIdx < nColCount)
-            arrHeaderValues[nIdx] = UnescapeXml(GetCellValue(strCell, arrShared));
+            arrHeaderValues[nIdx] = UnescapeXml(GetCellValue(strCell, arrShared, FALSE));
     }
 
     for (int i = 0; i < nColCount; ++i)
@@ -187,7 +193,13 @@ BOOL XlsxReader::ParseSheet(const CString& strPath, const std::vector<CString>& 
         {
             int nIdx = ColRefToIndex(GetAttribute(strCell, L"r"));
             if (nIdx >= 0 && nIdx < nColCount)
-                row.m_arrCells[nIdx] = UnescapeXml(GetCellValue(strCell, arrShared));
+            {
+                int nStyleIdx = _wtoi(GetAttribute(strCell, L"s"));
+                BOOL bIsDate  = (nStyleIdx >= 0 && nStyleIdx < (int)arrIsDateXf.size())
+                                ? arrIsDateXf[nStyleIdx]
+                                : FALSE;
+                row.m_arrCells[nIdx] = UnescapeXml(GetCellValue(strCell, arrShared, bIsDate));
+            }
         }
 
         outTable.AddRow(row);
@@ -417,7 +429,8 @@ int XlsxReader::ColRefToIndex(const CString& strCellRef) const
     return nResult - 1;
 }
 
-CString XlsxReader::GetCellValue(const CString& strCellXml, const std::vector<CString>& arrShared) const
+CString XlsxReader::GetCellValue(const CString& strCellXml, const std::vector<CString>& arrShared,
+                                  BOOL bIsDateFmt) const
 {
     CString strType = GetAttribute(strCellXml, L"t");
 
@@ -443,5 +456,119 @@ CString XlsxReader::GetCellValue(const CString& strCellXml, const std::vector<CS
     if (strType == L"e")
         return GetTagContent(strCellXml, L"v");
 
-    return GetTagContent(strCellXml, L"v");
+    CString strV = GetTagContent(strCellXml, L"v");
+    if (bIsDateFmt && !strV.IsEmpty() && strType.IsEmpty())
+    {
+        int nSerial = _wtoi(strV);
+        if (nSerial > 0)
+            return SerialToDate(nSerial);
+    }
+    return strV;
+}
+
+BOOL XlsxReader::IsDateNumFmtId(int nId) const
+{
+    return (nId >= 14 && nId <= 22) ? TRUE : FALSE;
+}
+
+BOOL XlsxReader::IsDateFormatCode(const CString& strCode) const
+{
+    CString strLower = strCode;
+    strLower.MakeLower();
+    return (strLower.Find(L'y') >= 0) ? TRUE : FALSE;
+}
+
+BOOL XlsxReader::ParseStyles(const CString& strPath, std::vector<BOOL>& arrIsDateXf) const
+{
+    CString strXml = ReadXmlFile(strPath);
+    if (strXml.IsEmpty())
+        return TRUE;
+
+    std::vector<int>     arrCustomDateIds;
+    CString strNumFmtsOpen  = L"<numFmts";
+    CString strNumFmtsClose = L"</numFmts>";
+    int nNFStart = strXml.Find(strNumFmtsOpen);
+    int nNFEnd   = strXml.Find(strNumFmtsClose);
+    if (nNFStart >= 0 && nNFEnd > nNFStart)
+    {
+        CString strNumFmts = strXml.Mid(nNFStart, nNFEnd - nNFStart);
+        int nPos = 0;
+        while (true)
+        {
+            int nFmt = strNumFmts.Find(L"<numFmt ", nPos);
+            if (nFmt < 0) break;
+            int nFmtEnd = strNumFmts.Find(L">", nFmt);
+            if (nFmtEnd < 0) break;
+
+            CString strFmtEl = strNumFmts.Mid(nFmt, nFmtEnd - nFmt + 1);
+            int nId = _wtoi(GetAttribute(strFmtEl, L"numFmtId"));
+            CString strCode = GetAttribute(strFmtEl, L"formatCode");
+
+            if (nId >= 164 && IsDateFormatCode(strCode))
+                arrCustomDateIds.push_back(nId);
+
+            nPos = nFmtEnd + 1;
+        }
+    }
+
+    CString strXfsOpen  = L"<cellXfs";
+    CString strXfsClose = L"</cellXfs>";
+    int nXFStart = strXml.Find(strXfsOpen);
+    int nXFEnd   = strXml.Find(strXfsClose);
+    if (nXFStart < 0 || nXFEnd < 0)
+        return TRUE;
+
+    CString strXfs = strXml.Mid(nXFStart, nXFEnd - nXFStart);
+    int nPos = 0;
+    while (true)
+    {
+        int nXf = strXfs.Find(L"<xf ", nPos);
+        if (nXf < 0) break;
+
+        int nXfEnd = strXfs.Find(L">", nXf);
+        if (nXfEnd < 0) break;
+
+        CString strXfEl = strXfs.Mid(nXf, nXfEnd - nXf + 1);
+        int nFmtId = _wtoi(GetAttribute(strXfEl, L"numFmtId"));
+
+        BOOL bIsDate = IsDateNumFmtId(nFmtId);
+        if (!bIsDate)
+        {
+            for (int nCustomId : arrCustomDateIds)
+            {
+                if (nFmtId == nCustomId)
+                {
+                    bIsDate = TRUE;
+                    break;
+                }
+            }
+        }
+        arrIsDateXf.push_back(bIsDate);
+        nPos = nXfEnd + 1;
+    }
+    return TRUE;
+}
+
+CString XlsxReader::SerialToDate(int nSerial) const
+{
+    if (nSerial <= 0) return L"";
+
+    if (nSerial > 60) --nSerial;
+
+    int nJD = nSerial + 2415020;
+
+    int l = nJD + 68569;
+    int n = (4 * l) / 146097;
+    l = l - (146097 * n + 3) / 4;
+    int i = (4000 * (l + 1)) / 1461001;
+    l = l - (1461 * i) / 4 + 31;
+    int j = (80 * l) / 2447;
+    int nDay   = l - (2447 * j) / 80;
+    l = j / 11;
+    int nMonth = j + 2 - 12 * l;
+    int nYear  = 100 * (n - 49) + i + l;
+
+    CString strDate;
+    strDate.Format(L"%04d-%02d-%02d", nYear, nMonth, nDay);
+    return strDate;
 }

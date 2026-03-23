@@ -383,9 +383,51 @@
             const el = document.getElementById('status-profile');
             if (el) el.textContent = '프로필: ' + detail.profileName;
         }
+
+        loadDashboardStats();
     });
 
     setStatus('loading', '초기화 중');
+})();
+
+(function () {
+    function loadDashboardStats() {
+        bridgeClient.sendCommand('history.query', 'getHistory', {})
+            .then(function (result) {
+                var records = result.records || [];
+                if (records.length === 0) return;
+
+                var today = new Date().toISOString().slice(0, 10);
+                var todayCount = 0;
+                var successCount = 0;
+                records.forEach(function (rec) {
+                    if (rec.success) successCount++;
+                    if (rec.timestamp && rec.timestamp.slice(0, 10) === today) todayCount++;
+                });
+
+                var successRate = Math.round((successCount / records.length) * 100);
+                var lastRun = records[records.length - 1].timestamp || '—';
+
+                document.getElementById('stat-total-runs').textContent  = records.length;
+                document.getElementById('stat-today-runs').textContent  = todayCount;
+                document.getElementById('stat-success-rate').textContent = successRate + '%';
+                document.getElementById('stat-last-run').textContent    = lastRun;
+
+                var emptyEl = document.getElementById('dashboard-empty');
+                if (emptyEl) emptyEl.classList.add('hidden');
+            })
+            .catch(function () {});
+    }
+
+    window.loadDashboardStats = loadDashboardStats;
+
+    document.querySelectorAll('.nav-item[data-page]').forEach(function (el) {
+        el.addEventListener('click', function () {
+            if (el.dataset.page === 'dashboard') {
+                loadDashboardStats();
+            }
+        });
+    });
 })();
 
 (function () {

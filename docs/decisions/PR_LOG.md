@@ -10,29 +10,11 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 - **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/2
 - **결과**: merged
 
-## [2026-03-22] develop → main (Phase 1 완료)
-- **목적**: Phase 1 완료 시점 main 반영
-- **변경 내용**: PR #2 (phase1-shell), PR #3 (project-folder-structure) 포함
-- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/4
-- **결과**: merged
-
-## [2026-03-23] feature/ui-design-tokens
-- **목적**: sagenexus-ui 기준 디자인 토큰 교체 (웜 베이지/브라운 Light Mode)
-- **변경 내용**: styles.css 전체 토큰 교체, Pretendard 폰트 적용, 0.5px 보더, 10px 카드 라운딩
-- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/7
-- **결과**: merged
-
-## [2026-03-23] feature/data-viewer-mvp
-- **목적**: Phase 2 Step 2 — Import 브릿지 + Data Viewer MVP
-- **변경 내용**: ImportBridgeHandler(openFileDialog/loadFile), MainWindow 핸들러 등록, Data Viewer 페이지(4상태·테이블 렌더링), 버튼/테이블/툴바 CSS
-- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/6
-- **결과**: merged
-
-## [2026-03-23] feature/csv-reader
-- **목적**: Phase 2 Step 1 — CsvReader, ImportService, IDataReader 구현 및 앱 즉시 종료 버그 수정
-- **변경 내용**: IDataReader 인터페이스, CsvReader(UTF-8/ANSI 폴백·쿼트 처리), ImportService(확장자 기반 분기), main.cpp MainWindow::Create 호출 누락 버그 수정
-- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/5
-- **결과**: merged
+## [2026-03-24] develop → main (Phase 2 완료)
+- **목적**: Phase 2 완료 시점 main 반영
+- **변경 내용**: Step 1~7 포함 (CSV/XLSX 읽기, Data Viewer, Transform, CSV Export, 실행 이력, 날짜 포맷 정규화, Dashboard 통계)
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/13
+- **결과**: merged ✅
 
 ## [2026-03-24] feature/xlsx-date-format-dashboard
 - **목적**: Phase 2 Step 7 — XLSX 날짜 포맷 정규화 및 Dashboard 통계 표시
@@ -56,13 +38,37 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 - **목적**: Phase 2 Step 4 — CSV Export (저장 다이얼로그 + CsvWriter + Export 페이지)
 - **변경 내용**: CsvWriter(UTF-8 BOM·RFC4180 쿼팅), ExportService, ExportBridgeHandler(artifact.export::exportCsv), MainWindow 핸들러 등록, Export 페이지 UI(요약 카드·완료/에러 상태)
 - **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/9
-- **결과**: merged
+- **결과**: merged ✅
 
 ## [2026-03-23] feature/transform-basic
 - **목적**: Phase 2 Step 3 — 기본 변환 기능 (trim / renameColumn / replaceValue)
 - **변경 내용**: TransformStep 도메인 모델, TransformService(3개 변환 규칙), TransformBridgeHandler(data.transform::applySteps), DataTable 뮤터블 접근자 추가, ImportBridgeHandler 공유 DataTable*로 전환, MainWindow DataTable 소유, Transform 페이지 UI(단계 빌더 + 결과 테이블)
 - **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/8
-- **결과**: merged
+- **결과**: merged ✅
+
+## [2026-03-23] feature/ui-design-tokens
+- **목적**: sagenexus-ui 기준 디자인 토큰 교체 (웜 베이지/브라운 Light Mode)
+- **변경 내용**: styles.css 전체 토큰 교체, Pretendard 폰트 적용, 0.5px 보더, 10px 카드 라운딩
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/7
+- **결과**: merged ✅
+
+## [2026-03-23] feature/data-viewer-mvp
+- **목적**: Phase 2 Step 2 — Import 브릿지 + Data Viewer MVP
+- **변경 내용**: ImportBridgeHandler(openFileDialog/loadFile), MainWindow 핸들러 등록, Data Viewer 페이지(4상태·테이블 렌더링), 버튼/테이블/툴바 CSS
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/6
+- **결과**: merged ✅
+
+## [2026-03-23] feature/csv-reader
+- **목적**: Phase 2 Step 1 — CsvReader, ImportService, IDataReader 구현 및 앱 즉시 종료 버그 수정
+- **변경 내용**: IDataReader 인터페이스, CsvReader(UTF-8/ANSI 폴백·쿼트 처리), ImportService(확장자 기반 분기), main.cpp MainWindow::Create 호출 누락 버그 수정
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/5
+- **결과**: merged ✅
+
+## [2026-03-22] develop → main (Phase 1 완료)
+- **목적**: Phase 1 완료 시점 main 반영
+- **변경 내용**: PR #2 (phase1-shell), PR #3 (project-folder-structure) 포함
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/4
+- **결과**: merged ✅
 
 ## [2026-03-22] refactor/project-folder-structure
 - **목적**: coding-rules 표준 폴더 구조로 전체 소스 파일 재배치 및 VS Solution Explorer 필터 재구성

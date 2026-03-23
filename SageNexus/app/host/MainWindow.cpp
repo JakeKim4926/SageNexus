@@ -141,11 +141,17 @@ void MainWindow::OnWebViewReady(BOOL bSuccess)
 
     sageMgr.GetLogger().LogInfo(L"MainWindow: WebView2 ready, navigating to shell");
 
+    RegisterBridgeHandlers();
     NavigateToShell();
 
     RECT rcClient = {};
     GetClientRect(m_hWnd, &rcClient);
     m_pWebViewHost->Resize(rcClient.right, rcClient.bottom);
+}
+
+void MainWindow::RegisterBridgeHandlers()
+{
+    m_importBridgeHandler.RegisterHandlers(m_pWebViewHost->GetDispatcher(), m_hWnd);
 }
 
 void MainWindow::NavigateToShell()

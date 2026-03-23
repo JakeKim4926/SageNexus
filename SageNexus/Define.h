@@ -34,3 +34,8 @@ constexpr const wchar_t* LOG_DIR_NAME     = L"Logs";
 // Bridge
 // ============================================================
 constexpr int BRIDGE_REQUEST_TIMEOUT_MS = 30000;
+
+// ============================================================
+// Import
+// ============================================================
+constexpr int CSV_MAX_PREVIEW_ROWS = 1000;

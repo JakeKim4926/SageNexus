@@ -460,6 +460,7 @@ html, body {
 
 #page-data-viewer { overflow: hidden; }
 #page-transform   { overflow: auto; }
+#page-export      { overflow: auto; }
 
 /* ============================================================
    Transform Builder
@@ -538,4 +539,20 @@ html, body {
     gap: var(--sp2);
     flex-shrink: 0;
     margin-bottom: var(--sp3);
+}
+
+/* ============================================================
+   Export Panel
+   ============================================================ */
+.ex-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: var(--sp3);
+    margin-bottom: var(--sp5);
+}
+
+.ex-actions {
+    display: flex;
+    gap: var(--sp2);
+    margin-bottom: var(--sp4);
 }

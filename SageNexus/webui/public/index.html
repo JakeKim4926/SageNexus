@@ -204,16 +204,59 @@
                 </div>
             </div>
 
-            <!-- Export Page (Phase 2) -->
+            <!-- Export Page -->
             <div class="page" id="page-export">
                 <div class="page-header">
                     <div class="page-title">내보내기</div>
                     <div class="page-subtitle">처리된 데이터를 파일로 내보냅니다.</div>
                 </div>
-                <div class="empty-state">
+
+                <!-- no data -->
+                <div class="empty-state" id="ex-state-no-data">
                     <div class="empty-icon">↑</div>
                     <div class="empty-title">내보낼 데이터가 없습니다</div>
-                    <div class="empty-desc">Phase 2에서 구현 예정입니다.</div>
+                    <div class="empty-desc">데이터 뷰어에서 파일을 먼저 불러오세요.</div>
+                </div>
+
+                <!-- export panel -->
+                <div class="hidden" id="ex-panel">
+                    <div class="ex-summary">
+                        <div class="stat-card">
+                            <div class="stat-label">파일</div>
+                            <div class="stat-value" id="ex-summary-name" style="font-size:14px;">—</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">행</div>
+                            <div class="stat-value" id="ex-summary-rows">—</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">열</div>
+                            <div class="stat-value" id="ex-summary-cols">—</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">형식</div>
+                            <div class="stat-value" style="font-size:14px;">CSV (UTF-8 BOM)</div>
+                        </div>
+                    </div>
+
+                    <div class="ex-actions">
+                        <button class="btn btn-primary" id="ex-btn-export">CSV로 내보내기</button>
+                    </div>
+
+                    <div class="loading-state hidden" id="ex-state-loading">
+                        <div class="loading-spinner"></div>
+                        <div class="loading-text">내보내는 중...</div>
+                    </div>
+                    <div class="error-state hidden" id="ex-state-error">
+                        <div class="error-icon">⚠</div>
+                        <div class="error-title">내보내기에 실패했습니다</div>
+                        <div class="error-desc" id="ex-error-message"></div>
+                    </div>
+                    <div class="empty-state hidden" id="ex-state-done">
+                        <div class="empty-icon" style="color:var(--ok);opacity:1;">✓</div>
+                        <div class="empty-title" style="color:var(--ok);">내보내기 완료</div>
+                        <div class="empty-desc" id="ex-done-path"></div>
+                    </div>
                 </div>
             </div>
 
@@ -550,13 +593,55 @@
             });
     });
 
-    var _origNavigateTo = window._navigateTo;
     document.querySelectorAll('.nav-item[data-page]').forEach(function (el) {
         el.addEventListener('click', function () {
             if (el.dataset.page === 'transform') {
                 syncNoDataState();
             }
         });
+    });
+})();
+
+(function () {
+    function syncExportState() {
+        var hasData = !!(window._currentTableData && window._currentTableData.columns && window._currentTableData.columns.length > 0);
+        document.getElementById('ex-state-no-data').classList.toggle('hidden', hasData);
+        document.getElementById('ex-panel').classList.toggle('hidden', !hasData);
+        if (hasData) {
+            var td = window._currentTableData;
+            document.getElementById('ex-summary-name').textContent = td.sourceName || '—';
+            document.getElementById('ex-summary-rows').textContent = td.rowCount;
+            document.getElementById('ex-summary-cols').textContent = td.columnCount;
+        }
+        document.getElementById('ex-state-loading').classList.add('hidden');
+        document.getElementById('ex-state-error').classList.add('hidden');
+        document.getElementById('ex-state-done').classList.add('hidden');
+    }
+
+    document.querySelectorAll('.nav-item[data-page]').forEach(function (el) {
+        el.addEventListener('click', function () {
+            if (el.dataset.page === 'export') {
+                syncExportState();
+            }
+        });
+    });
+
+    document.getElementById('ex-btn-export').addEventListener('click', function () {
+        document.getElementById('ex-state-loading').classList.remove('hidden');
+        document.getElementById('ex-state-error').classList.add('hidden');
+        document.getElementById('ex-state-done').classList.add('hidden');
+
+        bridgeClient.sendCommand('artifact.export', 'exportCsv', {})
+            .then(function (result) {
+                document.getElementById('ex-state-loading').classList.add('hidden');
+                document.getElementById('ex-done-path').textContent = result.filePath || '';
+                document.getElementById('ex-state-done').classList.remove('hidden');
+            })
+            .catch(function (err) {
+                document.getElementById('ex-state-loading').classList.add('hidden');
+                document.getElementById('ex-error-message').textContent = err.message || '';
+                document.getElementById('ex-state-error').classList.remove('hidden');
+            });
     });
 })();
 </script>

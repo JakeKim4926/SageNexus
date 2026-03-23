@@ -4,6 +4,7 @@
 #include "app/domain/model/DataTable.h"
 #include "app/infrastructure/bridge/ImportBridgeHandler.h"
 #include "app/infrastructure/bridge/TransformBridgeHandler.h"
+#include "app/infrastructure/bridge/ExportBridgeHandler.h"
 
 class MainWindow
 {
@@ -31,4 +32,5 @@ private:
     DataTable               m_currentTable;
     ImportBridgeHandler     m_importBridgeHandler;
     TransformBridgeHandler  m_transformBridgeHandler;
+    ExportBridgeHandler     m_exportBridgeHandler;
 };

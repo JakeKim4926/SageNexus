@@ -165,6 +165,9 @@
     <ClCompile Include="app\infrastructure\writers\CsvWriter.cpp">
       <Filter>소스 파일\app\infrastructure\writers</Filter>
     </ClCompile>
+    <ClCompile Include="app\infrastructure\writers\XlsxWriter.cpp">
+      <Filter>소스 파일\app\infrastructure\writers</Filter>
+    </ClCompile>
     <ClCompile Include="app\application\services\ExportService.cpp">
       <Filter>소스 파일\app\application\services</Filter>
     </ClCompile>
@@ -246,6 +249,9 @@
       <Filter>헤더 파일\app\infrastructure\bridge</Filter>
     </ClInclude>
     <ClInclude Include="app\infrastructure\writers\CsvWriter.h">
+      <Filter>헤더 파일\app\infrastructure\writers</Filter>
+    </ClInclude>
+    <ClInclude Include="app\infrastructure\writers\XlsxWriter.h">
       <Filter>헤더 파일\app\infrastructure\writers</Filter>
     </ClInclude>
     <ClInclude Include="app\application\services\ExportService.h">

@@ -555,6 +555,22 @@ html, body {
     display: flex;
     gap: var(--sp2);
     margin-bottom: var(--sp4);
+    align-items: center;
+}
+
+.format-select {
+    padding: 8px 12px;
+    border: 0.5px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--text-primary);
+    font-size: var(--fs-sm);
+    cursor: pointer;
+    outline: none;
+}
+
+.format-select:focus {
+    border-color: var(--accent);
 }
 
 /* ============================================================

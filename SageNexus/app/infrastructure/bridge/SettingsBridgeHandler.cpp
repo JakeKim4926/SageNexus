@@ -89,8 +89,8 @@ CString SettingsBridgeHandler::HandleGetPlugins(const BridgeMessage& msg)
 
 CString SettingsBridgeHandler::HandleTogglePlugin(const BridgeMessage& msg)
 {
-    CString strPluginId = ExtractPayloadString(msg.m_strPayload, L"pluginId");
-    BOOL bEnabled       = ExtractPayloadBool(msg.m_strPayload, L"enabled");
+    CString strPluginId = ExtractPayloadString(msg.m_strPayloadJson, L"pluginId");
+    BOOL bEnabled       = ExtractPayloadBool(msg.m_strPayloadJson, L"enabled");
 
     if (strPluginId.IsEmpty())
     {

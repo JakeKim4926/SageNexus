@@ -4,6 +4,12 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 
 ---
 
+## [2026-03-26] feature/xlsx-export
+- **목적**: Phase 3 Step 4 — XLSX Export 구현
+- **변경 내용**: XlsxWriter(Office Open XML + PowerShell ZipFile::CreateFromDirectory), ExportService::ExportToXlsx(), ExportBridgeHandler exportXlsx action, Export 페이지 형식 선택 UI(CSV/XLSX), SettingsBridgeHandler m_strPayload 버그 수정
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/17
+- **결과**: merged ✅
+
 ## [2026-03-26] feature/plugin-menu-control
 - **목적**: Phase 3 Step 3 — 플러그인 활성화 제어 및 사이드바 동적 렌더링
 - **변경 내용**: getPlugins/togglePlugin 브릿지 커맨드 추가, 사이드바 메뉴 플러그인 활성화 여부 기반 동적 렌더링, Settings 플러그인 on/off 토글 UI 구현

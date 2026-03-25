@@ -30,6 +30,7 @@ private:
     SageApp& operator=(const SageApp&) = delete;
 
     BOOL InitializePaths();
+    void WriteDefaultProfileFile(const CString& strFilePath) const;
 
     HINSTANCE        m_hInstance;
     CString          m_strAppDir;

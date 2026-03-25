@@ -36,6 +36,11 @@ constexpr const wchar_t* LOG_DIR_NAME     = L"Logs";
 constexpr int BRIDGE_REQUEST_TIMEOUT_MS = 30000;
 
 // ============================================================
+// Profile
+// ============================================================
+constexpr const wchar_t* PROFILE_FILE_NAME = L"profile.json";
+
+// ============================================================
 // Import
 // ============================================================
 constexpr int CSV_MAX_PREVIEW_ROWS = 1000;

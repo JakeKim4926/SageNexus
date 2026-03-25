@@ -200,6 +200,7 @@
     <ClCompile Include="app\infrastructure\history\ExecutionHistoryStore.cpp" />
     <ClCompile Include="app\application\services\HistoryService.cpp" />
     <ClCompile Include="app\infrastructure\bridge\HistoryBridgeHandler.cpp" />
+    <ClCompile Include="app\infrastructure\bridge\SettingsBridgeHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -228,6 +229,7 @@
     <ClInclude Include="app\infrastructure\history\ExecutionHistoryStore.h" />
     <ClInclude Include="app\application\services\HistoryService.h" />
     <ClInclude Include="app\infrastructure\bridge\HistoryBridgeHandler.h" />
+    <ClInclude Include="app\infrastructure\bridge\SettingsBridgeHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

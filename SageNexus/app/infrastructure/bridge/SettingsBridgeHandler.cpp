@@ -13,6 +13,18 @@ void SettingsBridgeHandler::RegisterHandlers(BridgeDispatcher& dispatcher)
         {
             return HandleGetProfile(msg);
         });
+
+    dispatcher.RegisterHandler(L"settings.plugins", L"getPlugins",
+        [this](const BridgeMessage& msg) -> CString
+        {
+            return HandleGetPlugins(msg);
+        });
+
+    dispatcher.RegisterHandler(L"settings.plugins", L"togglePlugin",
+        [this](const BridgeMessage& msg) -> CString
+        {
+            return HandleTogglePlugin(msg);
+        });
 }
 
 CString SettingsBridgeHandler::HandleGetProfile(const BridgeMessage& msg)
@@ -47,4 +59,103 @@ CString SettingsBridgeHandler::HandleGetProfile(const BridgeMessage& msg)
 
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
            L"\",\"success\":true,\"payload\":" + strPayload + L"}";
+}
+
+CString SettingsBridgeHandler::HandleGetPlugins(const BridgeMessage& msg)
+{
+    const PluginManager& pm = sageMgr.GetPluginManager();
+    const std::vector<PluginEntry>& arrPlugins = pm.GetAllPlugins();
+    const SolutionProfile& profile = sageMgr.GetProfile();
+
+    CString strArray = L"[";
+    for (int i = 0; i < static_cast<int>(arrPlugins.size()); ++i)
+    {
+        if (i > 0)
+            strArray += L",";
+
+        BOOL bEnabled = profile.IsPluginEnabled(arrPlugins[i].m_strPluginId);
+        CString strEntry;
+        strEntry.Format(L"{\"pluginId\":\"%s\",\"pluginName\":\"%s\",\"enabled\":%s}",
+            (LPCWSTR)arrPlugins[i].m_strPluginId,
+            (LPCWSTR)arrPlugins[i].m_strPluginName,
+            bEnabled ? L"true" : L"false");
+        strArray += strEntry;
+    }
+    strArray += L"]";
+
+    return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+           L"\",\"success\":true,\"payload\":" + strArray + L"}";
+}
+
+CString SettingsBridgeHandler::HandleTogglePlugin(const BridgeMessage& msg)
+{
+    CString strPluginId = ExtractPayloadString(msg.m_strPayload, L"pluginId");
+    BOOL bEnabled       = ExtractPayloadBool(msg.m_strPayload, L"enabled");
+
+    if (strPluginId.IsEmpty())
+    {
+        return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+               L"\",\"success\":false,\"error\":{\"code\":\"INVALID_PAYLOAD\",\"message\":\"pluginId is required\"}}";
+    }
+
+    sageMgr.GetProfile().SetPluginEnabled(strPluginId, bEnabled);
+    sageMgr.SaveProfileFile();
+
+    CString strResult;
+    strResult.Format(L"{\"pluginId\":\"%s\",\"enabled\":%s}",
+        (LPCWSTR)strPluginId,
+        bEnabled ? L"true" : L"false");
+
+    return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+           L"\",\"success\":true,\"payload\":" + strResult + L"}";
+}
+
+CString SettingsBridgeHandler::ExtractPayloadString(const CString& strJson, const CString& strKey) const
+{
+    std::string json  = WideToUtf8(strJson);
+    std::string key   = WideToUtf8(strKey);
+    std::string token = "\"" + key + "\"";
+
+    size_t nKeyPos = json.find(token);
+    if (nKeyPos == std::string::npos)
+        return L"";
+
+    size_t nColon = json.find(':', nKeyPos + token.size());
+    if (nColon == std::string::npos)
+        return L"";
+
+    size_t nQuoteOpen = json.find('"', nColon + 1);
+    if (nQuoteOpen == std::string::npos)
+        return L"";
+
+    size_t nQuoteClose = json.find('"', nQuoteOpen + 1);
+    if (nQuoteClose == std::string::npos)
+        return L"";
+
+    std::string strVal = json.substr(nQuoteOpen + 1, nQuoteClose - nQuoteOpen - 1);
+    return Utf8ToWide(strVal);
+}
+
+BOOL SettingsBridgeHandler::ExtractPayloadBool(const CString& strJson, const CString& strKey) const
+{
+    std::string json  = WideToUtf8(strJson);
+    std::string key   = WideToUtf8(strKey);
+    std::string token = "\"" + key + "\"";
+
+    size_t nKeyPos = json.find(token);
+    if (nKeyPos == std::string::npos)
+        return FALSE;
+
+    size_t nColon = json.find(':', nKeyPos + token.size());
+    if (nColon == std::string::npos)
+        return FALSE;
+
+    size_t nStart = nColon + 1;
+    while (nStart < json.size() && json[nStart] == ' ')
+        ++nStart;
+
+    if (json.substr(nStart, 4) == "true")
+        return TRUE;
+
+    return FALSE;
 }

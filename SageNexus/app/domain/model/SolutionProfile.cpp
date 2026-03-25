@@ -129,6 +129,23 @@ const MenuVisibility& SolutionProfile::GetMenuVisibility() const
     return m_menuVisibility;
 }
 
+void SolutionProfile::SetPluginEnabled(const CString& strPluginId, BOOL bEnabled)
+{
+    for (int i = 0; i < static_cast<int>(m_arrPlugins.size()); ++i)
+    {
+        if (m_arrPlugins[i].m_strPluginId == strPluginId)
+        {
+            m_arrPlugins[i].m_bEnabled = bEnabled;
+            return;
+        }
+    }
+
+    PluginConfig cfg;
+    cfg.m_strPluginId = strPluginId;
+    cfg.m_bEnabled    = bEnabled;
+    m_arrPlugins.push_back(cfg);
+}
+
 BOOL SolutionProfile::IsPluginEnabled(const CString& strPluginId) const
 {
     for (int i = 0; i < static_cast<int>(m_arrPlugins.size()); ++i)

@@ -335,6 +335,9 @@
                             <div class="settings-value" id="st-output-lang">—</div>
                         </div>
                     </div>
+
+                    <div class="settings-section-title" style="margin-top:24px;">플러그인</div>
+                    <div class="settings-card" id="st-plugins-list"></div>
                 </div>
             </div>
 
@@ -825,6 +828,24 @@
 })();
 
 (function () {
+    var PLUGIN_PAGE_MAP = {
+        'import':    'data-viewer',
+        'transform': 'transform',
+        'export':    'export',
+        'history':   'history'
+    };
+
+    function applySidebarVisibility(plugins) {
+        plugins.forEach(function (plugin) {
+            var pageId = PLUGIN_PAGE_MAP[plugin.pluginId];
+            if (!pageId) return;
+            var navItem = document.querySelector('.nav-item[data-page="' + pageId + '"]');
+            if (navItem) navItem.classList.toggle('hidden', !plugin.enabled);
+        });
+    }
+
+    window.applySidebarVisibility = applySidebarVisibility;
+
     function setSettingsState(state, info) {
         document.getElementById('st-state-loading').classList.toggle('hidden', state !== 'loading');
         document.getElementById('st-state-error').classList.toggle('hidden', state !== 'error');
@@ -835,19 +856,72 @@
         }
     }
 
+    function renderPlugins(plugins) {
+        var list = document.getElementById('st-plugins-list');
+        list.innerHTML = '';
+        plugins.forEach(function (plugin) {
+            var row = document.createElement('div');
+            row.className = 'settings-row';
+
+            var label = document.createElement('div');
+            label.className = 'settings-label';
+            label.textContent = plugin.pluginName || plugin.pluginId;
+
+            var toggle = document.createElement('label');
+            toggle.className = 'plugin-toggle';
+
+            var input = document.createElement('input');
+            input.type = 'checkbox';
+            input.checked = plugin.enabled;
+            input.dataset.pluginId = plugin.pluginId;
+            input.addEventListener('change', function () {
+                var enabled = input.checked;
+                bridgeClient.sendCommand('settings.plugins', 'togglePlugin', {
+                    pluginId: plugin.pluginId,
+                    enabled: enabled
+                })
+                .then(function () {
+                    plugin.enabled = enabled;
+                    applySidebarVisibility(plugins);
+                })
+                .catch(function () {
+                    input.checked = !enabled;
+                });
+            });
+
+            var slider = document.createElement('span');
+            slider.className = 'plugin-toggle-slider';
+
+            toggle.appendChild(input);
+            toggle.appendChild(slider);
+
+            row.appendChild(label);
+            row.appendChild(toggle);
+            list.appendChild(row);
+        });
+    }
+
     function loadSettings() {
         setSettingsState('loading');
-        bridgeClient.sendCommand('settings.profile', 'getProfile', {})
-            .then(function (result) {
-                document.getElementById('st-profile-id').textContent       = result.profileId || '—';
-                document.getElementById('st-profile-name').textContent     = result.profileName || '—';
-                document.getElementById('st-interface-lang').textContent   = result.defaultInterfaceLanguage || '—';
-                document.getElementById('st-output-lang').textContent      = result.defaultOutputLanguage || '—';
-                setSettingsState('data');
-            })
-            .catch(function (err) {
-                setSettingsState('error', { message: err.message });
-            });
+        Promise.all([
+            bridgeClient.sendCommand('settings.profile', 'getProfile', {}),
+            bridgeClient.sendCommand('settings.plugins', 'getPlugins', {})
+        ])
+        .then(function (results) {
+            var profile = results[0];
+            var plugins = results[1];
+
+            document.getElementById('st-profile-id').textContent       = profile.profileId || '—';
+            document.getElementById('st-profile-name').textContent     = profile.profileName || '—';
+            document.getElementById('st-interface-lang').textContent   = profile.defaultInterfaceLanguage || '—';
+            document.getElementById('st-output-lang').textContent      = profile.defaultOutputLanguage || '—';
+
+            renderPlugins(plugins);
+            setSettingsState('data');
+        })
+        .catch(function (err) {
+            setSettingsState('error', { message: err.message });
+        });
     }
 
     document.querySelectorAll('.nav-item[data-page]').forEach(function (el) {
@@ -856,6 +930,14 @@
                 loadSettings();
             }
         });
+    });
+
+    window.addEventListener('bridge:appReady', function () {
+        bridgeClient.sendCommand('settings.plugins', 'getPlugins', {})
+            .then(function (plugins) {
+                applySidebarVisibility(plugins);
+            })
+            .catch(function () {});
     });
 })();
 </script>

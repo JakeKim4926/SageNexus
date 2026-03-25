@@ -4,6 +4,12 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 
 ---
 
+## [2026-03-26] feature/plugin-manager
+- **목적**: Phase 3 Step 2 — IPlugin 인터페이스 및 PluginManager 구현
+- **변경 내용**: IPlugin 인터페이스, PluginManager, SolutionProfile plugin_* 파싱, SageApp 내장 플러그인 4개 등록
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/15
+- **결과**: pending
+
 ## [2026-03-25] feature/solution-profile-load
 - **목적**: Phase 3 Step 1 — SolutionProfile 파일 로드 및 Settings 브릿지 연동
 - **변경 내용**: LoadFromFile() 구현, profile.json 자동 생성, SettingsBridgeHandler 신규, Settings 페이지 프로필 정보 표시

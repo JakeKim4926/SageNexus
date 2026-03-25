@@ -41,6 +41,18 @@ BOOL SageApp::Initialize(HINSTANCE hInstance)
 
     m_profile.SetDefault();
 
+    CString strProfilePath = m_strAppDir + L"\\" + PROFILE_FILE_NAME;
+    CString strProfileError;
+    if (!m_profile.LoadFromFile(strProfilePath, strProfileError))
+    {
+        m_pLogger->LogInfo(L"Profile file not found, creating default: " + strProfilePath);
+        WriteDefaultProfileFile(strProfilePath);
+    }
+    else
+    {
+        m_pLogger->LogInfo(L"Profile loaded: " + m_profile.GetProfileName());
+    }
+
     m_bInitialized = TRUE;
     m_pLogger->LogInfo(L"SageApp initialized");
     return TRUE;
@@ -81,6 +93,26 @@ BOOL SageApp::InitializePaths()
     CreateDirectoryW(m_strDataDir, nullptr);
     CreateDirectoryW(m_strLogDir,  nullptr);
     return TRUE;
+}
+
+void SageApp::WriteDefaultProfileFile(const CString& strFilePath) const
+{
+    std::string strPath = WideToUtf8(strFilePath);
+    std::ofstream file(strPath, std::ios::out | std::ios::trunc);
+    if (!file.is_open())
+        return;
+
+    file << "{\n";
+    file << "  \"profileId\": \"default\",\n";
+    file << "  \"profileName\": \"Default Profile\",\n";
+    file << "  \"defaultInterfaceLanguage\": \"ko\",\n";
+    file << "  \"defaultOutputLanguage\": \"ko\",\n";
+    file << "  \"showDataViewer\": true,\n";
+    file << "  \"showTransform\": true,\n";
+    file << "  \"showExport\": true,\n";
+    file << "  \"showHistory\": true,\n";
+    file << "  \"showSettings\": true\n";
+    file << "}\n";
 }
 
 HINSTANCE       SageApp::GetHInstance() const  { return m_hInstance;    }

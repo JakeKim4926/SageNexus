@@ -156,6 +156,7 @@ void MainWindow::RegisterBridgeHandlers()
     m_transformBridgeHandler.RegisterHandlers(dispatcher, &m_currentTable);
     m_exportBridgeHandler.RegisterHandlers(dispatcher, m_hWnd, &m_currentTable);
     m_historyBridgeHandler.RegisterHandlers(dispatcher);
+    m_settingsBridgeHandler.RegisterHandlers(dispatcher);
 }
 
 void MainWindow::NavigateToShell()

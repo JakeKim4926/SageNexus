@@ -306,10 +306,35 @@
                     <div class="page-title">설정</div>
                     <div class="page-subtitle">앱 설정을 관리합니다.</div>
                 </div>
-                <div class="empty-state">
-                    <div class="empty-icon">⚙</div>
-                    <div class="empty-title">설정 화면</div>
-                    <div class="empty-desc">Phase 2에서 구현 예정입니다.</div>
+                <div class="loading-state hidden" id="st-state-loading">
+                    <div class="loading-spinner"></div>
+                    <div class="loading-text">설정을 불러오는 중...</div>
+                </div>
+                <div class="error-state hidden" id="st-state-error">
+                    <div class="error-icon">⚠</div>
+                    <div class="error-title">설정을 불러오지 못했습니다</div>
+                    <div class="error-desc" id="st-error-message"></div>
+                </div>
+                <div class="hidden" id="st-profile-section">
+                    <div class="settings-section-title">솔루션 프로필</div>
+                    <div class="settings-card">
+                        <div class="settings-row">
+                            <div class="settings-label">프로필 ID</div>
+                            <div class="settings-value" id="st-profile-id">—</div>
+                        </div>
+                        <div class="settings-row">
+                            <div class="settings-label">프로필 이름</div>
+                            <div class="settings-value" id="st-profile-name">—</div>
+                        </div>
+                        <div class="settings-row">
+                            <div class="settings-label">인터페이스 언어</div>
+                            <div class="settings-value" id="st-interface-lang">—</div>
+                        </div>
+                        <div class="settings-row">
+                            <div class="settings-label">결과물 언어</div>
+                            <div class="settings-value" id="st-output-lang">—</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -794,6 +819,41 @@
         el.addEventListener('click', function () {
             if (el.dataset.page === 'history') {
                 loadHistory();
+            }
+        });
+    });
+})();
+
+(function () {
+    function setSettingsState(state, info) {
+        document.getElementById('st-state-loading').classList.toggle('hidden', state !== 'loading');
+        document.getElementById('st-state-error').classList.toggle('hidden', state !== 'error');
+        document.getElementById('st-profile-section').classList.toggle('hidden', state !== 'data');
+        if (state === 'error') {
+            var msgEl = document.getElementById('st-error-message');
+            if (msgEl) msgEl.textContent = (info && info.message) ? info.message : '';
+        }
+    }
+
+    function loadSettings() {
+        setSettingsState('loading');
+        bridgeClient.sendCommand('settings.profile', 'getProfile', {})
+            .then(function (result) {
+                document.getElementById('st-profile-id').textContent       = result.profileId || '—';
+                document.getElementById('st-profile-name').textContent     = result.profileName || '—';
+                document.getElementById('st-interface-lang').textContent   = result.defaultInterfaceLanguage || '—';
+                document.getElementById('st-output-lang').textContent      = result.defaultOutputLanguage || '—';
+                setSettingsState('data');
+            })
+            .catch(function (err) {
+                setSettingsState('error', { message: err.message });
+            });
+    }
+
+    document.querySelectorAll('.nav-item[data-page]').forEach(function (el) {
+        el.addEventListener('click', function () {
+            if (el.dataset.page === 'settings') {
+                loadSettings();
             }
         });
     });

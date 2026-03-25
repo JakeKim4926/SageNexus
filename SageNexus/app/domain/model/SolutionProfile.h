@@ -38,6 +38,7 @@ public:
     const MenuVisibility&  GetMenuVisibility() const;
 
     BOOL IsPluginEnabled(const CString& strPluginId) const;
+    void SetPluginEnabled(const CString& strPluginId, BOOL bEnabled);
 
     void SetDefault();
 

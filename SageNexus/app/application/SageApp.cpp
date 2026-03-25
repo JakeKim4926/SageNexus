@@ -124,6 +124,37 @@ void SageApp::WriteDefaultProfileFile(const CString& strFilePath) const
     file << "}\n";
 }
 
+void SageApp::SaveProfileFile() const
+{
+    CString strPath = m_strAppDir + L"\\" + PROFILE_FILE_NAME;
+    std::string strFilePath = WideToUtf8(strPath);
+    std::ofstream file(strFilePath, std::ios::out | std::ios::trunc);
+    if (!file.is_open())
+        return;
+
+    const MenuVisibility& vis = m_profile.GetMenuVisibility();
+    const std::vector<PluginEntry>& arrPlugins = m_pluginManager.GetAllPlugins();
+
+    file << "{\n";
+    file << "  \"profileId\": \""    << WideToUtf8(m_profile.GetProfileId())                 << "\",\n";
+    file << "  \"profileName\": \""  << WideToUtf8(m_profile.GetProfileName())               << "\",\n";
+    file << "  \"defaultInterfaceLanguage\": \"" << WideToUtf8(m_profile.GetDefaultInterfaceLanguage()) << "\",\n";
+    file << "  \"defaultOutputLanguage\": \""    << WideToUtf8(m_profile.GetDefaultOutputLanguage())    << "\",\n";
+    file << "  \"showDataViewer\": " << (vis.m_bShowDataViewer ? "true" : "false") << ",\n";
+    file << "  \"showTransform\": "  << (vis.m_bShowTransform  ? "true" : "false") << ",\n";
+    file << "  \"showExport\": "     << (vis.m_bShowExport     ? "true" : "false") << ",\n";
+    file << "  \"showHistory\": "    << (vis.m_bShowHistory    ? "true" : "false") << ",\n";
+    file << "  \"showSettings\": "   << (vis.m_bShowSettings   ? "true" : "false");
+
+    for (int i = 0; i < static_cast<int>(arrPlugins.size()); ++i)
+    {
+        file << ",\n";
+        file << "  \"plugin_" << WideToUtf8(arrPlugins[i].m_strPluginId) << "\": ";
+        file << (m_profile.IsPluginEnabled(arrPlugins[i].m_strPluginId) ? "true" : "false");
+    }
+    file << "\n}\n";
+}
+
 HINSTANCE       SageApp::GetHInstance() const  { return m_hInstance;    }
 const CString&  SageApp::GetAppDir() const     { return m_strAppDir;    }
 const CString&  SageApp::GetDataDir() const    { return m_strDataDir;   }

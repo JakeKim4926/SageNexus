@@ -24,6 +24,7 @@ public:
     JsonConfigStore&     GetConfigStore();
     SolutionProfile&     GetProfile();
     PluginManager&       GetPluginManager();
+    void                 SaveProfileFile() const;
 
 private:
     SageApp();

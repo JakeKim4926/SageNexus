@@ -194,6 +194,7 @@
     <ClCompile Include="app\application\services\TransformService.cpp" />
     <ClCompile Include="app\infrastructure\bridge\TransformBridgeHandler.cpp" />
     <ClCompile Include="app\infrastructure\writers\CsvWriter.cpp" />
+    <ClCompile Include="app\infrastructure\writers\XlsxWriter.cpp" />
     <ClCompile Include="app\application\services\ExportService.cpp" />
     <ClCompile Include="app\infrastructure\bridge\ExportBridgeHandler.cpp" />
     <ClCompile Include="app\infrastructure\readers\XlsxReader.cpp" />
@@ -223,6 +224,7 @@
     <ClInclude Include="app\application\services\TransformService.h" />
     <ClInclude Include="app\infrastructure\bridge\TransformBridgeHandler.h" />
     <ClInclude Include="app\infrastructure\writers\CsvWriter.h" />
+    <ClInclude Include="app\infrastructure\writers\XlsxWriter.h" />
     <ClInclude Include="app\application\services\ExportService.h" />
     <ClInclude Include="app\infrastructure\bridge\ExportBridgeHandler.h" />
     <ClInclude Include="app\infrastructure\readers\XlsxReader.h" />

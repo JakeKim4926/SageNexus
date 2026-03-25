@@ -20,6 +20,12 @@ void ExportBridgeHandler::RegisterHandlers(BridgeDispatcher& dispatcher, HWND hP
         {
             return HandleExportCsv(msg, hParentWnd);
         });
+
+    dispatcher.RegisterHandler(L"artifact.export", L"exportXlsx",
+        [this, hParentWnd](const BridgeMessage& msg) -> CString
+        {
+            return HandleExportXlsx(msg, hParentWnd);
+        });
 }
 
 CString ExportBridgeHandler::HandleExportCsv(const BridgeMessage& msg, HWND hParentWnd)
@@ -64,6 +70,82 @@ CString ExportBridgeHandler::HandleExportCsv(const BridgeMessage& msg, HWND hPar
     CString strError;
 
     if (!exportService.ExportToCsv(*m_pSharedTable, strFilePath, strError))
+    {
+        ExecutionHistoryStore historyStore;
+        ExecutionRecord histRecord;
+        histRecord.m_strOperationType = L"export";
+        histRecord.m_strSourceName    = m_pSharedTable->GetSourceName();
+        histRecord.m_nRowCount        = m_pSharedTable->GetRowCount();
+        histRecord.m_nColumnCount     = m_pSharedTable->GetColumnCount();
+        histRecord.m_bSuccess         = FALSE;
+        histRecord.m_strErrorMessage  = strError;
+        CString strHistError;
+        historyStore.SaveRecord(histRecord, strHistError);
+
+        return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+               L"\",\"success\":false,\"payload\":null,"
+               L"\"error\":{\"code\":\"SNX_EX_003\",\"message\":\"" +
+               EscapeJsonString(strError) + L"\"}}";
+    }
+
+    ExecutionHistoryStore historyStore;
+    ExecutionRecord histRecord;
+    histRecord.m_strOperationType = L"export";
+    histRecord.m_strSourceName    = m_pSharedTable->GetSourceName();
+    histRecord.m_nRowCount        = m_pSharedTable->GetRowCount();
+    histRecord.m_nColumnCount     = m_pSharedTable->GetColumnCount();
+    histRecord.m_strOutputPath    = strFilePath;
+    histRecord.m_bSuccess         = TRUE;
+    CString strHistError;
+    historyStore.SaveRecord(histRecord, strHistError);
+
+    return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+           L"\",\"success\":true,\"payload\":{\"filePath\":\"" +
+           EscapeJsonString(strFilePath) + L"\"}}";
+}
+
+CString ExportBridgeHandler::HandleExportXlsx(const BridgeMessage& msg, HWND hParentWnd)
+{
+    if (!m_pSharedTable || m_pSharedTable->IsEmpty())
+    {
+        return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+               L"\",\"success\":false,\"payload\":null,"
+               L"\"error\":{\"code\":\"SNX_EX_001\",\"message\":\"내보낼 데이터가 없습니다.\"}}";
+    }
+
+    wchar_t szFile[MAX_PATH] = {};
+
+    CString strSuggest = m_pSharedTable->GetSourceName();
+    int nDot = strSuggest.ReverseFind(L'.');
+    if (nDot >= 0)
+        strSuggest = strSuggest.Left(nDot);
+    strSuggest += L"_export.xlsx";
+
+    if (strSuggest.GetLength() < MAX_PATH)
+        wcsncpy_s(szFile, MAX_PATH, strSuggest, _TRUNCATE);
+
+    OPENFILENAMEW ofn = {};
+    ofn.lStructSize   = sizeof(ofn);
+    ofn.hwndOwner     = hParentWnd;
+    ofn.lpstrFile     = szFile;
+    ofn.nMaxFile      = MAX_PATH;
+    ofn.lpstrFilter   = L"XLSX 파일\0*.xlsx\0모든 파일\0*.*\0";
+    ofn.lpstrTitle    = L"다른 이름으로 저장";
+    ofn.lpstrDefExt   = L"xlsx";
+    ofn.Flags         = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT;
+
+    if (!GetSaveFileNameW(&ofn))
+    {
+        return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+               L"\",\"success\":false,\"payload\":null,"
+               L"\"error\":{\"code\":\"SNX_EX_002\",\"message\":\"저장이 취소되었습니다.\"}}";
+    }
+
+    CString strFilePath = szFile;
+    ExportService exportService;
+    CString strError;
+
+    if (!exportService.ExportToXlsx(*m_pSharedTable, strFilePath, strError))
     {
         ExecutionHistoryStore historyStore;
         ExecutionRecord histRecord;

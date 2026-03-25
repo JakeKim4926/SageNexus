@@ -235,12 +235,16 @@
                         </div>
                         <div class="stat-card">
                             <div class="stat-label">형식</div>
-                            <div class="stat-value" style="font-size:14px;">CSV (UTF-8 BOM)</div>
+                            <div class="stat-value" style="font-size:14px;" id="ex-format-label">CSV</div>
                         </div>
                     </div>
 
                     <div class="ex-actions">
-                        <button class="btn btn-primary" id="ex-btn-export">CSV로 내보내기</button>
+                        <select id="ex-format-select" class="format-select">
+                            <option value="csv">CSV (UTF-8 BOM)</option>
+                            <option value="xlsx">XLSX</option>
+                        </select>
+                        <button class="btn btn-primary" id="ex-btn-export">내보내기</button>
                     </div>
 
                     <div class="loading-state hidden" id="ex-state-loading">
@@ -723,12 +727,22 @@
         });
     });
 
+    document.getElementById('ex-format-select').addEventListener('change', function () {
+        var fmt = this.value;
+        document.getElementById('ex-format-label').textContent = (fmt === 'xlsx') ? 'XLSX' : 'CSV';
+        document.getElementById('ex-state-done').classList.add('hidden');
+        document.getElementById('ex-state-error').classList.add('hidden');
+    });
+
     document.getElementById('ex-btn-export').addEventListener('click', function () {
+        var fmt    = document.getElementById('ex-format-select').value;
+        var action = (fmt === 'xlsx') ? 'exportXlsx' : 'exportCsv';
+
         document.getElementById('ex-state-loading').classList.remove('hidden');
         document.getElementById('ex-state-error').classList.add('hidden');
         document.getElementById('ex-state-done').classList.add('hidden');
 
-        bridgeClient.sendCommand('artifact.export', 'exportCsv', {})
+        bridgeClient.sendCommand('artifact.export', action, {})
             .then(function (result) {
                 document.getElementById('ex-state-loading').classList.add('hidden');
                 document.getElementById('ex-done-path').textContent = result.filePath || '';

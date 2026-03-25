@@ -53,6 +53,11 @@ BOOL SageApp::Initialize(HINSTANCE hInstance)
         m_pLogger->LogInfo(L"Profile loaded: " + m_profile.GetProfileName());
     }
 
+    m_pluginManager.RegisterBuiltIn(L"import",    L"데이터 가져오기");
+    m_pluginManager.RegisterBuiltIn(L"transform", L"데이터 변환");
+    m_pluginManager.RegisterBuiltIn(L"export",    L"내보내기");
+    m_pluginManager.RegisterBuiltIn(L"history",   L"실행 이력");
+
     m_bInitialized = TRUE;
     m_pLogger->LogInfo(L"SageApp initialized");
     return TRUE;
@@ -111,7 +116,11 @@ void SageApp::WriteDefaultProfileFile(const CString& strFilePath) const
     file << "  \"showTransform\": true,\n";
     file << "  \"showExport\": true,\n";
     file << "  \"showHistory\": true,\n";
-    file << "  \"showSettings\": true\n";
+    file << "  \"showSettings\": true,\n";
+    file << "  \"plugin_import\": true,\n";
+    file << "  \"plugin_transform\": true,\n";
+    file << "  \"plugin_export\": true,\n";
+    file << "  \"plugin_history\": true\n";
     file << "}\n";
 }
 
@@ -121,4 +130,5 @@ const CString&  SageApp::GetDataDir() const    { return m_strDataDir;   }
 const CString&  SageApp::GetLogDir() const     { return m_strLogDir;    }
 FileLogger&     SageApp::GetLogger()           { return *m_pLogger;     }
 JsonConfigStore& SageApp::GetConfigStore()     { return *m_pConfigStore;}
-SolutionProfile& SageApp::GetProfile()         { return m_profile;      }
+SolutionProfile& SageApp::GetProfile()         { return m_profile;       }
+PluginManager&   SageApp::GetPluginManager()   { return m_pluginManager; }

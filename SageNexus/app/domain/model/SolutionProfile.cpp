@@ -52,6 +52,20 @@ BOOL SolutionProfile::LoadFromFile(const CString& strFilePath, CString& strError
     if (entries.find("showSettings") != entries.end())
         m_menuVisibility.m_bShowSettings   = (entries["showSettings"] == "true") ? TRUE : FALSE;
 
+    m_arrPlugins.clear();
+    for (std::map<std::string, std::string>::const_iterator it = entries.begin();
+         it != entries.end(); ++it)
+    {
+        const std::string& strKey = it->first;
+        if (strKey.substr(0, 7) == "plugin_")
+        {
+            PluginConfig cfg;
+            cfg.m_strPluginId = Utf8ToWide(strKey.substr(7));
+            cfg.m_bEnabled    = (it->second == "true") ? TRUE : FALSE;
+            m_arrPlugins.push_back(cfg);
+        }
+    }
+
     return TRUE;
 }
 
@@ -122,5 +136,5 @@ BOOL SolutionProfile::IsPluginEnabled(const CString& strPluginId) const
         if (m_arrPlugins[i].m_strPluginId == strPluginId)
             return m_arrPlugins[i].m_bEnabled;
     }
-    return FALSE;
+    return TRUE;
 }

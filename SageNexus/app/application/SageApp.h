@@ -3,6 +3,7 @@
 #include "app/infrastructure/logging/FileLogger.h"
 #include "app/infrastructure/config/JsonConfigStore.h"
 #include "app/domain/model/SolutionProfile.h"
+#include "app/infrastructure/plugins/PluginManager.h"
 
 #define sageMgr SageApp::GetInstance()
 
@@ -22,6 +23,7 @@ public:
     FileLogger&          GetLogger();
     JsonConfigStore&     GetConfigStore();
     SolutionProfile&     GetProfile();
+    PluginManager&       GetPluginManager();
 
 private:
     SageApp();
@@ -41,4 +43,5 @@ private:
     FileLogger*       m_pLogger;
     JsonConfigStore*  m_pConfigStore;
     SolutionProfile   m_profile;
+    PluginManager     m_pluginManager;
 };

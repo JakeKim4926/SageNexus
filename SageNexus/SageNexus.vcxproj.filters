@@ -88,6 +88,12 @@
     <Filter Include="헤더 파일\app\infrastructure\history">
       <UniqueIdentifier>{C0000002-0004-0006-0000-000000000001}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\app\infrastructure\plugins">
+      <UniqueIdentifier>{C0000001-0004-0007-0000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\app\infrastructure\plugins">
+      <UniqueIdentifier>{C0000002-0004-0007-0000-000000000001}</UniqueIdentifier>
+    </Filter>
     <Filter Include="리소스 파일">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
     </Filter>
@@ -180,6 +186,9 @@
     <ClCompile Include="app\infrastructure\bridge\SettingsBridgeHandler.cpp">
       <Filter>소스 파일\app\infrastructure\bridge</Filter>
     </ClCompile>
+    <ClCompile Include="app\infrastructure\plugins\PluginManager.cpp">
+      <Filter>소스 파일\app\infrastructure\plugins</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -262,6 +271,12 @@
     </ClInclude>
     <ClInclude Include="app\infrastructure\bridge\SettingsBridgeHandler.h">
       <Filter>헤더 파일\app\infrastructure\bridge</Filter>
+    </ClInclude>
+    <ClInclude Include="app\domain\interfaces\IPlugin.h">
+      <Filter>헤더 파일\app\domain\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="app\infrastructure\plugins\PluginManager.h">
+      <Filter>헤더 파일\app\infrastructure\plugins</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

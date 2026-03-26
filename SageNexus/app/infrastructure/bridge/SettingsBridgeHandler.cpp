@@ -25,6 +25,18 @@ void SettingsBridgeHandler::RegisterHandlers(BridgeDispatcher& dispatcher)
         {
             return HandleTogglePlugin(msg);
         });
+
+    dispatcher.RegisterHandler(L"settings.language", L"getOutputLanguage",
+        [this](const BridgeMessage& msg) -> CString
+        {
+            return HandleGetOutputLanguage(msg);
+        });
+
+    dispatcher.RegisterHandler(L"settings.language", L"setOutputLanguage",
+        [this](const BridgeMessage& msg) -> CString
+        {
+            return HandleSetOutputLanguage(msg);
+        });
 }
 
 CString SettingsBridgeHandler::HandleGetProfile(const BridgeMessage& msg)
@@ -108,6 +120,30 @@ CString SettingsBridgeHandler::HandleTogglePlugin(const BridgeMessage& msg)
 
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
            L"\",\"success\":true,\"payload\":" + strResult + L"}";
+}
+
+CString SettingsBridgeHandler::HandleGetOutputLanguage(const BridgeMessage& msg)
+{
+    CString strLang = sageMgr.GetConfigStore().GetString(L"outputLanguage", L"ko");
+    return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+           L"\",\"success\":true,\"payload\":{\"outputLanguage\":\"" + strLang + L"\"}}";
+}
+
+CString SettingsBridgeHandler::HandleSetOutputLanguage(const BridgeMessage& msg)
+{
+    CString strLang = ExtractPayloadString(msg.m_strPayloadJson, L"outputLanguage");
+    if (strLang != L"ko" && strLang != L"en")
+    {
+        return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+               L"\",\"success\":false,\"error\":{\"code\":\"INVALID_PAYLOAD\","
+               L"\"message\":\"outputLanguage must be 'ko' or 'en'\"}}";
+    }
+
+    sageMgr.GetConfigStore().SetString(L"outputLanguage", strLang);
+    sageMgr.GetConfigStore().Save();
+
+    return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+           L"\",\"success\":true,\"payload\":{\"outputLanguage\":\"" + strLang + L"\"}}";
 }
 
 CString SettingsBridgeHandler::ExtractPayloadString(const CString& strJson, const CString& strKey) const

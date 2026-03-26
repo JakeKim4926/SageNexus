@@ -4,6 +4,12 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 
 ---
 
+## [2026-03-27] feature/html-export
+- **목적**: Phase 3 Step 5 — HTML Report Export + Artifact 모델
+- **변경 내용**: Artifact 도메인 모델, HtmlReportExporter(자체 포함 HTML), ArtifactStore(artifacts.json 영속화), ExportService::ExportToHtml(), exportHtml/getArtifacts 브릿지, Export 페이지 결과물 목록 UI
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/18
+- **결과**: merged ✅
+
 ## [2026-03-26] feature/xlsx-export
 - **목적**: Phase 3 Step 4 — XLSX Export 구현
 - **변경 내용**: XlsxWriter(Office Open XML + PowerShell ZipFile::CreateFromDirectory), ExportService::ExportToXlsx(), ExportBridgeHandler exportXlsx action, Export 페이지 형식 선택 UI(CSV/XLSX), SettingsBridgeHandler m_strPayload 버그 수정

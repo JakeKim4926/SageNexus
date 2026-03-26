@@ -94,6 +94,12 @@
     <Filter Include="헤더 파일\app\infrastructure\plugins">
       <UniqueIdentifier>{C0000002-0004-0007-0000-000000000001}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\app\infrastructure\exporters">
+      <UniqueIdentifier>{C0000001-0004-0008-0000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\app\infrastructure\exporters">
+      <UniqueIdentifier>{C0000002-0004-0008-0000-000000000001}</UniqueIdentifier>
+    </Filter>
     <Filter Include="리소스 파일">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
     </Filter>
@@ -162,6 +168,9 @@
     <ClCompile Include="app\infrastructure\bridge\TransformBridgeHandler.cpp">
       <Filter>소스 파일\app\infrastructure\bridge</Filter>
     </ClCompile>
+    <ClCompile Include="app\infrastructure\exporters\HtmlReportExporter.cpp">
+      <Filter>소스 파일\app\infrastructure\exporters</Filter>
+    </ClCompile>
     <ClCompile Include="app\infrastructure\writers\CsvWriter.cpp">
       <Filter>소스 파일\app\infrastructure\writers</Filter>
     </ClCompile>
@@ -178,6 +187,9 @@
       <Filter>소스 파일\app\infrastructure\readers</Filter>
     </ClCompile>
     <ClCompile Include="app\infrastructure\history\ExecutionHistoryStore.cpp">
+      <Filter>소스 파일\app\infrastructure\history</Filter>
+    </ClCompile>
+    <ClCompile Include="app\infrastructure\history\ArtifactStore.cpp">
       <Filter>소스 파일\app\infrastructure\history</Filter>
     </ClCompile>
     <ClCompile Include="app\application\services\HistoryService.cpp">
@@ -268,6 +280,15 @@
     </ClInclude>
     <ClInclude Include="app\infrastructure\history\ExecutionHistoryStore.h">
       <Filter>헤더 파일\app\infrastructure\history</Filter>
+    </ClInclude>
+    <ClInclude Include="app\infrastructure\history\ArtifactStore.h">
+      <Filter>헤더 파일\app\infrastructure\history</Filter>
+    </ClInclude>
+    <ClInclude Include="app\infrastructure\exporters\HtmlReportExporter.h">
+      <Filter>헤더 파일\app\infrastructure\exporters</Filter>
+    </ClInclude>
+    <ClInclude Include="app\domain\model\Artifact.h">
+      <Filter>헤더 파일\app\domain\model</Filter>
     </ClInclude>
     <ClInclude Include="app\application\services\HistoryService.h">
       <Filter>헤더 파일\app\application\services</Filter>

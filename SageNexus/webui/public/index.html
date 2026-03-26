@@ -243,6 +243,7 @@
                         <select id="ex-format-select" class="format-select">
                             <option value="csv">CSV (UTF-8 BOM)</option>
                             <option value="xlsx">XLSX</option>
+                            <option value="html">HTML 보고서</option>
                         </select>
                         <button class="btn btn-primary" id="ex-btn-export">내보내기</button>
                     </div>
@@ -260,6 +261,13 @@
                         <div class="empty-icon" style="color:var(--ok);opacity:1;">✓</div>
                         <div class="empty-title" style="color:var(--ok);">내보내기 완료</div>
                         <div class="empty-desc" id="ex-done-path"></div>
+                    </div>
+
+                    <!-- artifacts list -->
+                    <div id="ex-artifacts-section" class="hidden">
+                        <div class="section-divider"></div>
+                        <div class="section-label">내보낸 결과물</div>
+                        <div id="ex-artifacts-list" class="artifacts-list"></div>
                     </div>
                 </div>
             </div>
@@ -384,6 +392,7 @@
         });
         const breadcrumb = document.getElementById('breadcrumb');
         if (breadcrumb) breadcrumb.textContent = PAGE_TITLES[pageId] || pageId;
+        if (pageId === 'export') { loadArtifacts(); }
     }
 
     document.querySelectorAll('.nav-item[data-page]').forEach(function (el) {
@@ -727,16 +736,59 @@
         });
     });
 
+    var FORMAT_LABELS  = { csv: 'CSV', xlsx: 'XLSX', html: 'HTML' };
+    var FORMAT_ACTIONS = { csv: 'exportCsv', xlsx: 'exportXlsx', html: 'exportHtml' };
+
+    function loadArtifacts() {
+        bridgeClient.sendCommand('artifact.export', 'getArtifacts', {})
+            .then(function (result) {
+                var items = result.artifacts || [];
+                var section = document.getElementById('ex-artifacts-section');
+                var list    = document.getElementById('ex-artifacts-list');
+                if (items.length === 0) { section.classList.add('hidden'); return; }
+
+                list.innerHTML = '';
+                items.forEach(function (art) {
+                    var badge = art.format ? art.format.toUpperCase() : '';
+                    var name  = art.sourceName || '';
+                    var path  = art.filePath   || '';
+                    var meta  = (art.rowCount || 0) + '행 · ' + (art.columnCount || 0) + '열';
+                    if (art.createdAt) meta += ' · ' + art.createdAt;
+
+                    var div = document.createElement('div');
+                    div.className = 'artifact-item';
+                    div.innerHTML =
+                        '<span class="artifact-badge artifact-badge--' + art.format + '">' + badge + '</span>' +
+                        '<div class="artifact-info">' +
+                            '<div class="artifact-name">' + escapeHtml(name) + '</div>' +
+                            '<div class="artifact-meta">' + escapeHtml(meta) + '</div>' +
+                        '</div>' +
+                        '<div class="artifact-path" title="' + escapeHtml(path) + '">' + escapeHtml(path) + '</div>';
+                    list.appendChild(div);
+                });
+                section.classList.remove('hidden');
+            })
+            .catch(function () {});
+    }
+
+    function escapeHtml(str) {
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
     document.getElementById('ex-format-select').addEventListener('change', function () {
         var fmt = this.value;
-        document.getElementById('ex-format-label').textContent = (fmt === 'xlsx') ? 'XLSX' : 'CSV';
+        document.getElementById('ex-format-label').textContent = FORMAT_LABELS[fmt] || fmt.toUpperCase();
         document.getElementById('ex-state-done').classList.add('hidden');
         document.getElementById('ex-state-error').classList.add('hidden');
     });
 
     document.getElementById('ex-btn-export').addEventListener('click', function () {
         var fmt    = document.getElementById('ex-format-select').value;
-        var action = (fmt === 'xlsx') ? 'exportXlsx' : 'exportCsv';
+        var action = FORMAT_ACTIONS[fmt] || 'exportCsv';
 
         document.getElementById('ex-state-loading').classList.remove('hidden');
         document.getElementById('ex-state-error').classList.add('hidden');
@@ -747,6 +799,7 @@
                 document.getElementById('ex-state-loading').classList.add('hidden');
                 document.getElementById('ex-done-path').textContent = result.filePath || '';
                 document.getElementById('ex-state-done').classList.remove('hidden');
+                loadArtifacts();
             })
             .catch(function (err) {
                 document.getElementById('ex-state-loading').classList.add('hidden');

@@ -37,6 +37,18 @@ void SettingsBridgeHandler::RegisterHandlers(BridgeDispatcher& dispatcher)
         {
             return HandleSetOutputLanguage(msg);
         });
+
+    dispatcher.RegisterHandler(L"settings.language", L"getInterfaceLanguage",
+        [this](const BridgeMessage& msg) -> CString
+        {
+            return HandleGetInterfaceLanguage(msg);
+        });
+
+    dispatcher.RegisterHandler(L"settings.language", L"setInterfaceLanguage",
+        [this](const BridgeMessage& msg) -> CString
+        {
+            return HandleSetInterfaceLanguage(msg);
+        });
 }
 
 CString SettingsBridgeHandler::HandleGetProfile(const BridgeMessage& msg)
@@ -144,6 +156,30 @@ CString SettingsBridgeHandler::HandleSetOutputLanguage(const BridgeMessage& msg)
 
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
            L"\",\"success\":true,\"payload\":{\"outputLanguage\":\"" + strLang + L"\"}}";
+}
+
+CString SettingsBridgeHandler::HandleGetInterfaceLanguage(const BridgeMessage& msg)
+{
+    CString strLang = sageMgr.GetConfigStore().GetString(L"interfaceLanguage", L"ko");
+    return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+           L"\",\"success\":true,\"payload\":{\"interfaceLanguage\":\"" + strLang + L"\"}}";
+}
+
+CString SettingsBridgeHandler::HandleSetInterfaceLanguage(const BridgeMessage& msg)
+{
+    CString strLang = ExtractPayloadString(msg.m_strPayloadJson, L"interfaceLanguage");
+    if (strLang != L"ko" && strLang != L"en")
+    {
+        return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+               L"\",\"success\":false,\"error\":{\"code\":\"INVALID_PAYLOAD\","
+               L"\"message\":\"interfaceLanguage must be 'ko' or 'en'\"}}";
+    }
+
+    sageMgr.GetConfigStore().SetString(L"interfaceLanguage", strLang);
+    sageMgr.GetConfigStore().Save();
+
+    return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+           L"\",\"success\":true,\"payload\":{\"interfaceLanguage\":\"" + strLang + L"\"}}";
 }
 
 CString SettingsBridgeHandler::ExtractPayloadString(const CString& strJson, const CString& strKey) const

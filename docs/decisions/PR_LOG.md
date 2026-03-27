@@ -4,6 +4,12 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 
 ---
 
+## [2026-03-28] feature/output-language
+- **목적**: Phase 3 Step 6 — Output Language 반영
+- **변경 내용**: settings.language 브릿지(getOutputLanguage/setOutputLanguage), CsvWriter/XlsxWriter/HtmlReportExporter에 strLang 파라미터 추가, ExportService/ExportBridgeHandler 연결, Import/Transform 브릿지 columns에 displayNameKo/En 분리 전달, WebUI Settings 결과물 언어 select UI, Data Viewer/Transform 테이블 컬럼 헤더 언어 반영
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/19
+- **결과**: merged ✅
+
 ## [2026-03-27] feature/html-export
 - **목적**: Phase 3 Step 5 — HTML Report Export + Artifact 모델
 - **변경 내용**: Artifact 도메인 모델, HtmlReportExporter(자체 포함 HTML), ArtifactStore(artifacts.json 영속화), ExportService::ExportToHtml(), exportHtml/getArtifacts 브릿지, Export 페이지 결과물 목록 UI

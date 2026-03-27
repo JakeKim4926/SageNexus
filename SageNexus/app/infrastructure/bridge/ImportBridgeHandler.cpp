@@ -139,8 +139,10 @@ CString ImportBridgeHandler::SerializeTableToJson(const DataTable& table, const 
         const DataColumn& col = table.GetColumn(i);
         json += L"{\"internalName\":\"";
         json += (LPCWSTR)EscapeJsonString(col.m_strInternalName);
-        json += L"\",\"displayName\":\"";
+        json += L"\",\"displayNameKo\":\"";
         json += (LPCWSTR)EscapeJsonString(col.m_strDisplayNameKo);
+        json += L"\",\"displayNameEn\":\"";
+        json += (LPCWSTR)EscapeJsonString(col.m_strDisplayNameEn);
         json += L"\"}";
     }
     json += L"],";

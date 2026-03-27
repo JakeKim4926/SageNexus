@@ -4,7 +4,7 @@
 #include "app/infrastructure/writers/XlsxWriter.h"
 #include "app/infrastructure/exporters/HtmlReportExporter.h"
 
-BOOL ExportService::ExportToCsv(const DataTable& table, const CString& strFilePath, CString& strError)
+BOOL ExportService::ExportToCsv(const DataTable& table, const CString& strFilePath, const CString& strLang, CString& strError)
 {
     if (table.IsEmpty())
     {
@@ -19,10 +19,10 @@ BOOL ExportService::ExportToCsv(const DataTable& table, const CString& strFilePa
     }
 
     CsvWriter writer;
-    return writer.Write(table, strFilePath, strError);
+    return writer.Write(table, strFilePath, strLang, strError);
 }
 
-BOOL ExportService::ExportToXlsx(const DataTable& table, const CString& strFilePath, CString& strError)
+BOOL ExportService::ExportToXlsx(const DataTable& table, const CString& strFilePath, const CString& strLang, CString& strError)
 {
     if (table.IsEmpty())
     {
@@ -37,10 +37,10 @@ BOOL ExportService::ExportToXlsx(const DataTable& table, const CString& strFileP
     }
 
     XlsxWriter writer;
-    return writer.Write(table, strFilePath, strError);
+    return writer.Write(table, strFilePath, strLang, strError);
 }
 
-BOOL ExportService::ExportToHtml(const DataTable& table, const CString& strFilePath, CString& strError)
+BOOL ExportService::ExportToHtml(const DataTable& table, const CString& strFilePath, const CString& strLang, CString& strError)
 {
     if (table.IsEmpty())
     {
@@ -55,5 +55,5 @@ BOOL ExportService::ExportToHtml(const DataTable& table, const CString& strFileP
     }
 
     HtmlReportExporter exporter;
-    return exporter.Export(table, strFilePath, strError);
+    return exporter.Export(table, strFilePath, strLang, strError);
 }

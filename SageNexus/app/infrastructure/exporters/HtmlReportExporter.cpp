@@ -3,9 +3,9 @@
 #include <string>
 #include <vector>
 
-BOOL HtmlReportExporter::Export(const DataTable& table, const CString& strFilePath, CString& strError)
+BOOL HtmlReportExporter::Export(const DataTable& table, const CString& strFilePath, const CString& strLang, CString& strError)
 {
-    std::wstring html = BuildHtml(table);
+    std::wstring html = BuildHtml(table, strLang);
     return WriteHtmlFile(strFilePath, html, strError);
 }
 
@@ -35,7 +35,7 @@ BOOL HtmlReportExporter::WriteHtmlFile(const CString& strPath, const std::wstrin
     return TRUE;
 }
 
-std::wstring HtmlReportExporter::BuildHtml(const DataTable& table) const
+std::wstring HtmlReportExporter::BuildHtml(const DataTable& table, const CString& strLang) const
 {
     CString strSourceName = table.GetSourceName();
     CString strTimestamp  = GetCurrentTimestamp();
@@ -92,7 +92,7 @@ std::wstring HtmlReportExporter::BuildHtml(const DataTable& table) const
         L"<div class=\"table-wrap\">"
         L"<table>"
         L"<thead><tr>";
-    html += BuildHeaderRow(table);
+    html += BuildHeaderRow(table, strLang);
     html +=
         L"</tr></thead>"
         L"<tbody>";
@@ -108,13 +108,14 @@ std::wstring HtmlReportExporter::BuildHtml(const DataTable& table) const
     return html;
 }
 
-std::wstring HtmlReportExporter::BuildHeaderRow(const DataTable& table) const
+std::wstring HtmlReportExporter::BuildHeaderRow(const DataTable& table, const CString& strLang) const
 {
     std::wstring html;
     for (int i = 0; i < table.GetColumnCount(); ++i)
     {
         const DataColumn& col = table.GetColumn(i);
-        CString strHeader = col.m_strDisplayNameKo.IsEmpty() ? col.m_strInternalName : col.m_strDisplayNameKo;
+        CString strDisplay = (strLang == L"en") ? col.m_strDisplayNameEn : col.m_strDisplayNameKo;
+        CString strHeader  = strDisplay.IsEmpty() ? col.m_strInternalName : strDisplay;
         html += L"<th>";
         html += EscapeHtml(strHeader);
         html += L"</th>";

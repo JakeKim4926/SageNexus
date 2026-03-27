@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "app/infrastructure/writers/XlsxWriter.h"
 
-BOOL XlsxWriter::Write(const DataTable& table, const CString& strFilePath, CString& strError)
+BOOL XlsxWriter::Write(const DataTable& table, const CString& strFilePath, const CString& strLang, CString& strError)
 {
     wchar_t szTempBase[MAX_PATH] = {};
     GetTempPathW(MAX_PATH, szTempBase);
@@ -15,7 +15,7 @@ BOOL XlsxWriter::Write(const DataTable& table, const CString& strFilePath, CStri
     CString strSrcDir = strWorkDir + L"\\src";
     CreateDirectoryW(strSrcDir, nullptr);
 
-    if (!WriteXmlFiles(strSrcDir, table, strError))
+    if (!WriteXmlFiles(strSrcDir, table, strLang, strError))
     {
         CleanupDir(strWorkDir);
         return FALSE;
@@ -39,7 +39,7 @@ BOOL XlsxWriter::Write(const DataTable& table, const CString& strFilePath, CStri
     return TRUE;
 }
 
-BOOL XlsxWriter::WriteXmlFiles(const CString& strSrcDir, const DataTable& table, CString& strError) const
+BOOL XlsxWriter::WriteXmlFiles(const CString& strSrcDir, const DataTable& table, const CString& strLang, CString& strError) const
 {
     CreateDirectoryW(strSrcDir + L"\\_rels", nullptr);
     CreateDirectoryW(strSrcDir + L"\\xl", nullptr);
@@ -51,7 +51,7 @@ BOOL XlsxWriter::WriteXmlFiles(const CString& strSrcDir, const DataTable& table,
     if (!WriteTextFile(strSrcDir + L"\\xl\\workbook.xml",    BuildWorkbook(),     strError)) return FALSE;
     if (!WriteTextFile(strSrcDir + L"\\xl\\_rels\\workbook.xml.rels", BuildWorkbookRels(), strError)) return FALSE;
     if (!WriteTextFile(strSrcDir + L"\\xl\\styles.xml",      BuildStyles(),       strError)) return FALSE;
-    if (!WriteTextFile(strSrcDir + L"\\xl\\worksheets\\sheet1.xml", BuildSheet(table), strError)) return FALSE;
+    if (!WriteTextFile(strSrcDir + L"\\xl\\worksheets\\sheet1.xml", BuildSheet(table, strLang), strError)) return FALSE;
 
     return TRUE;
 }
@@ -225,7 +225,7 @@ std::wstring XlsxWriter::BuildStyles() const
            L"</styleSheet>";
 }
 
-std::wstring XlsxWriter::BuildSheet(const DataTable& table) const
+std::wstring XlsxWriter::BuildSheet(const DataTable& table, const CString& strLang) const
 {
     std::wstring xml;
     xml.reserve(1024 * 1024);
@@ -238,7 +238,8 @@ std::wstring XlsxWriter::BuildSheet(const DataTable& table) const
     for (int i = 0; i < table.GetColumnCount(); ++i)
     {
         const DataColumn& col = table.GetColumn(i);
-        CString strHeader = col.m_strDisplayNameKo.IsEmpty() ? col.m_strInternalName : col.m_strDisplayNameKo;
+        CString strDisplay = (strLang == L"en") ? col.m_strDisplayNameEn : col.m_strDisplayNameKo;
+        CString strHeader  = strDisplay.IsEmpty() ? col.m_strInternalName : strDisplay;
         xml += L"<c r=\"";
         xml += (LPCWSTR)(ColIndexToRef(i) + L"1");
         xml += L"\" t=\"inlineStr\" s=\"1\"><is><t>";

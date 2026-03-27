@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "app/infrastructure/bridge/ExportBridgeHandler.h"
 #include "app/application/services/ExportService.h"
+#include "app/application/SageApp.h"
 #include "app/infrastructure/history/ExecutionHistoryStore.h"
 #include "app/infrastructure/history/ArtifactStore.h"
 #include <commdlg.h>
@@ -79,10 +80,11 @@ CString ExportBridgeHandler::HandleExportCsv(const BridgeMessage& msg, HWND hPar
     }
 
     CString strFilePath = szFile;
+    CString strLang = sageMgr.GetConfigStore().GetString(L"outputLanguage", L"ko");
     ExportService exportService;
     CString strError;
 
-    if (!exportService.ExportToCsv(*m_pSharedTable, strFilePath, strError))
+    if (!exportService.ExportToCsv(*m_pSharedTable, strFilePath, strLang, strError))
     {
         ExecutionHistoryStore historyStore;
         ExecutionRecord histRecord;
@@ -165,10 +167,11 @@ CString ExportBridgeHandler::HandleExportXlsx(const BridgeMessage& msg, HWND hPa
     }
 
     CString strFilePath = szFile;
+    CString strLang = sageMgr.GetConfigStore().GetString(L"outputLanguage", L"ko");
     ExportService exportService;
     CString strError;
 
-    if (!exportService.ExportToXlsx(*m_pSharedTable, strFilePath, strError))
+    if (!exportService.ExportToXlsx(*m_pSharedTable, strFilePath, strLang, strError))
     {
         ExecutionHistoryStore historyStore;
         ExecutionRecord histRecord;
@@ -251,10 +254,11 @@ CString ExportBridgeHandler::HandleExportHtml(const BridgeMessage& msg, HWND hPa
     }
 
     CString strFilePath = szFile;
+    CString strLang = sageMgr.GetConfigStore().GetString(L"outputLanguage", L"ko");
     ExportService exportService;
     CString strError;
 
-    if (!exportService.ExportToHtml(*m_pSharedTable, strFilePath, strError))
+    if (!exportService.ExportToHtml(*m_pSharedTable, strFilePath, strLang, strError))
     {
         ExecutionHistoryStore historyStore;
         ExecutionRecord histRecord;

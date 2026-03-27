@@ -344,7 +344,12 @@
                         </div>
                         <div class="settings-row">
                             <div class="settings-label">결과물 언어</div>
-                            <div class="settings-value" id="st-output-lang">—</div>
+                            <div class="settings-value">
+                                <select id="st-output-lang-select" class="format-select">
+                                    <option value="ko">한국어 (ko)</option>
+                                    <option value="en">English (en)</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
 
@@ -370,6 +375,18 @@
 
 <script src="../src/core/bridge/bridge.js"></script>
 <script>
+// =========================================================
+// Output Language 전역 상태
+// =========================================================
+var _outputLanguage = 'ko';
+
+function getColDisplayName(col) {
+    if (_outputLanguage === 'en') {
+        return col.displayNameEn || col.displayNameKo || col.internalName;
+    }
+    return col.displayNameKo || col.displayNameEn || col.internalName;
+}
+
 (function () {
     // =========================================================
     // Navigation
@@ -493,7 +510,7 @@
         var tr = document.createElement('tr');
         tableData.columns.forEach(function (col) {
             var th = document.createElement('th');
-            th.textContent = col.displayName || col.internalName;
+            th.textContent = getColDisplayName(col);
             tr.appendChild(th);
         });
         thead.appendChild(tr);
@@ -562,7 +579,7 @@
         columns.forEach(function (col) {
             var opt = document.createElement('option');
             opt.value = col.internalName;
-            opt.textContent = col.displayName || col.internalName;
+            opt.textContent = getColDisplayName(col);
             sel.appendChild(opt);
         });
     }
@@ -586,7 +603,7 @@
         var tr = document.createElement('tr');
         tableData.columns.forEach(function (col) {
             var th = document.createElement('th');
-            th.textContent = col.displayName || col.internalName;
+            th.textContent = getColDisplayName(col);
             tr.appendChild(th);
         });
         thead.appendChild(tr);
@@ -972,16 +989,22 @@
         setSettingsState('loading');
         Promise.all([
             bridgeClient.sendCommand('settings.profile', 'getProfile', {}),
-            bridgeClient.sendCommand('settings.plugins', 'getPlugins', {})
+            bridgeClient.sendCommand('settings.plugins', 'getPlugins', {}),
+            bridgeClient.sendCommand('settings.language', 'getOutputLanguage', {})
         ])
         .then(function (results) {
-            var profile = results[0];
-            var plugins = results[1];
+            var profile  = results[0];
+            var plugins  = results[1];
+            var langData = results[2];
 
-            document.getElementById('st-profile-id').textContent       = profile.profileId || '—';
-            document.getElementById('st-profile-name').textContent     = profile.profileName || '—';
-            document.getElementById('st-interface-lang').textContent   = profile.defaultInterfaceLanguage || '—';
-            document.getElementById('st-output-lang').textContent      = profile.defaultOutputLanguage || '—';
+            document.getElementById('st-profile-id').textContent     = profile.profileId || '—';
+            document.getElementById('st-profile-name').textContent   = profile.profileName || '—';
+            document.getElementById('st-interface-lang').textContent = profile.defaultInterfaceLanguage || '—';
+
+            var currentLang = (langData && langData.outputLanguage) ? langData.outputLanguage : 'ko';
+            _outputLanguage = currentLang;
+            var sel = document.getElementById('st-output-lang-select');
+            if (sel) sel.value = currentLang;
 
             renderPlugins(plugins);
             setSettingsState('data');
@@ -990,6 +1013,21 @@
             setSettingsState('error', { message: err.message });
         });
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var sel = document.getElementById('st-output-lang-select');
+        if (!sel) return;
+        sel.addEventListener('change', function () {
+            var lang = sel.value;
+            bridgeClient.sendCommand('settings.language', 'setOutputLanguage', { outputLanguage: lang })
+                .then(function () {
+                    _outputLanguage = lang;
+                })
+                .catch(function () {
+                    sel.value = _outputLanguage;
+                });
+        });
+    });
 
     document.querySelectorAll('.nav-item[data-page]').forEach(function (el) {
         el.addEventListener('click', function () {
@@ -1000,11 +1038,18 @@
     });
 
     window.addEventListener('bridge:appReady', function () {
-        bridgeClient.sendCommand('settings.plugins', 'getPlugins', {})
-            .then(function (plugins) {
-                applySidebarVisibility(plugins);
-            })
-            .catch(function () {});
+        Promise.all([
+            bridgeClient.sendCommand('settings.plugins', 'getPlugins', {}),
+            bridgeClient.sendCommand('settings.language', 'getOutputLanguage', {})
+        ])
+        .then(function (results) {
+            applySidebarVisibility(results[0]);
+            var langData = results[1];
+            if (langData && langData.outputLanguage) {
+                _outputLanguage = langData.outputLanguage;
+            }
+        })
+        .catch(function () {});
     });
 })();
 </script>

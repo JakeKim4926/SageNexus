@@ -5,7 +5,7 @@
 class CsvWriter
 {
 public:
-    BOOL Write(const DataTable& table, const CString& strFilePath, CString& strError);
+    BOOL Write(const DataTable& table, const CString& strFilePath, const CString& strLang, CString& strError);
 
 private:
     CString QuoteField(const CString& str) const;

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "app/infrastructure/writers/CsvWriter.h"
 
-BOOL CsvWriter::Write(const DataTable& table, const CString& strFilePath, CString& strError)
+BOOL CsvWriter::Write(const DataTable& table, const CString& strFilePath, const CString& strLang, CString& strError)
 {
     std::wstring content;
     content.reserve(256 * 1024);
@@ -10,7 +10,8 @@ BOOL CsvWriter::Write(const DataTable& table, const CString& strFilePath, CStrin
     {
         if (i > 0) content += L",";
         const DataColumn& col = table.GetColumn(i);
-        CString strHeader = col.m_strDisplayNameKo.IsEmpty() ? col.m_strInternalName : col.m_strDisplayNameKo;
+        CString strDisplay = (strLang == L"en") ? col.m_strDisplayNameEn : col.m_strDisplayNameKo;
+        CString strHeader  = strDisplay.IsEmpty() ? col.m_strInternalName : strDisplay;
         content += (LPCWSTR)QuoteField(strHeader);
     }
     content += L"\r\n";

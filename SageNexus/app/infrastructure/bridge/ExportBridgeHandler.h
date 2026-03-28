@@ -12,6 +12,9 @@ public:
 
 private:
     CString HandleExportCsv(const BridgeMessage& msg, HWND hParentWnd);
+    CString HandleExportXlsx(const BridgeMessage& msg, HWND hParentWnd);
+    CString HandleExportHtml(const BridgeMessage& msg, HWND hParentWnd);
+    CString HandleGetArtifacts(const BridgeMessage& msg);
     CString EscapeJsonString(const CString& str) const;
 
     HWND       m_hParentWnd;

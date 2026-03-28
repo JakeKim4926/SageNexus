@@ -1,0 +1,35 @@
+{
+  "nav.section.main": "Main",
+  "nav.section.manage": "Manage",
+  "nav.dashboard": "Dashboard",
+  "nav.dataViewer": "Data Viewer",
+  "nav.transform": "Transform",
+  "nav.export": "Export",
+  "nav.history": "History",
+  "nav.settings": "Settings",
+
+  "page.dashboard.title": "Dashboard",
+  "page.dashboard.subtitle": "Overview of your automation activity.",
+  "page.dataViewer.title": "Data Viewer",
+  "page.dataViewer.subtitle": "Load a file to inspect data.",
+  "page.transform.title": "Transform",
+  "page.transform.subtitle": "Clean and transform your data.",
+  "page.export.title": "Export",
+  "page.export.subtitle": "Export processed data to a file.",
+  "page.history.title": "History",
+  "page.history.subtitle": "Review previous execution results.",
+  "page.settings.title": "Settings",
+  "page.settings.subtitle": "Manage application settings.",
+
+  "settings.section.profile": "Solution Profile",
+  "settings.section.language": "Language",
+  "settings.section.plugins": "Plugins",
+  "settings.label.profileId": "Profile ID",
+  "settings.label.profileName": "Profile Name",
+  "settings.label.interfaceLang": "Interface Language",
+  "settings.label.outputLang": "Output Language",
+
+  "status.initializing": "Initializing",
+  "status.ready": "Ready",
+  "status.profile.prefix": "Profile"
+}

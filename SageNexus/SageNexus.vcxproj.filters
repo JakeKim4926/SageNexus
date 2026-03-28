@@ -88,6 +88,18 @@
     <Filter Include="헤더 파일\app\infrastructure\history">
       <UniqueIdentifier>{C0000002-0004-0006-0000-000000000001}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\app\infrastructure\plugins">
+      <UniqueIdentifier>{C0000001-0004-0007-0000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\app\infrastructure\plugins">
+      <UniqueIdentifier>{C0000002-0004-0007-0000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\app\infrastructure\exporters">
+      <UniqueIdentifier>{C0000001-0004-0008-0000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\app\infrastructure\exporters">
+      <UniqueIdentifier>{C0000002-0004-0008-0000-000000000001}</UniqueIdentifier>
+    </Filter>
     <Filter Include="리소스 파일">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
     </Filter>
@@ -156,7 +168,13 @@
     <ClCompile Include="app\infrastructure\bridge\TransformBridgeHandler.cpp">
       <Filter>소스 파일\app\infrastructure\bridge</Filter>
     </ClCompile>
+    <ClCompile Include="app\infrastructure\exporters\HtmlReportExporter.cpp">
+      <Filter>소스 파일\app\infrastructure\exporters</Filter>
+    </ClCompile>
     <ClCompile Include="app\infrastructure\writers\CsvWriter.cpp">
+      <Filter>소스 파일\app\infrastructure\writers</Filter>
+    </ClCompile>
+    <ClCompile Include="app\infrastructure\writers\XlsxWriter.cpp">
       <Filter>소스 파일\app\infrastructure\writers</Filter>
     </ClCompile>
     <ClCompile Include="app\application\services\ExportService.cpp">
@@ -171,11 +189,20 @@
     <ClCompile Include="app\infrastructure\history\ExecutionHistoryStore.cpp">
       <Filter>소스 파일\app\infrastructure\history</Filter>
     </ClCompile>
+    <ClCompile Include="app\infrastructure\history\ArtifactStore.cpp">
+      <Filter>소스 파일\app\infrastructure\history</Filter>
+    </ClCompile>
     <ClCompile Include="app\application\services\HistoryService.cpp">
       <Filter>소스 파일\app\application\services</Filter>
     </ClCompile>
     <ClCompile Include="app\infrastructure\bridge\HistoryBridgeHandler.cpp">
       <Filter>소스 파일\app\infrastructure\bridge</Filter>
+    </ClCompile>
+    <ClCompile Include="app\infrastructure\bridge\SettingsBridgeHandler.cpp">
+      <Filter>소스 파일\app\infrastructure\bridge</Filter>
+    </ClCompile>
+    <ClCompile Include="app\infrastructure\plugins\PluginManager.cpp">
+      <Filter>소스 파일\app\infrastructure\plugins</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -236,6 +263,9 @@
     <ClInclude Include="app\infrastructure\writers\CsvWriter.h">
       <Filter>헤더 파일\app\infrastructure\writers</Filter>
     </ClInclude>
+    <ClInclude Include="app\infrastructure\writers\XlsxWriter.h">
+      <Filter>헤더 파일\app\infrastructure\writers</Filter>
+    </ClInclude>
     <ClInclude Include="app\application\services\ExportService.h">
       <Filter>헤더 파일\app\application\services</Filter>
     </ClInclude>
@@ -251,11 +281,29 @@
     <ClInclude Include="app\infrastructure\history\ExecutionHistoryStore.h">
       <Filter>헤더 파일\app\infrastructure\history</Filter>
     </ClInclude>
+    <ClInclude Include="app\infrastructure\history\ArtifactStore.h">
+      <Filter>헤더 파일\app\infrastructure\history</Filter>
+    </ClInclude>
+    <ClInclude Include="app\infrastructure\exporters\HtmlReportExporter.h">
+      <Filter>헤더 파일\app\infrastructure\exporters</Filter>
+    </ClInclude>
+    <ClInclude Include="app\domain\model\Artifact.h">
+      <Filter>헤더 파일\app\domain\model</Filter>
+    </ClInclude>
     <ClInclude Include="app\application\services\HistoryService.h">
       <Filter>헤더 파일\app\application\services</Filter>
     </ClInclude>
     <ClInclude Include="app\infrastructure\bridge\HistoryBridgeHandler.h">
       <Filter>헤더 파일\app\infrastructure\bridge</Filter>
+    </ClInclude>
+    <ClInclude Include="app\infrastructure\bridge\SettingsBridgeHandler.h">
+      <Filter>헤더 파일\app\infrastructure\bridge</Filter>
+    </ClInclude>
+    <ClInclude Include="app\domain\interfaces\IPlugin.h">
+      <Filter>헤더 파일\app\domain\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="app\infrastructure\plugins\PluginManager.h">
+      <Filter>헤더 파일\app\infrastructure\plugins</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -3,6 +3,7 @@
 #include "app/infrastructure/logging/FileLogger.h"
 #include "app/infrastructure/config/JsonConfigStore.h"
 #include "app/domain/model/SolutionProfile.h"
+#include "app/infrastructure/plugins/PluginManager.h"
 
 #define sageMgr SageApp::GetInstance()
 
@@ -22,6 +23,8 @@ public:
     FileLogger&          GetLogger();
     JsonConfigStore&     GetConfigStore();
     SolutionProfile&     GetProfile();
+    PluginManager&       GetPluginManager();
+    void                 SaveProfileFile() const;
 
 private:
     SageApp();
@@ -30,6 +33,7 @@ private:
     SageApp& operator=(const SageApp&) = delete;
 
     BOOL InitializePaths();
+    void WriteDefaultProfileFile(const CString& strFilePath) const;
 
     HINSTANCE        m_hInstance;
     CString          m_strAppDir;
@@ -40,4 +44,5 @@ private:
     FileLogger*       m_pLogger;
     JsonConfigStore*  m_pConfigStore;
     SolutionProfile   m_profile;
+    PluginManager     m_pluginManager;
 };

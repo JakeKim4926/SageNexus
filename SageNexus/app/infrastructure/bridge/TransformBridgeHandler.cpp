@@ -297,9 +297,12 @@ CString TransformBridgeHandler::SerializeTableToJson(const DataTable& table) con
         const DataColumn& col = table.GetColumn(i);
         json += L"{\"internalName\":\"";
         json += (LPCWSTR)EscapeJsonString(col.m_strInternalName);
-        json += L"\",\"displayName\":\"";
-        CString strDisplay = col.m_strDisplayNameKo.IsEmpty() ? col.m_strInternalName : col.m_strDisplayNameKo;
-        json += (LPCWSTR)EscapeJsonString(strDisplay);
+        json += L"\",\"displayNameKo\":\"";
+        CString strDisplayKo = col.m_strDisplayNameKo.IsEmpty() ? col.m_strInternalName : col.m_strDisplayNameKo;
+        json += (LPCWSTR)EscapeJsonString(strDisplayKo);
+        json += L"\",\"displayNameEn\":\"";
+        CString strDisplayEn = col.m_strDisplayNameEn.IsEmpty() ? col.m_strInternalName : col.m_strDisplayNameEn;
+        json += (LPCWSTR)EscapeJsonString(strDisplayEn);
         json += L"\"}";
     }
     json += L"],";

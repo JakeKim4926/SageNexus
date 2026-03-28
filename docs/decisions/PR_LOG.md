@@ -4,6 +4,48 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 
 ---
 
+## [2026-03-28] feature/phase3-step7-settings-i18n
+- **목적**: Phase 3 Step 7 — Settings 페이지 완성 + i18n 기초 적용
+- **변경 내용**: SettingsBridgeHandler에 getInterfaceLanguage/setInterfaceLanguage 핸들러 추가, ko.json/en.json 기초 번역 리소스 신규 생성(webui/src/i18n/), LOCALES 객체+t()/applyLocale() 함수 추가, 사이드바 nav·모든 페이지 타이틀에 data-i18n 적용, Settings 페이지 솔루션 프로필/언어/플러그인 3섹션으로 재편, Interface Language select UI 추가, bridge:appReady 시 interfaceLanguage 초기 로드
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/20
+- **결과**: merged ✅
+
+## [2026-03-28] feature/output-language
+- **목적**: Phase 3 Step 6 — Output Language 반영
+- **변경 내용**: settings.language 브릿지(getOutputLanguage/setOutputLanguage), CsvWriter/XlsxWriter/HtmlReportExporter에 strLang 파라미터 추가, ExportService/ExportBridgeHandler 연결, Import/Transform 브릿지 columns에 displayNameKo/En 분리 전달, WebUI Settings 결과물 언어 select UI, Data Viewer/Transform 테이블 컬럼 헤더 언어 반영
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/19
+- **결과**: merged ✅
+
+## [2026-03-27] feature/html-export
+- **목적**: Phase 3 Step 5 — HTML Report Export + Artifact 모델
+- **변경 내용**: Artifact 도메인 모델, HtmlReportExporter(자체 포함 HTML), ArtifactStore(artifacts.json 영속화), ExportService::ExportToHtml(), exportHtml/getArtifacts 브릿지, Export 페이지 결과물 목록 UI
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/18
+- **결과**: merged ✅
+
+## [2026-03-26] feature/xlsx-export
+- **목적**: Phase 3 Step 4 — XLSX Export 구현
+- **변경 내용**: XlsxWriter(Office Open XML + PowerShell ZipFile::CreateFromDirectory), ExportService::ExportToXlsx(), ExportBridgeHandler exportXlsx action, Export 페이지 형식 선택 UI(CSV/XLSX), SettingsBridgeHandler m_strPayload 버그 수정
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/17
+- **결과**: merged ✅
+
+## [2026-03-26] feature/plugin-menu-control
+- **목적**: Phase 3 Step 3 — 플러그인 활성화 제어 및 사이드바 동적 렌더링
+- **변경 내용**: getPlugins/togglePlugin 브릿지 커맨드 추가, 사이드바 메뉴 플러그인 활성화 여부 기반 동적 렌더링, Settings 플러그인 on/off 토글 UI 구현
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/16
+- **결과**: merged ✅
+
+## [2026-03-26] feature/plugin-manager
+- **목적**: Phase 3 Step 2 — IPlugin 인터페이스 및 PluginManager 구현
+- **변경 내용**: IPlugin 인터페이스, PluginManager, SolutionProfile plugin_* 파싱, SageApp 내장 플러그인 4개 등록
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/15
+- **결과**: merged ✅
+
+## [2026-03-25] feature/solution-profile-load
+- **목적**: Phase 3 Step 1 — SolutionProfile 파일 로드 및 Settings 브릿지 연동
+- **변경 내용**: LoadFromFile() 구현, profile.json 자동 생성, SettingsBridgeHandler 신규, Settings 페이지 프로필 정보 표시
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/14
+- **결과**: merged ✅
+
 ## [2026-03-22] feature/phase1-shell
 - **목적**: Phase 1 — Win32/WebView2 앱 셸 및 공통 뼈대 구축
 - **변경 내용**: MainWindow, WebViewHost, BridgeDispatcher, SageApp, FileLogger, JsonConfigStore, DataTable, SolutionProfile, Web UI 셸(index.html/bridge.js/styles.css), vcxproj 전체 구성

@@ -4,6 +4,12 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 
 ---
 
+## [2026-03-28] feature/phase3-step7-settings-i18n
+- **목적**: Phase 3 Step 7 — Settings 페이지 완성 + i18n 기초 적용
+- **변경 내용**: SettingsBridgeHandler에 getInterfaceLanguage/setInterfaceLanguage 핸들러 추가, ko.json/en.json 기초 번역 리소스 신규 생성(webui/src/i18n/), LOCALES 객체+t()/applyLocale() 함수 추가, 사이드바 nav·모든 페이지 타이틀에 data-i18n 적용, Settings 페이지 솔루션 프로필/언어/플러그인 3섹션으로 재편, Interface Language select UI 추가, bridge:appReady 시 interfaceLanguage 초기 로드
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/20
+- **결과**: merged ✅
+
 ## [2026-03-28] feature/output-language
 - **목적**: Phase 3 Step 6 — Output Language 반영
 - **변경 내용**: settings.language 브릿지(getOutputLanguage/setOutputLanguage), CsvWriter/XlsxWriter/HtmlReportExporter에 strLang 파라미터 추가, ExportService/ExportBridgeHandler 연결, Import/Transform 브릿지 columns에 displayNameKo/En 분리 전달, WebUI Settings 결과물 언어 select UI, Data Viewer/Transform 테이블 컬럼 헤더 언어 반영

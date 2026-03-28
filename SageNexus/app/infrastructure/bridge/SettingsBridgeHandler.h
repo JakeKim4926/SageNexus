@@ -15,6 +15,8 @@ private:
     CString HandleTogglePlugin(const BridgeMessage& msg);
     CString HandleGetOutputLanguage(const BridgeMessage& msg);
     CString HandleSetOutputLanguage(const BridgeMessage& msg);
+    CString HandleGetInterfaceLanguage(const BridgeMessage& msg);
+    CString HandleSetInterfaceLanguage(const BridgeMessage& msg);
 
     CString ExtractPayloadString(const CString& strJson, const CString& strKey) const;
     BOOL    ExtractPayloadBool(const CString& strJson, const CString& strKey) const;

@@ -33,30 +33,30 @@
         <!-- Sidebar Navigation -->
         <nav id="sidebar">
             <div class="nav-section">
-                <div class="nav-section-label">메인</div>
+                <div class="nav-section-label" data-i18n="nav.section.main">메인</div>
                 <div class="nav-item active" data-page="dashboard">
                     <span class="nav-icon">⊞</span>
-                    <span class="nav-label">대시보드</span>
+                    <span class="nav-label" data-i18n="nav.dashboard">대시보드</span>
                 </div>
                 <div class="nav-item" data-page="data-viewer">
                     <span class="nav-icon">⊟</span>
-                    <span class="nav-label">데이터 뷰어</span>
+                    <span class="nav-label" data-i18n="nav.dataViewer">데이터 뷰어</span>
                 </div>
                 <div class="nav-item" data-page="transform">
                     <span class="nav-icon">⇌</span>
-                    <span class="nav-label">변환</span>
+                    <span class="nav-label" data-i18n="nav.transform">변환</span>
                 </div>
                 <div class="nav-item" data-page="export">
                     <span class="nav-icon">↑</span>
-                    <span class="nav-label">내보내기</span>
+                    <span class="nav-label" data-i18n="nav.export">내보내기</span>
                 </div>
             </div>
 
             <div class="nav-section">
-                <div class="nav-section-label">관리</div>
+                <div class="nav-section-label" data-i18n="nav.section.manage">관리</div>
                 <div class="nav-item" data-page="history">
                     <span class="nav-icon">◷</span>
-                    <span class="nav-label">실행 이력</span>
+                    <span class="nav-label" data-i18n="nav.history">실행 이력</span>
                 </div>
             </div>
 
@@ -65,7 +65,7 @@
             <div class="nav-section">
                 <div class="nav-item" data-page="settings">
                     <span class="nav-icon">⚙</span>
-                    <span class="nav-label">설정</span>
+                    <span class="nav-label" data-i18n="nav.settings">설정</span>
                 </div>
             </div>
         </nav>
@@ -76,8 +76,8 @@
             <!-- Dashboard Page -->
             <div class="page active" id="page-dashboard">
                 <div class="page-header">
-                    <div class="page-title">대시보드</div>
-                    <div class="page-subtitle">업무 자동화 현황을 확인합니다.</div>
+                    <div class="page-title" data-i18n="page.dashboard.title">대시보드</div>
+                    <div class="page-subtitle" data-i18n="page.dashboard.subtitle">업무 자동화 현황을 확인합니다.</div>
                 </div>
                 <div class="dashboard-grid">
                     <div class="stat-card">
@@ -107,8 +107,8 @@
             <!-- Data Viewer Page -->
             <div class="page" id="page-data-viewer">
                 <div class="page-header">
-                    <div class="page-title">데이터 뷰어</div>
-                    <div class="page-subtitle">파일을 불러와 데이터를 확인합니다.</div>
+                    <div class="page-title" data-i18n="page.dataViewer.title">데이터 뷰어</div>
+                    <div class="page-subtitle" data-i18n="page.dataViewer.subtitle">파일을 불러와 데이터를 확인합니다.</div>
                 </div>
                 <div class="page-toolbar">
                     <button class="btn btn-primary" id="btn-open-file">파일 열기</button>
@@ -142,8 +142,8 @@
             <!-- Transform Page -->
             <div class="page" id="page-transform">
                 <div class="page-header">
-                    <div class="page-title">변환</div>
-                    <div class="page-subtitle">데이터를 정리하고 변환합니다.</div>
+                    <div class="page-title" data-i18n="page.transform.title">변환</div>
+                    <div class="page-subtitle" data-i18n="page.transform.subtitle">데이터를 정리하고 변환합니다.</div>
                 </div>
 
                 <!-- no data loaded -->
@@ -207,8 +207,8 @@
             <!-- Export Page -->
             <div class="page" id="page-export">
                 <div class="page-header">
-                    <div class="page-title">내보내기</div>
-                    <div class="page-subtitle">처리된 데이터를 파일로 내보냅니다.</div>
+                    <div class="page-title" data-i18n="page.export.title">내보내기</div>
+                    <div class="page-subtitle" data-i18n="page.export.subtitle">처리된 데이터를 파일로 내보냅니다.</div>
                 </div>
 
                 <!-- no data -->
@@ -275,8 +275,8 @@
             <!-- History Page -->
             <div class="page" id="page-history">
                 <div class="page-header">
-                    <div class="page-title">실행 이력</div>
-                    <div class="page-subtitle">이전 실행 결과를 확인합니다.</div>
+                    <div class="page-title" data-i18n="page.history.title">실행 이력</div>
+                    <div class="page-subtitle" data-i18n="page.history.subtitle">이전 실행 결과를 확인합니다.</div>
                 </div>
                 <div class="loading-state hidden" id="hs-state-loading">
                     <div class="loading-spinner"></div>
@@ -315,8 +315,8 @@
             <!-- Settings Page -->
             <div class="page" id="page-settings">
                 <div class="page-header">
-                    <div class="page-title">설정</div>
-                    <div class="page-subtitle">앱 설정을 관리합니다.</div>
+                    <div class="page-title" data-i18n="page.settings.title">설정</div>
+                    <div class="page-subtitle" data-i18n="page.settings.subtitle">앱 설정을 관리합니다.</div>
                 </div>
                 <div class="loading-state hidden" id="st-state-loading">
                     <div class="loading-spinner"></div>
@@ -328,22 +328,31 @@
                     <div class="error-desc" id="st-error-message"></div>
                 </div>
                 <div class="hidden" id="st-profile-section">
-                    <div class="settings-section-title">솔루션 프로필</div>
+                    <div class="settings-section-title" data-i18n="settings.section.profile">솔루션 프로필</div>
                     <div class="settings-card">
                         <div class="settings-row">
-                            <div class="settings-label">프로필 ID</div>
+                            <div class="settings-label" data-i18n="settings.label.profileId">프로필 ID</div>
                             <div class="settings-value" id="st-profile-id">—</div>
                         </div>
                         <div class="settings-row">
-                            <div class="settings-label">프로필 이름</div>
+                            <div class="settings-label" data-i18n="settings.label.profileName">프로필 이름</div>
                             <div class="settings-value" id="st-profile-name">—</div>
                         </div>
+                    </div>
+
+                    <div class="settings-section-title" style="margin-top:24px;" data-i18n="settings.section.language">언어</div>
+                    <div class="settings-card">
                         <div class="settings-row">
-                            <div class="settings-label">인터페이스 언어</div>
-                            <div class="settings-value" id="st-interface-lang">—</div>
+                            <div class="settings-label" data-i18n="settings.label.interfaceLang">인터페이스 언어</div>
+                            <div class="settings-value">
+                                <select id="st-interface-lang-select" class="format-select">
+                                    <option value="ko">한국어 (ko)</option>
+                                    <option value="en">English (en)</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="settings-row">
-                            <div class="settings-label">결과물 언어</div>
+                            <div class="settings-label" data-i18n="settings.label.outputLang">결과물 언어</div>
                             <div class="settings-value">
                                 <select id="st-output-lang-select" class="format-select">
                                     <option value="ko">한국어 (ko)</option>
@@ -353,7 +362,7 @@
                         </div>
                     </div>
 
-                    <div class="settings-section-title" style="margin-top:24px;">플러그인</div>
+                    <div class="settings-section-title" style="margin-top:24px;" data-i18n="settings.section.plugins">플러그인</div>
                     <div class="settings-card" id="st-plugins-list"></div>
                 </div>
             </div>
@@ -375,6 +384,100 @@
 
 <script src="../src/core/bridge/bridge.js"></script>
 <script>
+var LOCALES = {
+    ko: {
+        'nav.section.main':     '메인',
+        'nav.section.manage':   '관리',
+        'nav.dashboard':        '대시보드',
+        'nav.dataViewer':       '데이터 뷰어',
+        'nav.transform':        '변환',
+        'nav.export':           '내보내기',
+        'nav.history':          '실행 이력',
+        'nav.settings':         '설정',
+        'page.dashboard.title':     '대시보드',
+        'page.dashboard.subtitle':  '업무 자동화 현황을 확인합니다.',
+        'page.dataViewer.title':    '데이터 뷰어',
+        'page.dataViewer.subtitle': '파일을 불러와 데이터를 확인합니다.',
+        'page.transform.title':     '변환',
+        'page.transform.subtitle':  '데이터를 정리하고 변환합니다.',
+        'page.export.title':        '내보내기',
+        'page.export.subtitle':     '처리된 데이터를 파일로 내보냅니다.',
+        'page.history.title':       '실행 이력',
+        'page.history.subtitle':    '이전 실행 결과를 확인합니다.',
+        'page.settings.title':      '설정',
+        'page.settings.subtitle':   '앱 설정을 관리합니다.',
+        'settings.section.profile':  '솔루션 프로필',
+        'settings.section.language': '언어',
+        'settings.section.plugins':  '플러그인',
+        'settings.label.profileId':   '프로필 ID',
+        'settings.label.profileName': '프로필 이름',
+        'settings.label.interfaceLang': '인터페이스 언어',
+        'settings.label.outputLang':    '결과물 언어',
+        'status.initializing': '초기화 중',
+        'status.ready':        '준비됨',
+        'status.profile.prefix': '프로필'
+    },
+    en: {
+        'nav.section.main':     'Main',
+        'nav.section.manage':   'Manage',
+        'nav.dashboard':        'Dashboard',
+        'nav.dataViewer':       'Data Viewer',
+        'nav.transform':        'Transform',
+        'nav.export':           'Export',
+        'nav.history':          'History',
+        'nav.settings':         'Settings',
+        'page.dashboard.title':     'Dashboard',
+        'page.dashboard.subtitle':  'Overview of your automation activity.',
+        'page.dataViewer.title':    'Data Viewer',
+        'page.dataViewer.subtitle': 'Load a file to inspect data.',
+        'page.transform.title':     'Transform',
+        'page.transform.subtitle':  'Clean and transform your data.',
+        'page.export.title':        'Export',
+        'page.export.subtitle':     'Export processed data to a file.',
+        'page.history.title':       'History',
+        'page.history.subtitle':    'Review previous execution results.',
+        'page.settings.title':      'Settings',
+        'page.settings.subtitle':   'Manage application settings.',
+        'settings.section.profile':  'Solution Profile',
+        'settings.section.language': 'Language',
+        'settings.section.plugins':  'Plugins',
+        'settings.label.profileId':   'Profile ID',
+        'settings.label.profileName': 'Profile Name',
+        'settings.label.interfaceLang': 'Interface Language',
+        'settings.label.outputLang':    'Output Language',
+        'status.initializing': 'Initializing',
+        'status.ready':        'Ready',
+        'status.profile.prefix': 'Profile'
+    }
+};
+
+var _interfaceLanguage = 'ko';
+var _currentPage = 'dashboard';
+
+var PAGE_I18N_KEYS = {
+    'dashboard':   'nav.dashboard',
+    'data-viewer': 'nav.dataViewer',
+    'transform':   'nav.transform',
+    'export':      'nav.export',
+    'history':     'nav.history',
+    'settings':    'nav.settings'
+};
+
+function t(key) {
+    return (LOCALES[_interfaceLanguage] || LOCALES['ko'])[key] || key;
+}
+
+function applyLocale() {
+    document.querySelectorAll('[data-i18n]').forEach(function (el) {
+        var key = el.getAttribute('data-i18n');
+        el.textContent = t(key);
+    });
+    var breadcrumb = document.getElementById('breadcrumb');
+    if (breadcrumb && PAGE_I18N_KEYS[_currentPage]) {
+        breadcrumb.textContent = t(PAGE_I18N_KEYS[_currentPage]);
+    }
+}
+
 // =========================================================
 // Output Language 전역 상태
 // =========================================================
@@ -391,24 +494,16 @@ function getColDisplayName(col) {
     // =========================================================
     // Navigation
     // =========================================================
-    const PAGE_TITLES = {
-        'dashboard':   '대시보드',
-        'data-viewer': '데이터 뷰어',
-        'transform':   '변환',
-        'export':      '내보내기',
-        'history':     '실행 이력',
-        'settings':    '설정'
-    };
-
     function navigateTo(pageId) {
+        _currentPage = pageId;
         document.querySelectorAll('.nav-item').forEach(function (el) {
             el.classList.toggle('active', el.dataset.page === pageId);
         });
         document.querySelectorAll('.page').forEach(function (el) {
             el.classList.toggle('active', el.id === 'page-' + pageId);
         });
-        const breadcrumb = document.getElementById('breadcrumb');
-        if (breadcrumb) breadcrumb.textContent = PAGE_TITLES[pageId] || pageId;
+        var breadcrumb = document.getElementById('breadcrumb');
+        if (breadcrumb) breadcrumb.textContent = PAGE_I18N_KEYS[pageId] ? t(PAGE_I18N_KEYS[pageId]) : pageId;
         if (pageId === 'export') { loadArtifacts(); }
     }
 
@@ -432,20 +527,20 @@ function getColDisplayName(col) {
     // Bridge Events
     // =========================================================
     window.addEventListener('bridge:appReady', function (e) {
-        const overlay = document.getElementById('loading-overlay');
+        var overlay = document.getElementById('loading-overlay');
         if (overlay) overlay.classList.add('hidden');
-        setStatus('ready', '준비됨');
+        setStatus('ready', t('status.ready'));
 
-        const detail = e.detail || {};
+        var detail = e.detail || {};
         if (detail.profileName) {
-            const el = document.getElementById('status-profile');
-            if (el) el.textContent = '프로필: ' + detail.profileName;
+            var el = document.getElementById('status-profile');
+            if (el) el.textContent = t('status.profile.prefix') + ': ' + detail.profileName;
         }
 
         loadDashboardStats();
     });
 
-    setStatus('loading', '초기화 중');
+    setStatus('loading', t('status.initializing'));
 })();
 
 (function () {
@@ -990,21 +1085,28 @@ function getColDisplayName(col) {
         Promise.all([
             bridgeClient.sendCommand('settings.profile', 'getProfile', {}),
             bridgeClient.sendCommand('settings.plugins', 'getPlugins', {}),
-            bridgeClient.sendCommand('settings.language', 'getOutputLanguage', {})
+            bridgeClient.sendCommand('settings.language', 'getOutputLanguage', {}),
+            bridgeClient.sendCommand('settings.language', 'getInterfaceLanguage', {})
         ])
         .then(function (results) {
-            var profile  = results[0];
-            var plugins  = results[1];
-            var langData = results[2];
+            var profile       = results[0];
+            var plugins       = results[1];
+            var outputLang    = results[2];
+            var interfaceLang = results[3];
 
-            document.getElementById('st-profile-id').textContent     = profile.profileId || '—';
-            document.getElementById('st-profile-name').textContent   = profile.profileName || '—';
-            document.getElementById('st-interface-lang').textContent = profile.defaultInterfaceLanguage || '—';
+            document.getElementById('st-profile-id').textContent   = profile.profileId || '—';
+            document.getElementById('st-profile-name').textContent = profile.profileName || '—';
 
-            var currentLang = (langData && langData.outputLanguage) ? langData.outputLanguage : 'ko';
-            _outputLanguage = currentLang;
-            var sel = document.getElementById('st-output-lang-select');
-            if (sel) sel.value = currentLang;
+            var currentOutputLang = (outputLang && outputLang.outputLanguage) ? outputLang.outputLanguage : 'ko';
+            _outputLanguage = currentOutputLang;
+            var outputSel = document.getElementById('st-output-lang-select');
+            if (outputSel) outputSel.value = currentOutputLang;
+
+            var currentInterfaceLang = (interfaceLang && interfaceLang.interfaceLanguage) ? interfaceLang.interfaceLanguage : 'ko';
+            _interfaceLanguage = currentInterfaceLang;
+            var interfaceSel = document.getElementById('st-interface-lang-select');
+            if (interfaceSel) interfaceSel.value = currentInterfaceLang;
+            applyLocale();
 
             renderPlugins(plugins);
             setSettingsState('data');
@@ -1015,18 +1117,34 @@ function getColDisplayName(col) {
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        var sel = document.getElementById('st-output-lang-select');
-        if (!sel) return;
-        sel.addEventListener('change', function () {
-            var lang = sel.value;
-            bridgeClient.sendCommand('settings.language', 'setOutputLanguage', { outputLanguage: lang })
-                .then(function () {
-                    _outputLanguage = lang;
-                })
-                .catch(function () {
-                    sel.value = _outputLanguage;
-                });
-        });
+        var outputSel = document.getElementById('st-output-lang-select');
+        if (outputSel) {
+            outputSel.addEventListener('change', function () {
+                var lang = outputSel.value;
+                bridgeClient.sendCommand('settings.language', 'setOutputLanguage', { outputLanguage: lang })
+                    .then(function () {
+                        _outputLanguage = lang;
+                    })
+                    .catch(function () {
+                        outputSel.value = _outputLanguage;
+                    });
+            });
+        }
+
+        var interfaceSel = document.getElementById('st-interface-lang-select');
+        if (interfaceSel) {
+            interfaceSel.addEventListener('change', function () {
+                var lang = interfaceSel.value;
+                bridgeClient.sendCommand('settings.language', 'setInterfaceLanguage', { interfaceLanguage: lang })
+                    .then(function () {
+                        _interfaceLanguage = lang;
+                        applyLocale();
+                    })
+                    .catch(function () {
+                        interfaceSel.value = _interfaceLanguage;
+                    });
+            });
+        }
     });
 
     document.querySelectorAll('.nav-item[data-page]').forEach(function (el) {
@@ -1040,13 +1158,19 @@ function getColDisplayName(col) {
     window.addEventListener('bridge:appReady', function () {
         Promise.all([
             bridgeClient.sendCommand('settings.plugins', 'getPlugins', {}),
-            bridgeClient.sendCommand('settings.language', 'getOutputLanguage', {})
+            bridgeClient.sendCommand('settings.language', 'getOutputLanguage', {}),
+            bridgeClient.sendCommand('settings.language', 'getInterfaceLanguage', {})
         ])
         .then(function (results) {
             applySidebarVisibility(results[0]);
-            var langData = results[1];
-            if (langData && langData.outputLanguage) {
-                _outputLanguage = langData.outputLanguage;
+            var outputLangData = results[1];
+            if (outputLangData && outputLangData.outputLanguage) {
+                _outputLanguage = outputLangData.outputLanguage;
+            }
+            var interfaceLangData = results[2];
+            if (interfaceLangData && interfaceLangData.interfaceLanguage) {
+                _interfaceLanguage = interfaceLangData.interfaceLanguage;
+                applyLocale();
             }
         })
         .catch(function () {});

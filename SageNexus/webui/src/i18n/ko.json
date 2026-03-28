@@ -1,0 +1,35 @@
+{
+  "nav.section.main": "메인",
+  "nav.section.manage": "관리",
+  "nav.dashboard": "대시보드",
+  "nav.dataViewer": "데이터 뷰어",
+  "nav.transform": "변환",
+  "nav.export": "내보내기",
+  "nav.history": "실행 이력",
+  "nav.settings": "설정",
+
+  "page.dashboard.title": "대시보드",
+  "page.dashboard.subtitle": "업무 자동화 현황을 확인합니다.",
+  "page.dataViewer.title": "데이터 뷰어",
+  "page.dataViewer.subtitle": "파일을 불러와 데이터를 확인합니다.",
+  "page.transform.title": "변환",
+  "page.transform.subtitle": "데이터를 정리하고 변환합니다.",
+  "page.export.title": "내보내기",
+  "page.export.subtitle": "처리된 데이터를 파일로 내보냅니다.",
+  "page.history.title": "실행 이력",
+  "page.history.subtitle": "이전 실행 결과를 확인합니다.",
+  "page.settings.title": "설정",
+  "page.settings.subtitle": "앱 설정을 관리합니다.",
+
+  "settings.section.profile": "솔루션 프로필",
+  "settings.section.language": "언어",
+  "settings.section.plugins": "플러그인",
+  "settings.label.profileId": "프로필 ID",
+  "settings.label.profileName": "프로필 이름",
+  "settings.label.interfaceLang": "인터페이스 언어",
+  "settings.label.outputLang": "결과물 언어",
+
+  "status.initializing": "초기화 중",
+  "status.ready": "준비됨",
+  "status.profile.prefix": "프로필"
+}

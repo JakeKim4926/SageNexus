@@ -58,6 +58,10 @@
                     <span class="nav-icon">▶</span>
                     <span class="nav-label" data-i18n="nav.workflow">워크플로우</span>
                 </div>
+                <div class="nav-item" data-page="webextract">
+                    <span class="nav-icon">🌐</span>
+                    <span class="nav-label" data-i18n="nav.webextract">웹 추출</span>
+                </div>
                 <div class="nav-item" data-page="history">
                     <span class="nav-icon">◷</span>
                     <span class="nav-label" data-i18n="nav.history">실행 이력</span>
@@ -358,6 +362,7 @@
                     <div style="margin-top:12px;display:flex;gap:8px;align-items:center;">
                         <select id="wf-step-type-select" style="padding:7px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg-secondary);color:var(--text-primary);font-size:13px;">
                             <option value="import">Import (파일 가져오기)</option>
+                            <option value="webExtract">Web Extract (웹 추출)</option>
                             <option value="transform">Transform (데이터 변환)</option>
                             <option value="export">Export (내보내기)</option>
                         </select>
@@ -380,6 +385,50 @@
                             </div>
                         </div>
                         <button class="btn-secondary" id="wf-btn-cancel" style="margin-top:16px;" data-i18n="page.workflow.btn.cancel">취소</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Web Extract Page -->
+            <div class="page" id="page-webextract">
+                <div class="page-header">
+                    <div class="page-title" data-i18n="page.webextract.title">웹 추출</div>
+                    <div class="page-subtitle" data-i18n="page.webextract.subtitle">웹 페이지에서 테이블 데이터를 추출합니다.</div>
+                </div>
+                <div class="loading-state hidden" id="wx-state-loading">
+                    <div class="spinner"></div>
+                    <p data-i18n="state.loading">불러오는 중...</p>
+                </div>
+                <div class="error-state hidden" id="wx-state-error">
+                    <p class="error-icon">⚠</p>
+                    <p class="error-message" id="wx-error-msg"></p>
+                </div>
+                <div id="wx-state-form">
+                    <div class="card" style="margin-bottom:12px;">
+                        <div class="field-row" style="margin-bottom:10px;">
+                            <label class="field-label" data-i18n="webextract.url">URL</label>
+                            <input type="text" id="wx-input-url" class="field-input"
+                                   placeholder="https://example.com/table-page" style="width:100%;box-sizing:border-box;" />
+                        </div>
+                        <div class="field-row" style="margin-bottom:10px;">
+                            <label class="field-label" data-i18n="webextract.selector">CSS 선택자</label>
+                            <input type="text" id="wx-input-selector" class="field-input"
+                                   placeholder="table, #myTable, .data-table (비우면 첫 번째 테이블)" style="width:100%;box-sizing:border-box;" />
+                        </div>
+                        <button class="btn btn-primary" id="wx-btn-fetch" data-i18n="webextract.fetch">추출</button>
+                    </div>
+                    <div id="wx-state-data" class="hidden">
+                        <div class="card">
+                            <div class="toolbar">
+                                <span class="toolbar-info" id="wx-info"></span>
+                            </div>
+                            <div class="table-wrap">
+                                <table class="data-table" id="wx-table">
+                                    <thead id="wx-table-head"></thead>
+                                    <tbody id="wx-table-body"></tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -466,6 +515,7 @@ var LOCALES = {
         'nav.export':           '내보내기',
         'nav.history':          '실행 이력',
         'nav.workflow':         '워크플로우',
+        'nav.webextract':       '웹 추출',
         'nav.settings':         '설정',
         'page.dashboard.title':     '대시보드',
         'page.dashboard.subtitle':  '업무 자동화 현황을 확인합니다.',
@@ -486,6 +536,11 @@ var LOCALES = {
         'page.workflow.running.title':'실행 중',
         'page.workflow.btn.new':    '새 워크플로우',
         'page.workflow.btn.cancel': '취소',
+        'page.webextract.title':    '웹 추출',
+        'page.webextract.subtitle': '웹 페이지에서 테이블 데이터를 추출합니다.',
+        'webextract.url':           'URL',
+        'webextract.selector':      'CSS 선택자',
+        'webextract.fetch':         '추출',
         'page.settings.title':      '설정',
         'page.settings.subtitle':   '앱 설정을 관리합니다.',
         'settings.section.profile':  '솔루션 프로필',
@@ -508,6 +563,7 @@ var LOCALES = {
         'nav.export':           'Export',
         'nav.history':          'History',
         'nav.workflow':         'Workflow',
+        'nav.webextract':       'Web Extract',
         'nav.settings':         'Settings',
         'page.dashboard.title':     'Dashboard',
         'page.dashboard.subtitle':  'Overview of your automation activity.',
@@ -528,6 +584,11 @@ var LOCALES = {
         'page.workflow.running.title':'Running',
         'page.workflow.btn.new':    'New Workflow',
         'page.workflow.btn.cancel': 'Cancel',
+        'page.webextract.title':    'Web Extract',
+        'page.webextract.subtitle': 'Extract table data from web pages.',
+        'webextract.url':           'URL',
+        'webextract.selector':      'CSS Selector',
+        'webextract.fetch':         'Extract',
         'page.settings.title':      'Settings',
         'page.settings.subtitle':   'Manage application settings.',
         'settings.section.profile':  'Solution Profile',
@@ -553,6 +614,7 @@ var PAGE_I18N_KEYS = {
     'export':      'nav.export',
     'history':     'nav.history',
     'workflow':    'nav.workflow',
+    'webextract':  'nav.webextract',
     'settings':    'nav.settings'
 };
 
@@ -1104,8 +1166,9 @@ function getColDisplayName(col) {
         'import':    'data-viewer',
         'transform': 'transform',
         'export':    'export',
-        'history':   'history',
-        'workflow':  'workflow'
+        'history':    'history',
+        'workflow':   'workflow',
+        'webextract': 'webextract'
     };
 
     function applySidebarVisibility(plugins) {
@@ -1521,6 +1584,9 @@ function getColDisplayName(col) {
             fmtRow.appendChild(fmtLabel);
             fmtRow.appendChild(fmtSelect);
             form.appendChild(fmtRow);
+        } else if (step.stepType === 'webExtract') {
+            form.appendChild(makeField('URL', 'text', config.url || '', function (v) { updateConfig(idx, 'url', v); }));
+            form.appendChild(makeField('CSS 선택자', 'text', config.selector || '', function (v) { updateConfig(idx, 'selector', v); }));
         }
 
         return form;
@@ -1600,6 +1666,78 @@ function getColDisplayName(col) {
         document.getElementById('wf-running-panel').classList.add('hidden');
         _runningWorkflowId = null;
         loadWorkflows();
+    });
+})();
+
+(function () {
+    function setWxState(state, info) {
+        document.getElementById('wx-state-loading').classList.toggle('hidden', state !== 'loading');
+        document.getElementById('wx-state-error').classList.toggle('hidden', state !== 'error');
+        document.getElementById('wx-state-data').classList.toggle('hidden', state !== 'data');
+        if (state === 'error' && info && info.message) {
+            document.getElementById('wx-error-msg').textContent = info.message;
+        }
+    }
+
+    function renderTable(payload) {
+        var head = document.getElementById('wx-table-head');
+        var body = document.getElementById('wx-table-body');
+        head.innerHTML = '';
+        body.innerHTML = '';
+
+        var tr = document.createElement('tr');
+        (payload.columns || []).forEach(function (col) {
+            var th = document.createElement('th');
+            th.textContent = col.displayNameKo || col.internalName;
+            tr.appendChild(th);
+        });
+        head.appendChild(tr);
+
+        (payload.rows || []).forEach(function (rowArr) {
+            var tr2 = document.createElement('tr');
+            rowArr.forEach(function (cell) {
+                var td = document.createElement('td');
+                td.textContent = cell;
+                tr2.appendChild(td);
+            });
+            body.appendChild(tr2);
+        });
+
+        var info = document.getElementById('wx-info');
+        info.textContent = (payload.rowCount || 0) + ' 행 · ' + (payload.columnCount || 0) + ' 열';
+        setWxState('data');
+    }
+
+    document.getElementById('wx-btn-fetch').addEventListener('click', function () {
+        var url      = document.getElementById('wx-input-url').value.trim();
+        var selector = document.getElementById('wx-input-selector').value.trim();
+
+        if (!url) {
+            setWxState('error', { message: 'URL을 입력하세요.' });
+            return;
+        }
+
+        setWxState('loading');
+
+        bridgeClient.request('webExtract', 'fetchAndExtract', { url: url, selector: selector })
+            .then(function (payload) {
+                renderTable(payload);
+            })
+            .catch(function (err) {
+                setWxState('error', { message: err.message });
+            });
+    });
+
+    document.querySelectorAll('.nav-item[data-page]').forEach(function (el) {
+        el.addEventListener('click', function () {
+            if (el.dataset.page === 'webextract') {
+                setWxState('data');
+                if (!document.getElementById('wx-table-body').firstChild) {
+                    setWxState('data');
+                    document.getElementById('wx-state-data').classList.add('hidden');
+                }
+            }
+        });
     });
 })();
 </script>

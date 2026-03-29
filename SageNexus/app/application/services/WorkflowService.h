@@ -5,6 +5,7 @@
 #include "app/domain/model/DataTable.h"
 #include "app/infrastructure/workflow/WorkflowStore.h"
 #include "app/infrastructure/history/ExecutionHistoryStore.h"
+#include "app/application/services/WebExtractService.h"
 #include <vector>
 
 class WorkflowService

@@ -8,6 +8,7 @@
 #include "app/infrastructure/bridge/HistoryBridgeHandler.h"
 #include "app/infrastructure/bridge/SettingsBridgeHandler.h"
 #include "app/infrastructure/bridge/WorkflowBridgeHandler.h"
+#include "app/infrastructure/bridge/WebExtractBridgeHandler.h"
 
 class MainWindow
 {
@@ -40,5 +41,6 @@ private:
     ExportBridgeHandler     m_exportBridgeHandler;
     HistoryBridgeHandler    m_historyBridgeHandler;
     SettingsBridgeHandler   m_settingsBridgeHandler;
-    WorkflowBridgeHandler   m_workflowBridgeHandler;
+    WorkflowBridgeHandler     m_workflowBridgeHandler;
+    WebExtractBridgeHandler   m_webExtractBridgeHandler;
 };

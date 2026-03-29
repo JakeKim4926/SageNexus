@@ -162,6 +162,26 @@ void WorkflowService::ExecuteSteps(const WorkflowDefinition& workflow, HWND hNot
                 break;
             }
         }
+        else if (step.m_strStepType == L"webExtract")
+        {
+            CString strUrl      = ExtractConfigString(step.m_strConfigJson, L"url");
+            CString strSelector = ExtractConfigString(step.m_strConfigJson, L"selector");
+
+            if (strUrl.IsEmpty())
+            {
+                m_strLastError = L"WebExtract step: url이 비어 있습니다.";
+                bSuccess = FALSE;
+                break;
+            }
+
+            WebExtractService svc;
+            if (!svc.FetchAndExtract(strUrl, strSelector, currentTable, strError))
+            {
+                m_strLastError = strError;
+                bSuccess = FALSE;
+                break;
+            }
+        }
         else if (step.m_strStepType == L"export")
         {
             CString strFilePath = ExtractConfigString(step.m_strConfigJson, L"filePath");

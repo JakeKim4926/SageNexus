@@ -213,6 +213,9 @@
     <ClCompile Include="app\infrastructure\workflow\WorkflowStore.cpp">
       <Filter>소스 파일\app\infrastructure\workflow</Filter>
     </ClCompile>
+    <ClCompile Include="app\application\services\WorkflowService.cpp">
+      <Filter>소스 파일\app\application\services</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -322,6 +325,9 @@
     </ClInclude>
     <ClInclude Include="app\infrastructure\workflow\WorkflowStore.h">
       <Filter>헤더 파일\app\infrastructure\workflow</Filter>
+    </ClInclude>
+    <ClInclude Include="app\application\services\WorkflowService.h">
+      <Filter>헤더 파일\app\application\services</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

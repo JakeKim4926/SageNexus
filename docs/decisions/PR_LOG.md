@@ -4,6 +4,12 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 
 ---
 
+## [2026-03-29] feature/workflow-service
+- **목적**: Phase 4 Step 2 — WorkflowService + 실행 엔진 + progress 브릿지 구조
+- **변경 내용**: WM_WORKFLOW_PROGRESS/WM_WORKFLOW_COMPLETE 메시지 상수, NavigationItem::Workflow, WorkflowService(CRUD + 워커 스레드 실행 + cancel + 이력 기록), progress PostMessage 구조
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/23
+- **결과**: merged ✅
+
 ## [2026-03-29] feature/workflow-model
 - **목적**: Phase 4 Step 1 — WorkflowDefinition 모델 + WorkflowStore 구현
 - **변경 내용**: WorkflowStep 구조체(id/stepType/name/configJson), WorkflowDefinition 구조체(id/name/description/createdAt/updatedAt/steps[]), WorkflowStore(workflows.json CRUD — SaveWorkflow/LoadWorkflows/DeleteWorkflow), vcxproj·filters 등록

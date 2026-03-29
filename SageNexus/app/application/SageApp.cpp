@@ -57,6 +57,7 @@ BOOL SageApp::Initialize(HINSTANCE hInstance)
     m_pluginManager.RegisterBuiltIn(L"transform", L"데이터 변환");
     m_pluginManager.RegisterBuiltIn(L"export",    L"내보내기");
     m_pluginManager.RegisterBuiltIn(L"history",   L"실행 이력");
+    m_pluginManager.RegisterBuiltIn(L"workflow",  L"워크플로우");
 
     m_bInitialized = TRUE;
     m_pLogger->LogInfo(L"SageApp initialized");

@@ -54,6 +54,10 @@
 
             <div class="nav-section">
                 <div class="nav-section-label" data-i18n="nav.section.manage">관리</div>
+                <div class="nav-item" data-page="workflow">
+                    <span class="nav-icon">▶</span>
+                    <span class="nav-label" data-i18n="nav.workflow">워크플로우</span>
+                </div>
                 <div class="nav-item" data-page="history">
                     <span class="nav-icon">◷</span>
                     <span class="nav-label" data-i18n="nav.history">실행 이력</span>
@@ -312,6 +316,49 @@
                 </div>
             </div>
 
+            <!-- Workflow Page -->
+            <div class="page" id="page-workflow">
+                <div class="page-header">
+                    <div class="page-title" data-i18n="page.workflow.title">워크플로우</div>
+                    <div class="page-subtitle" data-i18n="page.workflow.subtitle">자동화 워크플로우를 관리하고 실행합니다.</div>
+                </div>
+                <div class="loading-state hidden" id="wf-state-loading">
+                    <div class="loading-spinner"></div>
+                    <div class="loading-text" data-i18n="page.workflow.loading">워크플로우를 불러오는 중...</div>
+                </div>
+                <div class="empty-state hidden" id="wf-state-empty">
+                    <div class="empty-icon">▶</div>
+                    <div class="empty-title" data-i18n="page.workflow.empty.title">워크플로우가 없습니다</div>
+                    <div class="empty-desc" data-i18n="page.workflow.empty.desc">새 워크플로우를 만들어 자동화 작업을 구성하세요.</div>
+                    <button class="btn-primary" id="wf-btn-new-empty" data-i18n="page.workflow.btn.new">새 워크플로우</button>
+                </div>
+                <div class="error-state hidden" id="wf-state-error">
+                    <div class="error-icon">⚠</div>
+                    <div class="error-title" data-i18n="page.workflow.error.title">워크플로우를 불러오지 못했습니다</div>
+                    <div class="error-desc" id="wf-error-message"></div>
+                </div>
+                <div class="hidden" id="wf-state-data">
+                    <div class="page-actions" style="margin-bottom:16px;">
+                        <button class="btn-primary" id="wf-btn-new" data-i18n="page.workflow.btn.new">새 워크플로우</button>
+                    </div>
+                    <div id="wf-list"></div>
+                </div>
+
+                <!-- 실행 진행 오버레이 -->
+                <div class="hidden" id="wf-running-panel" style="margin-top:24px;">
+                    <div class="settings-card" style="padding:20px;">
+                        <div class="settings-section-title" data-i18n="page.workflow.running.title">실행 중</div>
+                        <div style="margin-top:12px;">
+                            <div id="wf-progress-label" style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">-</div>
+                            <div style="background:var(--border);border-radius:4px;height:8px;overflow:hidden;">
+                                <div id="wf-progress-bar" style="background:var(--primary);height:100%;width:0%;transition:width 0.3s;"></div>
+                            </div>
+                        </div>
+                        <button class="btn-secondary" id="wf-btn-cancel" style="margin-top:16px;" data-i18n="page.workflow.btn.cancel">취소</button>
+                    </div>
+                </div>
+            </div>
+
             <!-- Settings Page -->
             <div class="page" id="page-settings">
                 <div class="page-header">
@@ -393,6 +440,7 @@ var LOCALES = {
         'nav.transform':        '변환',
         'nav.export':           '내보내기',
         'nav.history':          '실행 이력',
+        'nav.workflow':         '워크플로우',
         'nav.settings':         '설정',
         'page.dashboard.title':     '대시보드',
         'page.dashboard.subtitle':  '업무 자동화 현황을 확인합니다.',
@@ -404,6 +452,15 @@ var LOCALES = {
         'page.export.subtitle':     '처리된 데이터를 파일로 내보냅니다.',
         'page.history.title':       '실행 이력',
         'page.history.subtitle':    '이전 실행 결과를 확인합니다.',
+        'page.workflow.title':      '워크플로우',
+        'page.workflow.subtitle':   '자동화 워크플로우를 관리하고 실행합니다.',
+        'page.workflow.loading':    '워크플로우를 불러오는 중...',
+        'page.workflow.empty.title':'워크플로우가 없습니다',
+        'page.workflow.empty.desc': '새 워크플로우를 만들어 자동화 작업을 구성하세요.',
+        'page.workflow.error.title':'워크플로우를 불러오지 못했습니다',
+        'page.workflow.running.title':'실행 중',
+        'page.workflow.btn.new':    '새 워크플로우',
+        'page.workflow.btn.cancel': '취소',
         'page.settings.title':      '설정',
         'page.settings.subtitle':   '앱 설정을 관리합니다.',
         'settings.section.profile':  '솔루션 프로필',
@@ -425,6 +482,7 @@ var LOCALES = {
         'nav.transform':        'Transform',
         'nav.export':           'Export',
         'nav.history':          'History',
+        'nav.workflow':         'Workflow',
         'nav.settings':         'Settings',
         'page.dashboard.title':     'Dashboard',
         'page.dashboard.subtitle':  'Overview of your automation activity.',
@@ -436,6 +494,15 @@ var LOCALES = {
         'page.export.subtitle':     'Export processed data to a file.',
         'page.history.title':       'History',
         'page.history.subtitle':    'Review previous execution results.',
+        'page.workflow.title':      'Workflow',
+        'page.workflow.subtitle':   'Manage and run automation workflows.',
+        'page.workflow.loading':    'Loading workflows...',
+        'page.workflow.empty.title':'No workflows yet',
+        'page.workflow.empty.desc': 'Create a new workflow to get started.',
+        'page.workflow.error.title':'Failed to load workflows',
+        'page.workflow.running.title':'Running',
+        'page.workflow.btn.new':    'New Workflow',
+        'page.workflow.btn.cancel': 'Cancel',
         'page.settings.title':      'Settings',
         'page.settings.subtitle':   'Manage application settings.',
         'settings.section.profile':  'Solution Profile',
@@ -460,6 +527,7 @@ var PAGE_I18N_KEYS = {
     'transform':   'nav.transform',
     'export':      'nav.export',
     'history':     'nav.history',
+    'workflow':    'nav.workflow',
     'settings':    'nav.settings'
 };
 
@@ -1011,7 +1079,8 @@ function getColDisplayName(col) {
         'import':    'data-viewer',
         'transform': 'transform',
         'export':    'export',
-        'history':   'history'
+        'history':   'history',
+        'workflow':  'workflow'
     };
 
     function applySidebarVisibility(plugins) {
@@ -1152,6 +1221,9 @@ function getColDisplayName(col) {
             if (el.dataset.page === 'settings') {
                 loadSettings();
             }
+            if (el.dataset.page === 'workflow') {
+                loadWorkflows();
+            }
         });
     });
 
@@ -1174,6 +1246,135 @@ function getColDisplayName(col) {
             }
         })
         .catch(function () {});
+    });
+})();
+
+(function () {
+    var _runningWorkflowId = null;
+
+    function setWfState(state) {
+        document.getElementById('wf-state-loading').classList.toggle('hidden', state !== 'loading');
+        document.getElementById('wf-state-empty').classList.toggle('hidden', state !== 'empty');
+        document.getElementById('wf-state-error').classList.toggle('hidden', state !== 'error');
+        document.getElementById('wf-state-data').classList.toggle('hidden', state !== 'data');
+    }
+
+    function renderWorkflows(workflows) {
+        var list = document.getElementById('wf-list');
+        list.innerHTML = '';
+
+        workflows.forEach(function (wf) {
+            var card = document.createElement('div');
+            card.className = 'settings-card';
+            card.style.cssText = 'padding:16px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;';
+
+            var info = document.createElement('div');
+            var nameEl = document.createElement('div');
+            nameEl.style.cssText = 'font-weight:600;font-size:14px;';
+            nameEl.textContent = wf.name || wf.id;
+            var descEl = document.createElement('div');
+            descEl.style.cssText = 'font-size:12px;color:var(--text-secondary);margin-top:2px;';
+            descEl.textContent = wf.description || (wf.steps ? wf.steps.length + '개 단계' : '0개 단계');
+            info.appendChild(nameEl);
+            info.appendChild(descEl);
+
+            var actions = document.createElement('div');
+            actions.style.cssText = 'display:flex;gap:8px;';
+
+            var runBtn = document.createElement('button');
+            runBtn.className = 'btn-primary';
+            runBtn.style.cssText = 'font-size:12px;padding:6px 14px;';
+            runBtn.textContent = '실행';
+            runBtn.addEventListener('click', function () {
+                runWorkflow(wf.id);
+            });
+
+            var delBtn = document.createElement('button');
+            delBtn.className = 'btn-secondary';
+            delBtn.style.cssText = 'font-size:12px;padding:6px 14px;';
+            delBtn.textContent = '삭제';
+            delBtn.addEventListener('click', function () {
+                deleteWorkflow(wf.id);
+            });
+
+            actions.appendChild(runBtn);
+            actions.appendChild(delBtn);
+            card.appendChild(info);
+            card.appendChild(actions);
+            list.appendChild(card);
+        });
+    }
+
+    function loadWorkflows() {
+        setWfState('loading');
+        bridgeClient.sendCommand('workflow', 'getWorkflows', {})
+            .then(function (workflows) {
+                if (!workflows || workflows.length === 0) {
+                    setWfState('empty');
+                } else {
+                    renderWorkflows(workflows);
+                    setWfState('data');
+                }
+            })
+            .catch(function (err) {
+                document.getElementById('wf-error-message').textContent = err && err.message ? err.message : '알 수 없는 오류';
+                setWfState('error');
+            });
+    }
+
+    function runWorkflow(id) {
+        _runningWorkflowId = id;
+        document.getElementById('wf-running-panel').classList.remove('hidden');
+        document.getElementById('wf-progress-bar').style.width = '0%';
+        document.getElementById('wf-progress-label').textContent = '시작 중...';
+
+        bridgeClient.sendCommand('workflow', 'runWorkflow', { id: id })
+            .catch(function (err) {
+                document.getElementById('wf-running-panel').classList.add('hidden');
+                _runningWorkflowId = null;
+            });
+    }
+
+    function deleteWorkflow(id) {
+        bridgeClient.sendCommand('workflow', 'deleteWorkflow', { id: id })
+            .then(function () {
+                loadWorkflows();
+            })
+            .catch(function () {});
+    }
+
+    function createWorkflow() {
+        var name = window.prompt('워크플로우 이름을 입력하세요.');
+        if (!name || !name.trim()) return;
+        bridgeClient.sendCommand('workflow', 'createWorkflow', { name: name.trim(), description: '' })
+            .then(function () {
+                loadWorkflows();
+            })
+            .catch(function () {});
+    }
+
+    window.loadWorkflows = loadWorkflows;
+
+    document.getElementById('wf-btn-new').addEventListener('click', createWorkflow);
+    document.getElementById('wf-btn-new-empty').addEventListener('click', createWorkflow);
+    document.getElementById('wf-btn-cancel').addEventListener('click', function () {
+        bridgeClient.sendCommand('workflow', 'cancelWorkflow', {}).catch(function () {});
+    });
+
+    window.addEventListener('bridge:workflow:progress', function (e) {
+        var payload = e.detail || {};
+        var step  = payload.step  || 0;
+        var total = payload.total || 1;
+        var pct   = Math.round((step / total) * 100);
+        document.getElementById('wf-progress-bar').style.width = pct + '%';
+        document.getElementById('wf-progress-label').textContent = step + ' / ' + total + ' 단계';
+    });
+
+    window.addEventListener('bridge:workflow:complete', function (e) {
+        var payload = e.detail || {};
+        document.getElementById('wf-running-panel').classList.add('hidden');
+        _runningWorkflowId = null;
+        loadWorkflows();
     });
 })();
 </script>

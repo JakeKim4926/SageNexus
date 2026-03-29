@@ -98,6 +98,14 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         OnWebViewReady(static_cast<BOOL>(wParam));
         return 0;
 
+    case WM_WORKFLOW_PROGRESS:
+        OnWorkflowProgress(static_cast<int>(wParam), static_cast<int>(lParam));
+        return 0;
+
+    case WM_WORKFLOW_COMPLETE:
+        OnWorkflowComplete(static_cast<BOOL>(wParam));
+        return 0;
+
     case WM_DESTROY:
         OnDestroy();
         return 0;
@@ -157,6 +165,7 @@ void MainWindow::RegisterBridgeHandlers()
     m_exportBridgeHandler.RegisterHandlers(dispatcher, m_hWnd, &m_currentTable);
     m_historyBridgeHandler.RegisterHandlers(dispatcher);
     m_settingsBridgeHandler.RegisterHandlers(dispatcher);
+    m_workflowBridgeHandler.RegisterHandlers(dispatcher, m_hWnd);
 }
 
 void MainWindow::NavigateToShell()
@@ -164,6 +173,26 @@ void MainWindow::NavigateToShell()
     CString strUrl = L"file:///" + sageMgr.GetAppDir() + L"\\" + WEB_ENTRY_FILE;
     strUrl.Replace(L'\\', L'/');
     m_pWebViewHost->Navigate(strUrl);
+}
+
+void MainWindow::OnWorkflowProgress(int nStep, int nTotal)
+{
+    if (!m_pWebViewHost || !m_pWebViewHost->IsReady())
+        return;
+
+    CString strPayload;
+    strPayload.Format(L"{\"step\":%d,\"total\":%d}", nStep, nTotal);
+    m_pWebViewHost->SendEvent(L"workflow:progress", strPayload);
+}
+
+void MainWindow::OnWorkflowComplete(BOOL bSuccess)
+{
+    if (!m_pWebViewHost || !m_pWebViewHost->IsReady())
+        return;
+
+    CString strPayload;
+    strPayload.Format(L"{\"success\":%s}", bSuccess ? L"true" : L"false");
+    m_pWebViewHost->SendEvent(L"workflow:complete", strPayload);
 }
 
 void MainWindow::OnDestroy()

@@ -1,6 +1,8 @@
 #pragma once
 #include "pch.h"
 #include "app/domain/model/WorkflowDefinition.h"
+#include "app/domain/model/TransformStep.h"
+#include "app/domain/model/DataTable.h"
 #include "app/infrastructure/workflow/WorkflowStore.h"
 #include "app/infrastructure/history/ExecutionHistoryStore.h"
 #include <vector>
@@ -31,6 +33,9 @@ private:
 
     static DWORD WINAPI RunThread(LPVOID pParam);
     void ExecuteSteps(const WorkflowDefinition& workflow, HWND hNotifyWnd);
+
+    CString                        ExtractConfigString(const CString& strConfigJson, const CString& strKey) const;
+    std::vector<TransformStep>     ParseTransformSteps(const CString& strConfigJson) const;
 
     WorkflowStore          m_store;
     ExecutionHistoryStore  m_historyStore;

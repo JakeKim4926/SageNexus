@@ -1,7 +1,11 @@
 #include "pch.h"
 #include "app/application/services/WorkflowService.h"
+#include "app/application/services/ImportService.h"
+#include "app/application/services/TransformService.h"
+#include "app/application/services/ExportService.h"
 #include "app/application/SageApp.h"
 #include "Define.h"
+#include <string>
 
 WorkflowService::WorkflowService()
     : m_bRunning(FALSE)
@@ -108,8 +112,9 @@ void WorkflowService::ExecuteSteps(const WorkflowDefinition& workflow, HWND hNot
 {
     m_bRunning = TRUE;
 
-    int nTotal  = (int)workflow.m_arrSteps.size();
-    BOOL bSuccess = TRUE;
+    int    nTotal    = (int)workflow.m_arrSteps.size();
+    BOOL   bSuccess  = TRUE;
+    DataTable currentTable;
 
     for (int i = 0; i < nTotal; ++i)
     {
@@ -122,11 +127,70 @@ void WorkflowService::ExecuteSteps(const WorkflowDefinition& workflow, HWND hNot
 
         PostMessage(hNotifyWnd, WM_WORKFLOW_PROGRESS, (WPARAM)(i + 1), (LPARAM)nTotal);
 
-        sageMgr.GetLogger().Log(
-            LogLevel::Info,
+        const WorkflowStep& step = workflow.m_arrSteps[i];
+        CString strError;
+
+        sageMgr.GetLogger().Log(LogLevel::Info,
             L"[Workflow] " + workflow.m_strName +
-            L" — step " + workflow.m_arrSteps[i].m_strStepType +
-            L" (" + workflow.m_arrSteps[i].m_strName + L")");
+            L" step[" + step.m_strStepType + L"] " + step.m_strName);
+
+        if (step.m_strStepType == L"import")
+        {
+            CString strFilePath = ExtractConfigString(step.m_strConfigJson, L"filePath");
+            if (strFilePath.IsEmpty())
+            {
+                m_strLastError = L"Import step: filePath가 비어 있습니다.";
+                bSuccess = FALSE;
+                break;
+            }
+            ImportService svc;
+            if (!svc.LoadFromFile(strFilePath, currentTable, strError))
+            {
+                m_strLastError = strError;
+                bSuccess = FALSE;
+                break;
+            }
+        }
+        else if (step.m_strStepType == L"transform")
+        {
+            std::vector<TransformStep> arrRules = ParseTransformSteps(step.m_strConfigJson);
+            TransformService svc;
+            if (!svc.ApplySteps(currentTable, arrRules, strError))
+            {
+                m_strLastError = strError;
+                bSuccess = FALSE;
+                break;
+            }
+        }
+        else if (step.m_strStepType == L"export")
+        {
+            CString strFilePath = ExtractConfigString(step.m_strConfigJson, L"filePath");
+            CString strFormat   = ExtractConfigString(step.m_strConfigJson, L"format");
+            CString strLang     = ExtractConfigString(step.m_strConfigJson, L"outputLanguage");
+
+            if (strFilePath.IsEmpty())
+            {
+                m_strLastError = L"Export step: filePath가 비어 있습니다.";
+                bSuccess = FALSE;
+                break;
+            }
+            if (strLang.IsEmpty())
+                strLang = L"ko";
+
+            ExportService svc;
+            if (strFormat == L"xlsx")
+                bSuccess = svc.ExportToXlsx(currentTable, strFilePath, strLang, strError);
+            else if (strFormat == L"html")
+                bSuccess = svc.ExportToHtml(currentTable, strFilePath, strLang, strError);
+            else
+                bSuccess = svc.ExportToCsv(currentTable, strFilePath, strLang, strError);
+
+            if (!bSuccess)
+            {
+                m_strLastError = strError;
+                break;
+            }
+        }
     }
 
     ExecutionRecord record;
@@ -141,4 +205,116 @@ void WorkflowService::ExecuteSteps(const WorkflowDefinition& workflow, HWND hNot
     m_bRunning = FALSE;
 
     PostMessage(hNotifyWnd, WM_WORKFLOW_COMPLETE, (WPARAM)bSuccess, 0);
+}
+
+CString WorkflowService::ExtractConfigString(const CString& strConfigJson, const CString& strKey) const
+{
+    std::string json  = WideToUtf8(strConfigJson);
+    std::string key   = WideToUtf8(strKey);
+    std::string token = "\"" + key + "\"";
+
+    size_t nKeyPos = json.find(token);
+    if (nKeyPos == std::string::npos) return L"";
+
+    size_t nColon = json.find(':', nKeyPos + token.size());
+    if (nColon == std::string::npos) return L"";
+
+    size_t nQuoteOpen = json.find('"', nColon + 1);
+    if (nQuoteOpen == std::string::npos) return L"";
+
+    size_t nQuoteClose = nQuoteOpen + 1;
+    while (nQuoteClose < json.size())
+    {
+        if (json[nQuoteClose] == '\\') { nQuoteClose += 2; continue; }
+        if (json[nQuoteClose] == '"') break;
+        ++nQuoteClose;
+    }
+
+    if (nQuoteClose >= json.size()) return L"";
+
+    std::string val = json.substr(nQuoteOpen + 1, nQuoteClose - nQuoteOpen - 1);
+
+    std::string unescaped;
+    for (size_t i = 0; i < val.size(); ++i)
+    {
+        if (val[i] == '\\' && i + 1 < val.size())
+        {
+            ++i;
+            switch (val[i])
+            {
+            case '"':  unescaped += '"';  break;
+            case '\\': unescaped += '\\'; break;
+            case '/':  unescaped += '/';  break;
+            case 'n':  unescaped += '\n'; break;
+            case 'r':  unescaped += '\r'; break;
+            case 't':  unescaped += '\t'; break;
+            default:   unescaped += val[i]; break;
+            }
+        }
+        else
+        {
+            unescaped += val[i];
+        }
+    }
+
+    return Utf8ToWide(unescaped);
+}
+
+std::vector<TransformStep> WorkflowService::ParseTransformSteps(const CString& strConfigJson) const
+{
+    std::vector<TransformStep> arrSteps;
+
+    std::string json = WideToUtf8(strConfigJson);
+    std::string rulesToken = "\"rules\"";
+    size_t nPos = json.find(rulesToken);
+    if (nPos == std::string::npos) return arrSteps;
+
+    size_t nBracket = json.find('[', nPos);
+    if (nBracket == std::string::npos) return arrSteps;
+
+    int nDepth = 0;
+    size_t nEnd = nBracket;
+    for (; nEnd < json.size(); ++nEnd)
+    {
+        if (json[nEnd] == '[') ++nDepth;
+        else if (json[nEnd] == ']') { --nDepth; if (nDepth == 0) break; }
+    }
+
+    std::string rulesJson = json.substr(nBracket, nEnd - nBracket + 1);
+
+    nDepth = 0;
+    size_t nObjStart = std::string::npos;
+    for (size_t i = 0; i < rulesJson.size(); ++i)
+    {
+        if (rulesJson[i] == '"')
+        {
+            ++i;
+            while (i < rulesJson.size())
+            {
+                if (rulesJson[i] == '\\') ++i;
+                else if (rulesJson[i] == '"') break;
+                ++i;
+            }
+            continue;
+        }
+        if (rulesJson[i] == '{') { if (nDepth == 0) nObjStart = i; ++nDepth; }
+        else if (rulesJson[i] == '}')
+        {
+            --nDepth;
+            if (nDepth == 0 && nObjStart != std::string::npos)
+            {
+                CString strObj = Utf8ToWide(rulesJson.substr(nObjStart, i - nObjStart + 1));
+                TransformStep step;
+                step.m_strType   = ExtractConfigString(strObj, L"type");
+                step.m_strColumn = ExtractConfigString(strObj, L"column");
+                step.m_strParam1 = ExtractConfigString(strObj, L"param1");
+                step.m_strParam2 = ExtractConfigString(strObj, L"param2");
+                if (!step.m_strType.IsEmpty())
+                    arrSteps.push_back(step);
+                nObjStart = std::string::npos;
+            }
+        }
+    }
+
+    return arrSteps;
 }

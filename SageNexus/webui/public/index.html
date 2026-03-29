@@ -344,6 +344,31 @@
                     <div id="wf-list"></div>
                 </div>
 
+                <!-- Step 편집기 (detail view) -->
+                <div class="hidden" id="wf-detail-view">
+                    <div style="margin-bottom:16px;">
+                        <button class="btn-secondary" id="wf-btn-back">← 목록으로</button>
+                    </div>
+                    <div class="settings-card" style="padding:16px;margin-bottom:16px;">
+                        <label style="font-size:12px;color:var(--text-secondary);display:block;margin-bottom:4px;">워크플로우 이름</label>
+                        <input type="text" id="wf-detail-name" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-secondary);color:var(--text-primary);font-size:14px;">
+                    </div>
+                    <div class="settings-section-title" style="margin-bottom:8px;">Steps</div>
+                    <div id="wf-steps-container"></div>
+                    <div style="margin-top:12px;display:flex;gap:8px;align-items:center;">
+                        <select id="wf-step-type-select" style="padding:7px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg-secondary);color:var(--text-primary);font-size:13px;">
+                            <option value="import">Import (파일 가져오기)</option>
+                            <option value="transform">Transform (데이터 변환)</option>
+                            <option value="export">Export (내보내기)</option>
+                        </select>
+                        <button class="btn-secondary" id="wf-btn-add-step">+ Step 추가</button>
+                    </div>
+                    <div style="margin-top:20px;display:flex;gap:8px;">
+                        <button class="btn-primary" id="wf-btn-save-detail">저장</button>
+                        <button class="btn-secondary" id="wf-btn-back2">취소</button>
+                    </div>
+                </div>
+
                 <!-- 실행 진행 오버레이 -->
                 <div class="hidden" id="wf-running-panel" style="margin-top:24px;">
                     <div class="settings-card" style="padding:20px;">
@@ -1251,18 +1276,21 @@ function getColDisplayName(col) {
 
 (function () {
     var _runningWorkflowId = null;
+    var _editingWorkflow   = null;
 
     function setWfState(state) {
         document.getElementById('wf-state-loading').classList.toggle('hidden', state !== 'loading');
         document.getElementById('wf-state-empty').classList.toggle('hidden', state !== 'empty');
         document.getElementById('wf-state-error').classList.toggle('hidden', state !== 'error');
         document.getElementById('wf-state-data').classList.toggle('hidden', state !== 'data');
+        document.getElementById('wf-detail-view').classList.toggle('hidden', state !== 'detail');
     }
+
+    /* ── List view ─────────────────────────────────────── */
 
     function renderWorkflows(workflows) {
         var list = document.getElementById('wf-list');
         list.innerHTML = '';
-
         workflows.forEach(function (wf) {
             var card = document.createElement('div');
             card.className = 'settings-card';
@@ -1274,29 +1302,32 @@ function getColDisplayName(col) {
             nameEl.textContent = wf.name || wf.id;
             var descEl = document.createElement('div');
             descEl.style.cssText = 'font-size:12px;color:var(--text-secondary);margin-top:2px;';
-            descEl.textContent = wf.description || (wf.steps ? wf.steps.length + '개 단계' : '0개 단계');
+            descEl.textContent = wf.steps ? wf.steps.length + '개 단계' : '0개 단계';
             info.appendChild(nameEl);
             info.appendChild(descEl);
 
             var actions = document.createElement('div');
             actions.style.cssText = 'display:flex;gap:8px;';
 
+            var editBtn = document.createElement('button');
+            editBtn.className = 'btn-secondary';
+            editBtn.style.cssText = 'font-size:12px;padding:6px 14px;';
+            editBtn.textContent = '편집';
+            editBtn.addEventListener('click', function () { openDetail(wf); });
+
             var runBtn = document.createElement('button');
             runBtn.className = 'btn-primary';
             runBtn.style.cssText = 'font-size:12px;padding:6px 14px;';
             runBtn.textContent = '실행';
-            runBtn.addEventListener('click', function () {
-                runWorkflow(wf.id);
-            });
+            runBtn.addEventListener('click', function () { runWorkflow(wf.id); });
 
             var delBtn = document.createElement('button');
             delBtn.className = 'btn-secondary';
             delBtn.style.cssText = 'font-size:12px;padding:6px 14px;';
             delBtn.textContent = '삭제';
-            delBtn.addEventListener('click', function () {
-                deleteWorkflow(wf.id);
-            });
+            delBtn.addEventListener('click', function () { deleteWorkflow(wf.id); });
 
+            actions.appendChild(editBtn);
             actions.appendChild(runBtn);
             actions.appendChild(delBtn);
             card.appendChild(info);
@@ -1322,35 +1353,222 @@ function getColDisplayName(col) {
             });
     }
 
+    function createWorkflow() {
+        var name = window.prompt('워크플로우 이름을 입력하세요.');
+        if (!name || !name.trim()) return;
+        bridgeClient.sendCommand('workflow', 'createWorkflow', { name: name.trim(), description: '' })
+            .then(function (wf) { openDetail(wf); })
+            .catch(function () {});
+    }
+
+    function deleteWorkflow(id) {
+        bridgeClient.sendCommand('workflow', 'deleteWorkflow', { id: id })
+            .then(function () { loadWorkflows(); })
+            .catch(function () {});
+    }
+
     function runWorkflow(id) {
         _runningWorkflowId = id;
         document.getElementById('wf-running-panel').classList.remove('hidden');
         document.getElementById('wf-progress-bar').style.width = '0%';
         document.getElementById('wf-progress-label').textContent = '시작 중...';
-
         bridgeClient.sendCommand('workflow', 'runWorkflow', { id: id })
-            .catch(function (err) {
+            .catch(function () {
                 document.getElementById('wf-running-panel').classList.add('hidden');
                 _runningWorkflowId = null;
             });
     }
 
-    function deleteWorkflow(id) {
-        bridgeClient.sendCommand('workflow', 'deleteWorkflow', { id: id })
-            .then(function () {
-                loadWorkflows();
-            })
-            .catch(function () {});
+    /* ── Detail / Step Editor ───────────────────────────── */
+
+    function openDetail(wf) {
+        _editingWorkflow = JSON.parse(JSON.stringify(wf));
+        if (!_editingWorkflow.steps) _editingWorkflow.steps = [];
+        document.getElementById('wf-detail-name').value = _editingWorkflow.name || '';
+        renderStepList();
+        setWfState('detail');
     }
 
-    function createWorkflow() {
-        var name = window.prompt('워크플로우 이름을 입력하세요.');
-        if (!name || !name.trim()) return;
-        bridgeClient.sendCommand('workflow', 'createWorkflow', { name: name.trim(), description: '' })
-            .then(function () {
-                loadWorkflows();
-            })
-            .catch(function () {});
+    function renderStepList() {
+        var container = document.getElementById('wf-steps-container');
+        container.innerHTML = '';
+        (_editingWorkflow.steps || []).forEach(function (step, idx) {
+            container.appendChild(buildStepCard(step, idx));
+        });
+    }
+
+    function buildStepCard(step, idx) {
+        var card = document.createElement('div');
+        card.className = 'settings-card';
+        card.style.cssText = 'padding:14px;margin-bottom:10px;';
+
+        var header = document.createElement('div');
+        header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;';
+
+        var badge = document.createElement('span');
+        badge.style.cssText = 'background:var(--primary);color:#fff;border-radius:4px;padding:2px 8px;font-size:11px;font-weight:600;';
+        badge.textContent = step.stepType || 'step';
+
+        var nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.placeholder = 'Step 이름 (선택)';
+        nameInput.value = step.name || '';
+        nameInput.style.cssText = 'flex:1;margin:0 10px;padding:5px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg-secondary);color:var(--text-primary);font-size:12px;';
+        nameInput.addEventListener('input', function () {
+            _editingWorkflow.steps[idx].name = nameInput.value;
+        });
+
+        var removeBtn = document.createElement('button');
+        removeBtn.className = 'btn-secondary';
+        removeBtn.style.cssText = 'font-size:11px;padding:4px 10px;';
+        removeBtn.textContent = '제거';
+        removeBtn.addEventListener('click', function () {
+            _editingWorkflow.steps.splice(idx, 1);
+            renderStepList();
+        });
+
+        header.appendChild(badge);
+        header.appendChild(nameInput);
+        header.appendChild(removeBtn);
+        card.appendChild(header);
+        card.appendChild(buildConfigForm(step, idx));
+        return card;
+    }
+
+    function buildConfigForm(step, idx) {
+        var form = document.createElement('div');
+        var config = {};
+        try { config = JSON.parse(step.configJson || '{}'); } catch (e) {}
+
+        if (step.stepType === 'import') {
+            form.appendChild(makeField('파일 경로', 'text', config.filePath || '', function (v) {
+                updateConfig(idx, 'filePath', v);
+            }));
+        } else if (step.stepType === 'transform') {
+            var rules = config.rules || [];
+            var rulesDiv = document.createElement('div');
+            rulesDiv.id = 'wf-rules-' + idx;
+
+            function renderRules() {
+                rulesDiv.innerHTML = '';
+                rules.forEach(function (rule, rIdx) {
+                    var row = document.createElement('div');
+                    row.style.cssText = 'display:flex;gap:6px;align-items:center;margin-bottom:6px;flex-wrap:wrap;';
+
+                    var typeSelect = document.createElement('select');
+                    typeSelect.style.cssText = 'padding:5px;border:1px solid var(--border);border-radius:4px;background:var(--bg-secondary);color:var(--text-primary);font-size:12px;';
+                    ['trim', 'renameColumn', 'replaceValue'].forEach(function (t) {
+                        var opt = document.createElement('option');
+                        opt.value = t; opt.textContent = t;
+                        if (rule.type === t) opt.selected = true;
+                        typeSelect.appendChild(opt);
+                    });
+                    typeSelect.addEventListener('change', function () { rules[rIdx].type = typeSelect.value; setRulesConfig(); });
+
+                    var colInput = makeInlineInput(rule.column || '', '컬럼명', function (v) { rules[rIdx].column = v; setRulesConfig(); });
+                    var p1Input  = makeInlineInput(rule.param1 || '', '값1', function (v) { rules[rIdx].param1 = v; setRulesConfig(); });
+                    var p2Input  = makeInlineInput(rule.param2 || '', '값2', function (v) { rules[rIdx].param2 = v; setRulesConfig(); });
+
+                    var delBtn = document.createElement('button');
+                    delBtn.className = 'btn-secondary';
+                    delBtn.style.cssText = 'font-size:11px;padding:3px 8px;';
+                    delBtn.textContent = '×';
+                    delBtn.addEventListener('click', function () { rules.splice(rIdx, 1); setRulesConfig(); renderRules(); });
+
+                    row.appendChild(typeSelect);
+                    row.appendChild(colInput);
+                    row.appendChild(p1Input);
+                    row.appendChild(p2Input);
+                    row.appendChild(delBtn);
+                    rulesDiv.appendChild(row);
+                });
+            }
+
+            function setRulesConfig() {
+                _editingWorkflow.steps[idx].configJson = JSON.stringify({ rules: rules });
+            }
+
+            var addRuleBtn = document.createElement('button');
+            addRuleBtn.className = 'btn-secondary';
+            addRuleBtn.style.cssText = 'font-size:12px;padding:5px 10px;margin-top:6px;';
+            addRuleBtn.textContent = '+ 규칙 추가';
+            addRuleBtn.addEventListener('click', function () {
+                rules.push({ type: 'trim', column: '', param1: '', param2: '' });
+                setRulesConfig();
+                renderRules();
+            });
+
+            renderRules();
+            form.appendChild(rulesDiv);
+            form.appendChild(addRuleBtn);
+        } else if (step.stepType === 'export') {
+            form.appendChild(makeField('출력 파일 경로', 'text', config.filePath || '', function (v) { updateConfig(idx, 'filePath', v); }));
+
+            var fmtRow = document.createElement('div');
+            fmtRow.style.cssText = 'margin-bottom:8px;';
+            var fmtLabel = document.createElement('label');
+            fmtLabel.style.cssText = 'font-size:12px;color:var(--text-secondary);display:block;margin-bottom:4px;';
+            fmtLabel.textContent = '형식';
+            var fmtSelect = document.createElement('select');
+            fmtSelect.style.cssText = 'padding:6px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg-secondary);color:var(--text-primary);font-size:13px;';
+            ['csv', 'xlsx', 'html'].forEach(function (f) {
+                var opt = document.createElement('option');
+                opt.value = f; opt.textContent = f.toUpperCase();
+                if ((config.format || 'csv') === f) opt.selected = true;
+                fmtSelect.appendChild(opt);
+            });
+            fmtSelect.addEventListener('change', function () { updateConfig(idx, 'format', fmtSelect.value); });
+            fmtRow.appendChild(fmtLabel);
+            fmtRow.appendChild(fmtSelect);
+            form.appendChild(fmtRow);
+        }
+
+        return form;
+    }
+
+    function makeField(label, type, value, onChange) {
+        var wrap = document.createElement('div');
+        wrap.style.cssText = 'margin-bottom:8px;';
+        var lbl = document.createElement('label');
+        lbl.style.cssText = 'font-size:12px;color:var(--text-secondary);display:block;margin-bottom:4px;';
+        lbl.textContent = label;
+        var inp = document.createElement('input');
+        inp.type = type;
+        inp.value = value;
+        inp.style.cssText = 'width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg-secondary);color:var(--text-primary);font-size:13px;';
+        inp.addEventListener('input', function () { onChange(inp.value); });
+        wrap.appendChild(lbl);
+        wrap.appendChild(inp);
+        return wrap;
+    }
+
+    function makeInlineInput(value, placeholder, onChange) {
+        var inp = document.createElement('input');
+        inp.type = 'text';
+        inp.value = value;
+        inp.placeholder = placeholder;
+        inp.style.cssText = 'width:90px;padding:5px 6px;border:1px solid var(--border);border-radius:4px;background:var(--bg-secondary);color:var(--text-primary);font-size:12px;';
+        inp.addEventListener('input', function () { onChange(inp.value); });
+        return inp;
+    }
+
+    function updateConfig(idx, key, value) {
+        var config = {};
+        try { config = JSON.parse(_editingWorkflow.steps[idx].configJson || '{}'); } catch (e) {}
+        config[key] = value;
+        _editingWorkflow.steps[idx].configJson = JSON.stringify(config);
+    }
+
+    function saveDetail() {
+        _editingWorkflow.name = document.getElementById('wf-detail-name').value.trim() || _editingWorkflow.name;
+        bridgeClient.sendCommand('workflow', 'updateWorkflow', {
+            id:          _editingWorkflow.id,
+            name:        _editingWorkflow.name,
+            description: _editingWorkflow.description || '',
+            steps:       _editingWorkflow.steps
+        })
+        .then(function () { loadWorkflows(); })
+        .catch(function () {});
     }
 
     window.loadWorkflows = loadWorkflows;
@@ -1359,6 +1577,14 @@ function getColDisplayName(col) {
     document.getElementById('wf-btn-new-empty').addEventListener('click', createWorkflow);
     document.getElementById('wf-btn-cancel').addEventListener('click', function () {
         bridgeClient.sendCommand('workflow', 'cancelWorkflow', {}).catch(function () {});
+    });
+    document.getElementById('wf-btn-back').addEventListener('click', function () { loadWorkflows(); });
+    document.getElementById('wf-btn-back2').addEventListener('click', function () { loadWorkflows(); });
+    document.getElementById('wf-btn-save-detail').addEventListener('click', saveDetail);
+    document.getElementById('wf-btn-add-step').addEventListener('click', function () {
+        var type = document.getElementById('wf-step-type-select').value;
+        _editingWorkflow.steps.push({ id: '', stepType: type, name: '', configJson: '{}' });
+        renderStepList();
     });
 
     window.addEventListener('bridge:workflow:progress', function (e) {
@@ -1371,7 +1597,6 @@ function getColDisplayName(col) {
     });
 
     window.addEventListener('bridge:workflow:complete', function (e) {
-        var payload = e.detail || {};
         document.getElementById('wf-running-panel').classList.add('hidden');
         _runningWorkflowId = null;
         loadWorkflows();

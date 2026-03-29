@@ -40,5 +40,6 @@ enum class NavigationItem
     Export,
     History,
     Workflow,
+    WebExtract,
     Settings
 };

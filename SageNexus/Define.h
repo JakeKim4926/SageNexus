@@ -5,6 +5,8 @@
 // ============================================================
 #define WM_WEBVIEW_READY        (WM_USER + 1)
 #define WM_BRIDGE_MESSAGE       (WM_USER + 2)
+#define WM_WORKFLOW_PROGRESS    (WM_USER + 3)
+#define WM_WORKFLOW_COMPLETE    (WM_USER + 4)
 
 // ============================================================
 // Window

@@ -205,6 +205,7 @@
     <ClCompile Include="app\infrastructure\bridge\HistoryBridgeHandler.cpp" />
     <ClCompile Include="app\infrastructure\bridge\SettingsBridgeHandler.cpp" />
     <ClCompile Include="app\infrastructure\plugins\PluginManager.cpp" />
+    <ClCompile Include="app\infrastructure\workflow\WorkflowStore.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -240,6 +241,9 @@
     <ClInclude Include="app\infrastructure\bridge\SettingsBridgeHandler.h" />
     <ClInclude Include="app\domain\interfaces\IPlugin.h" />
     <ClInclude Include="app\infrastructure\plugins\PluginManager.h" />
+    <ClInclude Include="app\domain\model\WorkflowStep.h" />
+    <ClInclude Include="app\domain\model\WorkflowDefinition.h" />
+    <ClInclude Include="app\infrastructure\workflow\WorkflowStore.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

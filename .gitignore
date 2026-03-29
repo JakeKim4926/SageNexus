@@ -119,6 +119,23 @@ Desktop.ini
 *.sln
 
 # =========================
+# Node.js / Web
+# =========================
+node_modules/
+webui/dist/
+webui/.env
+webui/.env.*
+webui/.env.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.parcel-cache/
+.next/
+.nuxt/
+.vite/
+
+# =========================
 # Keep these in Git
 # =========================
 #!*.slnx

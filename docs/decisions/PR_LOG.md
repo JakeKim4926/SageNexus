@@ -4,6 +4,12 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 
 ---
 
+## [2026-03-29] feature/web-extract-module
+- **목적**: Phase 4 Step 5 — Web Extract 모듈 MVP
+- **변경 내용**: WebExtractService(WinHTTP HTTP/HTTPS + HTML 테이블 파싱 + CSS 선택자 지원), WebExtractBridgeHandler(webExtract::fetchAndExtract), WorkflowService webExtract 스텝 타입 추가, SageApp webextract 플러그인 등록, WebUI 웹 추출 페이지 + Workflow 편집기 webExtract 폼
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/26
+- **결과**: merged ✅
+
 ## [2026-03-29] feature/workflow-step-editor
 - **목적**: Phase 4 Step 4 — Workflow Step 편집기 + 실제 실행 연결
 - **변경 내용**: WorkflowService ExecuteSteps에서 ImportService/TransformService/ExportService 실제 호출, ExtractConfigString/ParseTransformSteps 구현, WebUI Workflow 상세 편집기(step 추가/삭제, 타입별 config 폼 — import/transform/export, saveDetail → updateWorkflow 브릿지)

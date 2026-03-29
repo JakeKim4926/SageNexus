@@ -4,6 +4,12 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 
 ---
 
+## [2026-03-29] feature/workflow-bridge-ui
+- **목적**: Phase 4 Step 3 — WorkflowBridgeHandler + Workflow 페이지 기초
+- **변경 내용**: WorkflowBridgeHandler(CRUD 6 action + run/cancel), MainWindow WM_WORKFLOW_PROGRESS/COMPLETE 처리 → SendEvent, SageApp workflow 플러그인 등록, WebUI Workflow 페이지(목록/empty/error/progress bar) + bridge:workflow:progress/complete 이벤트 처리 + i18n
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/24
+- **결과**: merged ✅
+
 ## [2026-03-29] feature/workflow-service
 - **목적**: Phase 4 Step 2 — WorkflowService + 실행 엔진 + progress 브릿지 구조
 - **변경 내용**: WM_WORKFLOW_PROGRESS/WM_WORKFLOW_COMPLETE 메시지 상수, NavigationItem::Workflow, WorkflowService(CRUD + 워커 스레드 실행 + cancel + 이력 기록), progress PostMessage 구조

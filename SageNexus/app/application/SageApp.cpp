@@ -18,15 +18,14 @@ SageApp::SageApp()
 
 SageApp::~SageApp()
 {
-    delete m_pConfigStore;
-    m_pConfigStore = nullptr;
-
-    delete m_pLogger;
-    m_pLogger = nullptr;
+    Shutdown();
 }
 
 BOOL SageApp::Initialize(HINSTANCE hInstance)
 {
+    if (m_bInitialized)
+        return FALSE;
+
     m_hInstance = hInstance;
 
     if (!InitializePaths())
@@ -34,7 +33,10 @@ BOOL SageApp::Initialize(HINSTANCE hInstance)
 
     m_pLogger = new FileLogger(m_strLogDir);
     if (!m_pLogger->Initialize())
+    {
+        ReleaseResources();
         return FALSE;
+    }
 
     m_pConfigStore = new JsonConfigStore(m_strAppDir);
     m_pConfigStore->Load();
@@ -53,11 +55,11 @@ BOOL SageApp::Initialize(HINSTANCE hInstance)
         m_pLogger->LogInfo(L"Profile loaded: " + m_profile.GetProfileName());
     }
 
-    m_pluginManager.RegisterBuiltIn(L"import",    L"데이터 가져오기");
-    m_pluginManager.RegisterBuiltIn(L"transform", L"데이터 변환");
-    m_pluginManager.RegisterBuiltIn(L"export",    L"내보내기");
-    m_pluginManager.RegisterBuiltIn(L"history",   L"실행 이력");
-    m_pluginManager.RegisterBuiltIn(L"workflow",    L"워크플로우");
+    m_pluginManager.RegisterBuiltIn(L"import",     L"데이터 가져오기");
+    m_pluginManager.RegisterBuiltIn(L"transform",  L"데이터 변환");
+    m_pluginManager.RegisterBuiltIn(L"export",     L"내보내기");
+    m_pluginManager.RegisterBuiltIn(L"history",    L"실행 이력");
+    m_pluginManager.RegisterBuiltIn(L"workflow",   L"워크플로우");
     m_pluginManager.RegisterBuiltIn(L"webextract", L"웹 추출");
 
     m_bInitialized = TRUE;
@@ -67,7 +69,7 @@ BOOL SageApp::Initialize(HINSTANCE hInstance)
 
 void SageApp::Shutdown()
 {
-    if (!m_bInitialized)
+    if (!m_bInitialized && m_pLogger == nullptr && m_pConfigStore == nullptr)
         return;
 
     if (m_pLogger)
@@ -79,7 +81,22 @@ void SageApp::Shutdown()
     if (m_pLogger)
         m_pLogger->Flush();
 
+    ReleaseResources();
+
+    m_hInstance = nullptr;
+    m_strAppDir.Empty();
+    m_strDataDir.Empty();
+    m_strLogDir.Empty();
     m_bInitialized = FALSE;
+}
+
+void SageApp::ReleaseResources()
+{
+    delete m_pConfigStore;
+    m_pConfigStore = nullptr;
+
+    delete m_pLogger;
+    m_pLogger = nullptr;
 }
 
 BOOL SageApp::InitializePaths()
@@ -98,7 +115,7 @@ BOOL SageApp::InitializePaths()
     m_strLogDir  = m_strAppDir + L"\\" + LOG_DIR_NAME;
 
     CreateDirectoryW(m_strDataDir, nullptr);
-    CreateDirectoryW(m_strLogDir,  nullptr);
+    CreateDirectoryW(m_strLogDir, nullptr);
     return TRUE;
 }
 
@@ -138,15 +155,15 @@ void SageApp::SaveProfileFile() const
     const std::vector<PluginEntry>& arrPlugins = m_pluginManager.GetAllPlugins();
 
     file << "{\n";
-    file << "  \"profileId\": \""    << WideToUtf8(m_profile.GetProfileId())                 << "\",\n";
-    file << "  \"profileName\": \""  << WideToUtf8(m_profile.GetProfileName())               << "\",\n";
+    file << "  \"profileId\": \"" << WideToUtf8(m_profile.GetProfileId()) << "\",\n";
+    file << "  \"profileName\": \"" << WideToUtf8(m_profile.GetProfileName()) << "\",\n";
     file << "  \"defaultInterfaceLanguage\": \"" << WideToUtf8(m_profile.GetDefaultInterfaceLanguage()) << "\",\n";
-    file << "  \"defaultOutputLanguage\": \""    << WideToUtf8(m_profile.GetDefaultOutputLanguage())    << "\",\n";
+    file << "  \"defaultOutputLanguage\": \"" << WideToUtf8(m_profile.GetDefaultOutputLanguage()) << "\",\n";
     file << "  \"showDataViewer\": " << (vis.m_bShowDataViewer ? "true" : "false") << ",\n";
-    file << "  \"showTransform\": "  << (vis.m_bShowTransform  ? "true" : "false") << ",\n";
-    file << "  \"showExport\": "     << (vis.m_bShowExport     ? "true" : "false") << ",\n";
-    file << "  \"showHistory\": "    << (vis.m_bShowHistory    ? "true" : "false") << ",\n";
-    file << "  \"showSettings\": "   << (vis.m_bShowSettings   ? "true" : "false");
+    file << "  \"showTransform\": " << (vis.m_bShowTransform ? "true" : "false") << ",\n";
+    file << "  \"showExport\": " << (vis.m_bShowExport ? "true" : "false") << ",\n";
+    file << "  \"showHistory\": " << (vis.m_bShowHistory ? "true" : "false") << ",\n";
+    file << "  \"showSettings\": " << (vis.m_bShowSettings ? "true" : "false");
 
     for (int i = 0; i < static_cast<int>(arrPlugins.size()); ++i)
     {
@@ -154,14 +171,48 @@ void SageApp::SaveProfileFile() const
         file << "  \"plugin_" << WideToUtf8(arrPlugins[i].m_strPluginId) << "\": ";
         file << (m_profile.IsPluginEnabled(arrPlugins[i].m_strPluginId) ? "true" : "false");
     }
+
     file << "\n}\n";
 }
 
-HINSTANCE       SageApp::GetHInstance() const  { return m_hInstance;    }
-const CString&  SageApp::GetAppDir() const     { return m_strAppDir;    }
-const CString&  SageApp::GetDataDir() const    { return m_strDataDir;   }
-const CString&  SageApp::GetLogDir() const     { return m_strLogDir;    }
-FileLogger&     SageApp::GetLogger()           { return *m_pLogger;     }
-JsonConfigStore& SageApp::GetConfigStore()     { return *m_pConfigStore;}
-SolutionProfile& SageApp::GetProfile()         { return m_profile;       }
-PluginManager&   SageApp::GetPluginManager()   { return m_pluginManager; }
+HINSTANCE SageApp::GetHInstance() const
+{
+    return m_hInstance;
+}
+
+const CString& SageApp::GetAppDir() const
+{
+    return m_strAppDir;
+}
+
+const CString& SageApp::GetDataDir() const
+{
+    return m_strDataDir;
+}
+
+const CString& SageApp::GetLogDir() const
+{
+    return m_strLogDir;
+}
+
+FileLogger& SageApp::GetLogger()
+{
+    ASSERT(m_pLogger != nullptr);
+    return *m_pLogger;
+}
+
+JsonConfigStore& SageApp::GetConfigStore()
+{
+    ASSERT(m_pConfigStore != nullptr);
+    return *m_pConfigStore;
+}
+
+SolutionProfile& SageApp::GetProfile()
+{
+    return m_profile;
+}
+
+PluginManager& SageApp::GetPluginManager()
+{
+    return m_pluginManager;
+}

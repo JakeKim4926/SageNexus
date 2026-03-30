@@ -20,11 +20,11 @@ public:
     const CString&  GetDataDir() const;
     const CString&  GetLogDir() const;
 
-    FileLogger&          GetLogger();
-    JsonConfigStore&     GetConfigStore();
-    SolutionProfile&     GetProfile();
-    PluginManager&       GetPluginManager();
-    void                 SaveProfileFile() const;
+    FileLogger&       GetLogger();
+    JsonConfigStore&  GetConfigStore();
+    SolutionProfile&  GetProfile();
+    PluginManager&    GetPluginManager();
+    void              SaveProfileFile() const;
 
 private:
     SageApp();
@@ -34,6 +34,7 @@ private:
 
     BOOL InitializePaths();
     void WriteDefaultProfileFile(const CString& strFilePath) const;
+    void ReleaseResources();
 
     HINSTANCE        m_hInstance;
     CString          m_strAppDir;
@@ -41,8 +42,8 @@ private:
     CString          m_strLogDir;
     BOOL             m_bInitialized;
 
-    FileLogger*       m_pLogger;
-    JsonConfigStore*  m_pConfigStore;
-    SolutionProfile   m_profile;
-    PluginManager     m_pluginManager;
+    FileLogger*      m_pLogger;
+    JsonConfigStore* m_pConfigStore;
+    SolutionProfile  m_profile;
+    PluginManager    m_pluginManager;
 };

@@ -197,13 +197,13 @@ const CString& SageApp::GetLogDir() const
 
 FileLogger& SageApp::GetLogger()
 {
-    ASSERT(m_pLogger != nullptr);
+    assert(m_pLogger != nullptr);
     return *m_pLogger;
 }
 
 JsonConfigStore& SageApp::GetConfigStore()
 {
-    ASSERT(m_pConfigStore != nullptr);
+    assert(m_pConfigStore != nullptr);
     return *m_pConfigStore;
 }
 

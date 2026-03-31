@@ -16,6 +16,7 @@
 #include <sstream>
 #include <mutex>
 #include <map>
+#include <cassert>
 
 #include <WebView2.h>
 

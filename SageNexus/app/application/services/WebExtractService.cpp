@@ -142,7 +142,8 @@ BOOL WebExtractService::ExtractTable(const std::string& strHtml, const CString& 
     }
 
     outTable.Clear();
-    outTable.SetSourceName(strSelector.IsEmpty() ? L"web" : strSelector);
+    CString strSourceName = strSelector.IsEmpty() ? CString(L"web") : strSelector;
+    outTable.SetSourceName(strSourceName);
 
     std::vector<std::string> headers = ExtractCellsFromRow(rows[0], "th");
     int nDataStart = 1;

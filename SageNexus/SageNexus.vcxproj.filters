@@ -177,6 +177,9 @@
     <ClCompile Include="app\infrastructure\exporters\HtmlReportExporter.cpp">
       <Filter>소스 파일\app\infrastructure\exporters</Filter>
     </ClCompile>
+    <ClCompile Include="app\infrastructure\exporters\WordExporter.cpp">
+      <Filter>소스 파일\app\infrastructure\exporters</Filter>
+    </ClCompile>
     <ClCompile Include="app\infrastructure\writers\CsvWriter.cpp">
       <Filter>소스 파일\app\infrastructure\writers</Filter>
     </ClCompile>
@@ -306,6 +309,9 @@
       <Filter>헤더 파일\app\infrastructure\history</Filter>
     </ClInclude>
     <ClInclude Include="app\infrastructure\exporters\HtmlReportExporter.h">
+      <Filter>헤더 파일\app\infrastructure\exporters</Filter>
+    </ClInclude>
+    <ClInclude Include="app\infrastructure\exporters\WordExporter.h">
       <Filter>헤더 파일\app\infrastructure\exporters</Filter>
     </ClInclude>
     <ClInclude Include="app\domain\model\Artifact.h">

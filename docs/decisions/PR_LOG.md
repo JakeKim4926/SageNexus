@@ -4,6 +4,12 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 
 ---
 
+## [2026-04-01] feature/word-export
+- **목적**: Phase 5 Step 1 — Word Export (docx, OpenXML)
+- **변경 내용**: WordExporter(OpenXML docx 직접 생성), ExportService::ExportToWord(), ExportBridgeHandler exportWord action, Export 페이지 Word 옵션 추가, WebExtractService 삼항 연산자 타입 모호성 수정
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/27
+- **결과**: merged ✅
+
 ## [2026-03-29] feature/web-extract-module
 - **목적**: Phase 4 Step 5 — Web Extract 모듈 MVP
 - **변경 내용**: WebExtractService(WinHTTP HTTP/HTTPS + HTML 테이블 파싱 + CSS 선택자 지원), WebExtractBridgeHandler(webExtract::fetchAndExtract), WorkflowService webExtract 스텝 타입 추가, SageApp webextract 플러그인 등록, WebUI 웹 추출 페이지 + Workflow 편집기 webExtract 폼

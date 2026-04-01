@@ -195,6 +195,7 @@
     <ClCompile Include="app\infrastructure\bridge\TransformBridgeHandler.cpp" />
     <ClCompile Include="app\infrastructure\exporters\HtmlReportExporter.cpp" />
     <ClCompile Include="app\infrastructure\exporters\WordExporter.cpp" />
+    <ClCompile Include="app\infrastructure\exporters\PdfExporter.cpp" />
     <ClCompile Include="app\infrastructure\writers\CsvWriter.cpp" />
     <ClCompile Include="app\infrastructure\writers\XlsxWriter.cpp" />
     <ClCompile Include="app\application\services\ExportService.cpp" />
@@ -241,6 +242,7 @@
     <ClInclude Include="app\infrastructure\history\ArtifactStore.h" />
     <ClInclude Include="app\infrastructure\exporters\HtmlReportExporter.h" />
     <ClInclude Include="app\infrastructure\exporters\WordExporter.h" />
+    <ClInclude Include="app\infrastructure\exporters\PdfExporter.h" />
     <ClInclude Include="app\domain\model\Artifact.h" />
     <ClInclude Include="app\application\services\HistoryService.h" />
     <ClInclude Include="app\infrastructure\bridge\HistoryBridgeHandler.h" />

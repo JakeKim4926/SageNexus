@@ -4,6 +4,12 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 
 ---
 
+## [2026-04-01] feature/pdf-export
+- **목적**: Phase 5 Step 2 — PDF Export (HTML → Edge headless → PDF)
+- **변경 내용**: PdfExporter(HTML 임시 파일 생성 + msedge headless --print-to-pdf, Edge 경로 자동 탐색), ExportService::ExportToPdf(), ExportBridgeHandler exportPdf action, Export 페이지 PDF 옵션 추가
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/28
+- **결과**: pending
+
 ## [2026-04-01] feature/word-export
 - **목적**: Phase 5 Step 1 — Word Export (docx, OpenXML)
 - **변경 내용**: WordExporter(OpenXML docx 직접 생성), ExportService::ExportToWord(), ExportBridgeHandler exportWord action, Export 페이지 Word 옵션 추가, WebExtractService 삼항 연산자 타입 모호성 수정

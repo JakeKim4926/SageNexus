@@ -253,6 +253,7 @@
                             <option value="xlsx">XLSX</option>
                             <option value="html">HTML 보고서</option>
                             <option value="docx">Word 문서 (.docx)</option>
+                            <option value="pdf">PDF 문서</option>
                         </select>
                         <button class="btn btn-primary" id="ex-btn-export">내보내기</button>
                     </div>
@@ -1004,8 +1005,8 @@ function getColDisplayName(col) {
         });
     });
 
-    var FORMAT_LABELS  = { csv: 'CSV', xlsx: 'XLSX', html: 'HTML', docx: 'DOCX' };
-    var FORMAT_ACTIONS = { csv: 'exportCsv', xlsx: 'exportXlsx', html: 'exportHtml', docx: 'exportWord' };
+    var FORMAT_LABELS  = { csv: 'CSV', xlsx: 'XLSX', html: 'HTML', docx: 'DOCX', pdf: 'PDF' };
+    var FORMAT_ACTIONS = { csv: 'exportCsv', xlsx: 'exportXlsx', html: 'exportHtml', docx: 'exportWord', pdf: 'exportPdf' };
 
     function loadArtifacts() {
         bridgeClient.sendCommand('artifact.export', 'getArtifacts', {})

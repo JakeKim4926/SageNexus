@@ -211,6 +211,29 @@ void WorkflowService::ExecuteSteps(const WorkflowDefinition& workflow, HWND hNot
                 break;
             }
         }
+        else if (step.m_strStepType == L"sendEmail")
+        {
+            EmailAction action;
+            action.m_strRecipients     = ExtractConfigString(step.m_strConfigJson, L"recipients");
+            action.m_strSubject        = ExtractConfigString(step.m_strConfigJson, L"subject");
+            action.m_strBody           = ExtractConfigString(step.m_strConfigJson, L"body");
+            action.m_strAttachFilePath = ExtractConfigString(step.m_strConfigJson, L"attachFilePath");
+
+            if (action.m_strRecipients.IsEmpty())
+            {
+                m_strLastError = L"Send Email step: recipients가 비어 있습니다.";
+                bSuccess = FALSE;
+                break;
+            }
+
+            EmailService svc;
+            if (!svc.SendEmail(action, strError))
+            {
+                m_strLastError = strError;
+                bSuccess = FALSE;
+                break;
+            }
+        }
     }
 
     ExecutionRecord record;

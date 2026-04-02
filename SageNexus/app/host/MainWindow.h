@@ -9,6 +9,7 @@
 #include "app/infrastructure/bridge/SettingsBridgeHandler.h"
 #include "app/infrastructure/bridge/WorkflowBridgeHandler.h"
 #include "app/infrastructure/bridge/WebExtractBridgeHandler.h"
+#include "app/infrastructure/bridge/EmailBridgeHandler.h"
 
 class MainWindow
 {
@@ -43,4 +44,5 @@ private:
     SettingsBridgeHandler   m_settingsBridgeHandler;
     WorkflowBridgeHandler     m_workflowBridgeHandler;
     WebExtractBridgeHandler   m_webExtractBridgeHandler;
+    EmailBridgeHandler        m_emailBridgeHandler;
 };

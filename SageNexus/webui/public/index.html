@@ -367,6 +367,7 @@
                             <option value="webExtract">Web Extract (웹 추출)</option>
                             <option value="transform">Transform (데이터 변환)</option>
                             <option value="export">Export (내보내기)</option>
+                            <option value="sendEmail">Send Email (이메일 발송)</option>
                         </select>
                         <button class="btn-secondary" id="wf-btn-add-step">+ Step 추가</button>
                     </div>
@@ -1589,6 +1590,11 @@ function getColDisplayName(col) {
         } else if (step.stepType === 'webExtract') {
             form.appendChild(makeField('URL', 'text', config.url || '', function (v) { updateConfig(idx, 'url', v); }));
             form.appendChild(makeField('CSS 선택자', 'text', config.selector || '', function (v) { updateConfig(idx, 'selector', v); }));
+        } else if (step.stepType === 'sendEmail') {
+            form.appendChild(makeField('수신자 (쉼표 구분)', 'text', config.recipients || '', function (v) { updateConfig(idx, 'recipients', v); }));
+            form.appendChild(makeField('제목', 'text', config.subject || '', function (v) { updateConfig(idx, 'subject', v); }));
+            form.appendChild(makeField('본문', 'text', config.body || '', function (v) { updateConfig(idx, 'body', v); }));
+            form.appendChild(makeField('첨부 파일 경로 (선택)', 'text', config.attachFilePath || '', function (v) { updateConfig(idx, 'attachFilePath', v); }));
         }
 
         return form;

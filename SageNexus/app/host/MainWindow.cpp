@@ -167,6 +167,7 @@ void MainWindow::RegisterBridgeHandlers()
     m_settingsBridgeHandler.RegisterHandlers(dispatcher);
     m_workflowBridgeHandler.RegisterHandlers(dispatcher, m_hWnd);
     m_webExtractBridgeHandler.RegisterHandlers(dispatcher, &m_currentTable);
+    m_emailBridgeHandler.RegisterHandlers(dispatcher);
 }
 
 void MainWindow::NavigateToShell()

@@ -231,6 +231,12 @@
     <ClCompile Include="app\infrastructure\bridge\WebExtractBridgeHandler.cpp">
       <Filter>소스 파일\app\infrastructure\bridge</Filter>
     </ClCompile>
+    <ClCompile Include="app\application\services\EmailService.cpp">
+      <Filter>소스 파일\app\application\services</Filter>
+    </ClCompile>
+    <ClCompile Include="app\infrastructure\bridge\EmailBridgeHandler.cpp">
+      <Filter>소스 파일\app\infrastructure\bridge</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -357,6 +363,15 @@
       <Filter>헤더 파일\app\application\services</Filter>
     </ClInclude>
     <ClInclude Include="app\infrastructure\bridge\WebExtractBridgeHandler.h">
+      <Filter>헤더 파일\app\infrastructure\bridge</Filter>
+    </ClInclude>
+    <ClInclude Include="app\domain\model\EmailAction.h">
+      <Filter>헤더 파일\app\domain\model</Filter>
+    </ClInclude>
+    <ClInclude Include="app\application\services\EmailService.h">
+      <Filter>헤더 파일\app\application\services</Filter>
+    </ClInclude>
+    <ClInclude Include="app\infrastructure\bridge\EmailBridgeHandler.h">
       <Filter>헤더 파일\app\infrastructure\bridge</Filter>
     </ClInclude>
   </ItemGroup>

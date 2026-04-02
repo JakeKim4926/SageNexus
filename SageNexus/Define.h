@@ -46,3 +46,8 @@ constexpr const wchar_t* PROFILE_FILE_NAME = L"profile.json";
 // Import
 // ============================================================
 constexpr int CSV_MAX_PREVIEW_ROWS = 1000;
+
+// ============================================================
+// API Call
+// ============================================================
+constexpr int API_DEFAULT_TIMEOUT_MS = 30000;

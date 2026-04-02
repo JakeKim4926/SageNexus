@@ -234,6 +234,32 @@ void WorkflowService::ExecuteSteps(const WorkflowDefinition& workflow, HWND hNot
                 break;
             }
         }
+        else if (step.m_strStepType == L"callApi")
+        {
+            ApiCallAction action;
+            action.m_strUrl         = ExtractConfigString(step.m_strConfigJson, L"url");
+            action.m_strMethod      = ExtractConfigString(step.m_strConfigJson, L"method");
+            action.m_strHeadersJson = ExtractConfigString(step.m_strConfigJson, L"headers");
+            action.m_strBody        = ExtractConfigString(step.m_strConfigJson, L"body");
+
+            CString strTimeout = ExtractConfigString(step.m_strConfigJson, L"timeout");
+            action.m_nTimeoutMs = strTimeout.IsEmpty() ? 30000 : _wtoi(strTimeout);
+
+            if (action.m_strUrl.IsEmpty())
+            {
+                m_strLastError = L"Call API step: url이 비어 있습니다.";
+                bSuccess = FALSE;
+                break;
+            }
+
+            ApiCallService svc;
+            if (!svc.CallApi(action, strError))
+            {
+                m_strLastError = strError;
+                bSuccess = FALSE;
+                break;
+            }
+        }
     }
 
     ExecutionRecord record;

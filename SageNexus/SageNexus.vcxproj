@@ -214,6 +214,8 @@
     <ClCompile Include="app\infrastructure\bridge\WebExtractBridgeHandler.cpp" />
     <ClCompile Include="app\application\services\EmailService.cpp" />
     <ClCompile Include="app\infrastructure\bridge\EmailBridgeHandler.cpp" />
+    <ClCompile Include="app\application\services\ApiCallService.cpp" />
+    <ClCompile Include="app\infrastructure\bridge\ApiCallBridgeHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -261,6 +263,9 @@
     <ClInclude Include="app\domain\model\EmailAction.h" />
     <ClInclude Include="app\application\services\EmailService.h" />
     <ClInclude Include="app\infrastructure\bridge\EmailBridgeHandler.h" />
+    <ClInclude Include="app\domain\model\ApiCallAction.h" />
+    <ClInclude Include="app\application\services\ApiCallService.h" />
+    <ClInclude Include="app\infrastructure\bridge\ApiCallBridgeHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -7,8 +7,8 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 ## [2026-04-03] feature/phase5-step3-email-action
 - **목적**: Phase 5 Step 3 — 이메일 발송 액션 (MAPI 기반)
 - **변경 내용**: EmailAction 도메인 모델, EmailService(Simple MAPI MAPISendMailW), EmailBridgeHandler(workflow.email::sendEmail), WorkflowService sendEmail step 추가, Workflow 편집기 sendEmail 폼 추가
-- **PR 링크**: pending
-- **결과**: pending
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/29
+- **결과**: merged ✅
 
 ## [2026-04-01] feature/pdf-export
 - **목적**: Phase 5 Step 2 — PDF Export (HTML → Edge headless → PDF)

@@ -10,6 +10,7 @@
 #include "app/infrastructure/bridge/WorkflowBridgeHandler.h"
 #include "app/infrastructure/bridge/WebExtractBridgeHandler.h"
 #include "app/infrastructure/bridge/EmailBridgeHandler.h"
+#include "app/infrastructure/bridge/ApiCallBridgeHandler.h"
 
 class MainWindow
 {
@@ -45,4 +46,5 @@ private:
     WorkflowBridgeHandler     m_workflowBridgeHandler;
     WebExtractBridgeHandler   m_webExtractBridgeHandler;
     EmailBridgeHandler        m_emailBridgeHandler;
+    ApiCallBridgeHandler      m_apiCallBridgeHandler;
 };

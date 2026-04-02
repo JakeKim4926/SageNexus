@@ -4,6 +4,12 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 
 ---
 
+## [2026-04-03] feature/api-call-action
+- **목적**: Phase 5 Step 4 — API 전송 액션 (WinHTTP POST)
+- **변경 내용**: ApiCallAction 도메인 모델, ApiCallService(WinHTTP HTTP 요청, 커스텀 헤더/바디/타임아웃), ApiCallBridgeHandler(workflow.api::callApi), WorkflowService callApi step 추가, Workflow 편집기 callApi 폼 추가
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/30
+- **결과**: pending
+
 ## [2026-04-03] feature/phase5-step3-email-action
 - **목적**: Phase 5 Step 3 — 이메일 발송 액션 (MAPI 기반)
 - **변경 내용**: EmailAction 도메인 모델, EmailService(Simple MAPI MAPISendMailW), EmailBridgeHandler(workflow.email::sendEmail), WorkflowService sendEmail step 추가, Workflow 편집기 sendEmail 폼 추가

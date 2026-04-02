@@ -7,6 +7,7 @@
 #include "app/infrastructure/history/ExecutionHistoryStore.h"
 #include "app/application/services/WebExtractService.h"
 #include "app/application/services/EmailService.h"
+#include "app/application/services/ApiCallService.h"
 #include <vector>
 
 class WorkflowService

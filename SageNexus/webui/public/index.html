@@ -368,6 +368,7 @@
                             <option value="transform">Transform (데이터 변환)</option>
                             <option value="export">Export (내보내기)</option>
                             <option value="sendEmail">Send Email (이메일 발송)</option>
+                            <option value="callApi">Call API (API 전송)</option>
                         </select>
                         <button class="btn-secondary" id="wf-btn-add-step">+ Step 추가</button>
                     </div>
@@ -1595,6 +1596,11 @@ function getColDisplayName(col) {
             form.appendChild(makeField('제목', 'text', config.subject || '', function (v) { updateConfig(idx, 'subject', v); }));
             form.appendChild(makeField('본문', 'text', config.body || '', function (v) { updateConfig(idx, 'body', v); }));
             form.appendChild(makeField('첨부 파일 경로 (선택)', 'text', config.attachFilePath || '', function (v) { updateConfig(idx, 'attachFilePath', v); }));
+        } else if (step.stepType === 'callApi') {
+            form.appendChild(makeField('URL', 'text', config.url || '', function (v) { updateConfig(idx, 'url', v); }));
+            form.appendChild(makeField('메서드 (POST/GET/PUT/DELETE)', 'text', config.method || 'POST', function (v) { updateConfig(idx, 'method', v); }));
+            form.appendChild(makeField('헤더 (JSON, 예: {"Content-Type":"application/json"})', 'text', config.headers || '', function (v) { updateConfig(idx, 'headers', v); }));
+            form.appendChild(makeField('본문 (JSON 문자열)', 'text', config.body || '', function (v) { updateConfig(idx, 'body', v); }));
         }
 
         return form;

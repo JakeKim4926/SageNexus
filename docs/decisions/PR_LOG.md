@@ -4,6 +4,66 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 
 ---
 
+## [2026-04-04] feature/phase5-step5-i18n
+- **목적**: Phase 5 Step 5 — i18n 고도화 + Output Language QA + Phase 5 마무리
+- **변경 내용**: ko.json/en.json 전체 키 동기화 (workflow/webextract/상태 누락 키 추가), 인라인 LOCALES에 신규 키 100여 개 추가, 하드코딩 텍스트 data-i18n 속성 및 t() 호출로 전면 교체 (Dashboard/DataViewer/Transform/Export/History/Settings/Workflow/WebExtract), 플러그인명 i18n(plugin.name.* 키), WebExtract Output Language 적용(getColDisplayName 사용), bridgeClient.request → sendCommand 버그 수정, Word/PDF Output Language 적용 확인
+- **PR 링크**: pending
+- **결과**: pending
+
+## [2026-04-03] feature/api-call-action
+- **목적**: Phase 5 Step 4 — API 전송 액션 (WinHTTP POST)
+- **변경 내용**: ApiCallAction 도메인 모델, ApiCallService(WinHTTP HTTP 요청, 커스텀 헤더/바디/타임아웃), ApiCallBridgeHandler(workflow.api::callApi), WorkflowService callApi step 추가, Workflow 편집기 callApi 폼 추가
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/30
+- **결과**: pending
+
+## [2026-04-03] feature/phase5-step3-email-action
+- **목적**: Phase 5 Step 3 — 이메일 발송 액션 (MAPI 기반)
+- **변경 내용**: EmailAction 도메인 모델, EmailService(Simple MAPI MAPISendMailW), EmailBridgeHandler(workflow.email::sendEmail), WorkflowService sendEmail step 추가, Workflow 편집기 sendEmail 폼 추가
+- **PR 링크**: pending
+- **결과**: pending
+
+## [2026-04-01] feature/pdf-export
+- **목적**: Phase 5 Step 2 — PDF Export (HTML → Edge headless → PDF)
+- **변경 내용**: PdfExporter(HTML 임시 파일 생성 + msedge headless --print-to-pdf, Edge 경로 자동 탐색), ExportService::ExportToPdf(), ExportBridgeHandler exportPdf action, Export 페이지 PDF 옵션 추가
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/28
+- **결과**: merged ✅
+
+## [2026-04-01] feature/word-export
+- **목적**: Phase 5 Step 1 — Word Export (docx, OpenXML)
+- **변경 내용**: WordExporter(OpenXML docx 직접 생성), ExportService::ExportToWord(), ExportBridgeHandler exportWord action, Export 페이지 Word 옵션 추가, WebExtractService 삼항 연산자 타입 모호성 수정
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/27
+- **결과**: merged ✅
+
+## [2026-03-29] feature/web-extract-module
+- **목적**: Phase 4 Step 5 — Web Extract 모듈 MVP
+- **변경 내용**: WebExtractService(WinHTTP HTTP/HTTPS + HTML 테이블 파싱 + CSS 선택자 지원), WebExtractBridgeHandler(webExtract::fetchAndExtract), WorkflowService webExtract 스텝 타입 추가, SageApp webextract 플러그인 등록, WebUI 웹 추출 페이지 + Workflow 편집기 webExtract 폼
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/26
+- **결과**: merged ✅
+
+## [2026-03-29] feature/workflow-step-editor
+- **목적**: Phase 4 Step 4 — Workflow Step 편집기 + 실제 실행 연결
+- **변경 내용**: WorkflowService ExecuteSteps에서 ImportService/TransformService/ExportService 실제 호출, ExtractConfigString/ParseTransformSteps 구현, WebUI Workflow 상세 편집기(step 추가/삭제, 타입별 config 폼 — import/transform/export, saveDetail → updateWorkflow 브릿지)
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/25
+- **결과**: merged ✅
+
+## [2026-03-29] feature/workflow-bridge-ui
+- **목적**: Phase 4 Step 3 — WorkflowBridgeHandler + Workflow 페이지 기초
+- **변경 내용**: WorkflowBridgeHandler(CRUD 6 action + run/cancel), MainWindow WM_WORKFLOW_PROGRESS/COMPLETE 처리 → SendEvent, SageApp workflow 플러그인 등록, WebUI Workflow 페이지(목록/empty/error/progress bar) + bridge:workflow:progress/complete 이벤트 처리 + i18n
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/24
+- **결과**: merged ✅
+
+## [2026-03-29] feature/workflow-service
+- **목적**: Phase 4 Step 2 — WorkflowService + 실행 엔진 + progress 브릿지 구조
+- **변경 내용**: WM_WORKFLOW_PROGRESS/WM_WORKFLOW_COMPLETE 메시지 상수, NavigationItem::Workflow, WorkflowService(CRUD + 워커 스레드 실행 + cancel + 이력 기록), progress PostMessage 구조
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/23
+- **결과**: merged ✅
+
+## [2026-03-29] feature/workflow-model
+- **목적**: Phase 4 Step 1 — WorkflowDefinition 모델 + WorkflowStore 구현
+- **변경 내용**: WorkflowStep 구조체(id/stepType/name/configJson), WorkflowDefinition 구조체(id/name/description/createdAt/updatedAt/steps[]), WorkflowStore(workflows.json CRUD — SaveWorkflow/LoadWorkflows/DeleteWorkflow), vcxproj·filters 등록
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/22
+- **결과**: merged ✅
+
 ## [2026-03-28] feature/phase3-step7-settings-i18n
 - **목적**: Phase 3 Step 7 — Settings 페이지 완성 + i18n 기초 적용
 - **변경 내용**: SettingsBridgeHandler에 getInterfaceLanguage/setInterfaceLanguage 핸들러 추가, ko.json/en.json 기초 번역 리소스 신규 생성(webui/src/i18n/), LOCALES 객체+t()/applyLocale() 함수 추가, 사이드바 nav·모든 페이지 타이틀에 data-i18n 적용, Settings 페이지 솔루션 프로필/언어/플러그인 3섹션으로 재편, Interface Language select UI 추가, bridge:appReady 시 interfaceLanguage 초기 로드

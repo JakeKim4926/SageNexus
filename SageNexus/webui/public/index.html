@@ -54,6 +54,14 @@
 
             <div class="nav-section">
                 <div class="nav-section-label" data-i18n="nav.section.manage">관리</div>
+                <div class="nav-item" data-page="workflow">
+                    <span class="nav-icon">▶</span>
+                    <span class="nav-label" data-i18n="nav.workflow">워크플로우</span>
+                </div>
+                <div class="nav-item" data-page="webextract">
+                    <span class="nav-icon">🌐</span>
+                    <span class="nav-label" data-i18n="nav.webextract">웹 추출</span>
+                </div>
                 <div class="nav-item" data-page="history">
                     <span class="nav-icon">◷</span>
                     <span class="nav-label" data-i18n="nav.history">실행 이력</span>
@@ -81,26 +89,26 @@
                 </div>
                 <div class="dashboard-grid">
                     <div class="stat-card">
-                        <div class="stat-label">총 실행 횟수</div>
+                        <div class="stat-label" data-i18n="dashboard.stat.totalRuns">총 실행 횟수</div>
                         <div class="stat-value" id="stat-total-runs">—</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-label">오늘 실행</div>
+                        <div class="stat-label" data-i18n="dashboard.stat.todayRuns">오늘 실행</div>
                         <div class="stat-value" id="stat-today-runs">—</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-label">성공률</div>
+                        <div class="stat-label" data-i18n="dashboard.stat.successRate">성공률</div>
                         <div class="stat-value" id="stat-success-rate">—</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-label">마지막 실행</div>
+                        <div class="stat-label" data-i18n="dashboard.stat.lastRun">마지막 실행</div>
                         <div class="stat-value" id="stat-last-run">—</div>
                     </div>
                 </div>
                 <div class="empty-state" id="dashboard-empty">
                     <div class="empty-icon">⊞</div>
-                    <div class="empty-title">아직 실행된 작업이 없습니다</div>
-                    <div class="empty-desc">데이터 뷰어에서 파일을 불러와 작업을 시작하세요.</div>
+                    <div class="empty-title" data-i18n="dashboard.empty.title">아직 실행된 작업이 없습니다</div>
+                    <div class="empty-desc" data-i18n="dashboard.empty.desc">데이터 뷰어에서 파일을 불러와 작업을 시작하세요.</div>
                 </div>
             </div>
 
@@ -111,23 +119,23 @@
                     <div class="page-subtitle" data-i18n="page.dataViewer.subtitle">파일을 불러와 데이터를 확인합니다.</div>
                 </div>
                 <div class="page-toolbar">
-                    <button class="btn btn-primary" id="btn-open-file">파일 열기</button>
+                    <button class="btn btn-primary" id="btn-open-file" data-i18n="dv.btn.openFile">파일 열기</button>
                     <span class="file-info-name" id="dv-filename"></span>
                     <span class="file-info-meta" id="dv-meta"></span>
                 </div>
                 <div class="page-body">
                     <div class="empty-state" id="dv-state-empty">
                         <div class="empty-icon">⊟</div>
-                        <div class="empty-title">불러온 파일이 없습니다</div>
-                        <div class="empty-desc">파일 열기 버튼을 눌러 CSV 파일을 선택하세요.</div>
+                        <div class="empty-title" data-i18n="dv.empty.title">불러온 파일이 없습니다</div>
+                        <div class="empty-desc" data-i18n="dv.empty.desc">파일 열기 버튼을 눌러 CSV 파일을 선택하세요.</div>
                     </div>
                     <div class="loading-state hidden" id="dv-state-loading">
                         <div class="loading-spinner"></div>
-                        <div class="loading-text">파일을 불러오는 중...</div>
+                        <div class="loading-text" data-i18n="dv.loading.text">파일을 불러오는 중...</div>
                     </div>
                     <div class="error-state hidden" id="dv-state-error">
                         <div class="error-icon">⚠</div>
-                        <div class="error-title">파일을 불러오지 못했습니다</div>
+                        <div class="error-title" data-i18n="dv.error.title">파일을 불러오지 못했습니다</div>
                         <div class="error-desc" id="dv-error-message"></div>
                     </div>
                     <div class="table-wrapper hidden" id="dv-state-data">
@@ -149,8 +157,8 @@
                 <!-- no data loaded -->
                 <div class="empty-state" id="tf-state-no-data">
                     <div class="empty-icon">⇌</div>
-                    <div class="empty-title">불러온 데이터가 없습니다</div>
-                    <div class="empty-desc">데이터 뷰어에서 파일을 먼저 불러오세요.</div>
+                    <div class="empty-title" data-i18n="tf.empty.title">불러온 데이터가 없습니다</div>
+                    <div class="empty-desc" data-i18n="tf.empty.desc">데이터 뷰어에서 파일을 먼저 불러오세요.</div>
                 </div>
 
                 <!-- transform builder (shown when data is available) -->
@@ -163,35 +171,35 @@
                     <!-- step form -->
                     <div class="tf-form">
                         <select class="tf-select" id="tf-step-type">
-                            <option value="trim">공백 제거 (trim)</option>
-                            <option value="renameColumn">컬럼명 변경</option>
-                            <option value="replaceValue">값 치환</option>
+                            <option value="trim" data-i18n="tf.step.trim">공백 제거 (trim)</option>
+                            <option value="renameColumn" data-i18n="tf.step.renameColumn">컬럼명 변경</option>
+                            <option value="replaceValue" data-i18n="tf.step.replaceValue">값 치환</option>
                         </select>
                         <select class="tf-select" id="tf-step-column">
-                            <option value="">(전체 컬럼)</option>
+                            <option value="" data-i18n="tf.column.all">(전체 컬럼)</option>
                         </select>
                         <input class="tf-input" type="text" id="tf-param1" placeholder="param1" />
                         <input class="tf-input" type="text" id="tf-param2" placeholder="param2" />
-                        <button class="btn" id="tf-btn-add-step">단계 추가</button>
+                        <button class="btn" id="tf-btn-add-step" data-i18n="tf.btn.addStep">단계 추가</button>
                     </div>
 
                     <!-- step list -->
                     <div class="tf-step-list" id="tf-step-list"></div>
 
                     <div class="tf-actions">
-                        <button class="btn btn-primary" id="tf-btn-apply" disabled>변환 적용</button>
-                        <button class="btn" id="tf-btn-clear-steps">단계 초기화</button>
+                        <button class="btn btn-primary" id="tf-btn-apply" disabled data-i18n="tf.btn.apply">변환 적용</button>
+                        <button class="btn" id="tf-btn-clear-steps" data-i18n="tf.btn.clear">단계 초기화</button>
                     </div>
 
                     <!-- result states -->
                     <div class="page-body" id="tf-result-area" style="margin-top:16px;">
                         <div class="loading-state hidden" id="tf-state-loading">
                             <div class="loading-spinner"></div>
-                            <div class="loading-text">변환 중...</div>
+                            <div class="loading-text" data-i18n="tf.loading.text">변환 중...</div>
                         </div>
                         <div class="error-state hidden" id="tf-state-error">
                             <div class="error-icon">⚠</div>
-                            <div class="error-title">변환에 실패했습니다</div>
+                            <div class="error-title" data-i18n="tf.error.title">변환에 실패했습니다</div>
                             <div class="error-desc" id="tf-error-message"></div>
                         </div>
                         <div class="table-wrapper hidden" id="tf-state-data">
@@ -214,59 +222,61 @@
                 <!-- no data -->
                 <div class="empty-state" id="ex-state-no-data">
                     <div class="empty-icon">↑</div>
-                    <div class="empty-title">내보낼 데이터가 없습니다</div>
-                    <div class="empty-desc">데이터 뷰어에서 파일을 먼저 불러오세요.</div>
+                    <div class="empty-title" data-i18n="ex.empty.title">내보낼 데이터가 없습니다</div>
+                    <div class="empty-desc" data-i18n="ex.empty.desc">데이터 뷰어에서 파일을 먼저 불러오세요.</div>
                 </div>
 
                 <!-- export panel -->
                 <div class="hidden" id="ex-panel">
                     <div class="ex-summary">
                         <div class="stat-card">
-                            <div class="stat-label">파일</div>
+                            <div class="stat-label" data-i18n="ex.stat.file">파일</div>
                             <div class="stat-value" id="ex-summary-name" style="font-size:14px;">—</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-label">행</div>
+                            <div class="stat-label" data-i18n="ex.stat.rows">행</div>
                             <div class="stat-value" id="ex-summary-rows">—</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-label">열</div>
+                            <div class="stat-label" data-i18n="ex.stat.cols">열</div>
                             <div class="stat-value" id="ex-summary-cols">—</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-label">형식</div>
+                            <div class="stat-label" data-i18n="ex.stat.format">형식</div>
                             <div class="stat-value" style="font-size:14px;" id="ex-format-label">CSV</div>
                         </div>
                     </div>
 
                     <div class="ex-actions">
                         <select id="ex-format-select" class="format-select">
-                            <option value="csv">CSV (UTF-8 BOM)</option>
-                            <option value="xlsx">XLSX</option>
-                            <option value="html">HTML 보고서</option>
+                            <option value="csv" data-i18n="ex.format.csv">CSV (UTF-8 BOM)</option>
+                            <option value="xlsx" data-i18n="ex.format.xlsx">XLSX</option>
+                            <option value="html" data-i18n="ex.format.html">HTML 보고서</option>
+                            <option value="docx" data-i18n="ex.format.docx">Word 문서 (.docx)</option>
+                            <option value="pdf" data-i18n="ex.format.pdf">PDF 문서</option>
                         </select>
-                        <button class="btn btn-primary" id="ex-btn-export">내보내기</button>
+                        <button class="btn btn-primary" id="ex-btn-export" data-i18n="ex.btn.export">내보내기</button>
                     </div>
 
                     <div class="loading-state hidden" id="ex-state-loading">
                         <div class="loading-spinner"></div>
-                        <div class="loading-text">내보내는 중...</div>
+                        <div class="loading-text" data-i18n="ex.loading.text">내보내는 중...</div>
                     </div>
                     <div class="error-state hidden" id="ex-state-error">
                         <div class="error-icon">⚠</div>
-                        <div class="error-title">내보내기에 실패했습니다</div>
+                        <div class="error-title" data-i18n="ex.error.title">내보내기에 실패했습니다</div>
                         <div class="error-desc" id="ex-error-message"></div>
                     </div>
                     <div class="empty-state hidden" id="ex-state-done">
                         <div class="empty-icon" style="color:var(--ok);opacity:1;">✓</div>
-                        <div class="empty-title" style="color:var(--ok);">내보내기 완료</div>
+                        <div class="empty-title" style="color:var(--ok);" data-i18n="ex.done.title">내보내기 완료</div>
                         <div class="empty-desc" id="ex-done-path"></div>
                     </div>
 
                     <!-- artifacts list -->
                     <div id="ex-artifacts-section" class="hidden">
                         <div class="section-divider"></div>
-                        <div class="section-label">내보낸 결과물</div>
+                        <div class="section-label" data-i18n="ex.artifacts.title">내보낸 결과물</div>
                         <div id="ex-artifacts-list" class="artifacts-list"></div>
                     </div>
                 </div>
@@ -280,16 +290,16 @@
                 </div>
                 <div class="loading-state hidden" id="hs-state-loading">
                     <div class="loading-spinner"></div>
-                    <div class="loading-text">이력을 불러오는 중...</div>
+                    <div class="loading-text" data-i18n="hs.loading.text">이력을 불러오는 중...</div>
                 </div>
                 <div class="empty-state hidden" id="hs-state-empty">
                     <div class="empty-icon">◷</div>
-                    <div class="empty-title">실행 이력이 없습니다</div>
-                    <div class="empty-desc">데이터를 가져오거나 변환, 내보내기를 실행하면 이력이 쌓입니다.</div>
+                    <div class="empty-title" data-i18n="hs.empty.title">실행 이력이 없습니다</div>
+                    <div class="empty-desc" data-i18n="hs.empty.desc">데이터를 가져오거나 변환, 내보내기를 실행하면 이력이 쌓입니다.</div>
                 </div>
                 <div class="error-state hidden" id="hs-state-error">
                     <div class="error-icon">⚠</div>
-                    <div class="error-title">이력을 불러오지 못했습니다</div>
+                    <div class="error-title" data-i18n="hs.error.title">이력을 불러오지 못했습니다</div>
                     <div class="error-desc" id="hs-error-message"></div>
                 </div>
                 <div class="page-body">
@@ -297,17 +307,132 @@
                         <table class="data-table">
                             <thead>
                                 <tr>
-                                    <th>시간</th>
-                                    <th>유형</th>
-                                    <th>소스</th>
-                                    <th>행</th>
-                                    <th>열</th>
-                                    <th>결과</th>
-                                    <th>출력 경로</th>
+                                    <th data-i18n="hs.col.time">시간</th>
+                                    <th data-i18n="hs.col.type">유형</th>
+                                    <th data-i18n="hs.col.source">소스</th>
+                                    <th data-i18n="hs.col.rows">행</th>
+                                    <th data-i18n="hs.col.cols">열</th>
+                                    <th data-i18n="hs.col.result">결과</th>
+                                    <th data-i18n="hs.col.outputPath">출력 경로</th>
                                 </tr>
                             </thead>
                             <tbody id="hs-table-body"></tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workflow Page -->
+            <div class="page" id="page-workflow">
+                <div class="page-header">
+                    <div class="page-title" data-i18n="page.workflow.title">워크플로우</div>
+                    <div class="page-subtitle" data-i18n="page.workflow.subtitle">자동화 워크플로우를 관리하고 실행합니다.</div>
+                </div>
+                <div class="loading-state hidden" id="wf-state-loading">
+                    <div class="loading-spinner"></div>
+                    <div class="loading-text" data-i18n="page.workflow.loading">워크플로우를 불러오는 중...</div>
+                </div>
+                <div class="empty-state hidden" id="wf-state-empty">
+                    <div class="empty-icon">▶</div>
+                    <div class="empty-title" data-i18n="page.workflow.empty.title">워크플로우가 없습니다</div>
+                    <div class="empty-desc" data-i18n="page.workflow.empty.desc">새 워크플로우를 만들어 자동화 작업을 구성하세요.</div>
+                    <button class="btn-primary" id="wf-btn-new-empty" data-i18n="page.workflow.btn.new">새 워크플로우</button>
+                </div>
+                <div class="error-state hidden" id="wf-state-error">
+                    <div class="error-icon">⚠</div>
+                    <div class="error-title" data-i18n="page.workflow.error.title">워크플로우를 불러오지 못했습니다</div>
+                    <div class="error-desc" id="wf-error-message"></div>
+                </div>
+                <div class="hidden" id="wf-state-data">
+                    <div class="page-actions" style="margin-bottom:16px;">
+                        <button class="btn-primary" id="wf-btn-new" data-i18n="page.workflow.btn.new">새 워크플로우</button>
+                    </div>
+                    <div id="wf-list"></div>
+                </div>
+
+                <!-- Step 편집기 (detail view) -->
+                <div class="hidden" id="wf-detail-view">
+                    <div style="margin-bottom:16px;">
+                        <button class="btn-secondary" id="wf-btn-back" data-i18n="wf.btn.back">← 목록으로</button>
+                    </div>
+                    <div class="settings-card" style="padding:16px;margin-bottom:16px;">
+                        <label style="font-size:12px;color:var(--text-secondary);display:block;margin-bottom:4px;" data-i18n="wf.label.name">워크플로우 이름</label>
+                        <input type="text" id="wf-detail-name" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-secondary);color:var(--text-primary);font-size:14px;">
+                    </div>
+                    <div class="settings-section-title" style="margin-bottom:8px;" data-i18n="wf.section.steps">Steps</div>
+                    <div id="wf-steps-container"></div>
+                    <div style="margin-top:12px;display:flex;gap:8px;align-items:center;">
+                        <select id="wf-step-type-select" style="padding:7px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg-secondary);color:var(--text-primary);font-size:13px;">
+                            <option value="import" data-i18n="wf.step.type.import">Import (파일 가져오기)</option>
+                            <option value="webExtract" data-i18n="wf.step.type.webExtract">Web Extract (웹 추출)</option>
+                            <option value="transform" data-i18n="wf.step.type.transform">Transform (데이터 변환)</option>
+                            <option value="export" data-i18n="wf.step.type.export">Export (내보내기)</option>
+                            <option value="sendEmail" data-i18n="wf.step.type.sendEmail">Send Email (이메일 발송)</option>
+                            <option value="callApi" data-i18n="wf.step.type.callApi">Call API (API 전송)</option>
+                        </select>
+                        <button class="btn-secondary" id="wf-btn-add-step" data-i18n="wf.btn.addStep">+ Step 추가</button>
+                    </div>
+                    <div style="margin-top:20px;display:flex;gap:8px;">
+                        <button class="btn-primary" id="wf-btn-save-detail" data-i18n="wf.btn.save">저장</button>
+                        <button class="btn-secondary" id="wf-btn-back2" data-i18n="wf.detail.btn.cancel">취소</button>
+                    </div>
+                </div>
+
+                <!-- 실행 진행 오버레이 -->
+                <div class="hidden" id="wf-running-panel" style="margin-top:24px;">
+                    <div class="settings-card" style="padding:20px;">
+                        <div class="settings-section-title" data-i18n="page.workflow.running.title">실행 중</div>
+                        <div style="margin-top:12px;">
+                            <div id="wf-progress-label" style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">-</div>
+                            <div style="background:var(--border);border-radius:4px;height:8px;overflow:hidden;">
+                                <div id="wf-progress-bar" style="background:var(--primary);height:100%;width:0%;transition:width 0.3s;"></div>
+                            </div>
+                        </div>
+                        <button class="btn-secondary" id="wf-btn-cancel" style="margin-top:16px;" data-i18n="page.workflow.btn.cancel">취소</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Web Extract Page -->
+            <div class="page" id="page-webextract">
+                <div class="page-header">
+                    <div class="page-title" data-i18n="page.webextract.title">웹 추출</div>
+                    <div class="page-subtitle" data-i18n="page.webextract.subtitle">웹 페이지에서 테이블 데이터를 추출합니다.</div>
+                </div>
+                <div class="loading-state hidden" id="wx-state-loading">
+                    <div class="spinner"></div>
+                    <p data-i18n="state.loading">불러오는 중...</p>
+                </div>
+                <div class="error-state hidden" id="wx-state-error">
+                    <p class="error-icon">⚠</p>
+                    <p class="error-message" id="wx-error-msg"></p>
+                </div>
+                <div id="wx-state-form">
+                    <div class="card" style="margin-bottom:12px;">
+                        <div class="field-row" style="margin-bottom:10px;">
+                            <label class="field-label" data-i18n="webextract.url">URL</label>
+                            <input type="text" id="wx-input-url" class="field-input"
+                                   placeholder="https://example.com/table-page" style="width:100%;box-sizing:border-box;" />
+                        </div>
+                        <div class="field-row" style="margin-bottom:10px;">
+                            <label class="field-label" data-i18n="webextract.selector">CSS 선택자</label>
+                            <input type="text" id="wx-input-selector" class="field-input"
+                                   placeholder="table, #myTable, .data-table (비우면 첫 번째 테이블)" style="width:100%;box-sizing:border-box;" />
+                        </div>
+                        <button class="btn btn-primary" id="wx-btn-fetch" data-i18n="webextract.fetch">추출</button>
+                    </div>
+                    <div id="wx-state-data" class="hidden">
+                        <div class="card">
+                            <div class="toolbar">
+                                <span class="toolbar-info" id="wx-info"></span>
+                            </div>
+                            <div class="table-wrap">
+                                <table class="data-table" id="wx-table">
+                                    <thead id="wx-table-head"></thead>
+                                    <tbody id="wx-table-body"></tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -320,11 +445,11 @@
                 </div>
                 <div class="loading-state hidden" id="st-state-loading">
                     <div class="loading-spinner"></div>
-                    <div class="loading-text">설정을 불러오는 중...</div>
+                    <div class="loading-text" data-i18n="st.loading.text">설정을 불러오는 중...</div>
                 </div>
                 <div class="error-state hidden" id="st-state-error">
                     <div class="error-icon">⚠</div>
-                    <div class="error-title">설정을 불러오지 못했습니다</div>
+                    <div class="error-title" data-i18n="st.error.title">설정을 불러오지 못했습니다</div>
                     <div class="error-desc" id="st-error-message"></div>
                 </div>
                 <div class="hidden" id="st-profile-section">
@@ -393,6 +518,8 @@ var LOCALES = {
         'nav.transform':        '변환',
         'nav.export':           '내보내기',
         'nav.history':          '실행 이력',
+        'nav.workflow':         '워크플로우',
+        'nav.webextract':       '웹 추출',
         'nav.settings':         '설정',
         'page.dashboard.title':     '대시보드',
         'page.dashboard.subtitle':  '업무 자동화 현황을 확인합니다.',
@@ -404,6 +531,20 @@ var LOCALES = {
         'page.export.subtitle':     '처리된 데이터를 파일로 내보냅니다.',
         'page.history.title':       '실행 이력',
         'page.history.subtitle':    '이전 실행 결과를 확인합니다.',
+        'page.workflow.title':      '워크플로우',
+        'page.workflow.subtitle':   '자동화 워크플로우를 관리하고 실행합니다.',
+        'page.workflow.loading':    '워크플로우를 불러오는 중...',
+        'page.workflow.empty.title':'워크플로우가 없습니다',
+        'page.workflow.empty.desc': '새 워크플로우를 만들어 자동화 작업을 구성하세요.',
+        'page.workflow.error.title':'워크플로우를 불러오지 못했습니다',
+        'page.workflow.running.title':'실행 중',
+        'page.workflow.btn.new':    '새 워크플로우',
+        'page.workflow.btn.cancel': '취소',
+        'page.webextract.title':    '웹 추출',
+        'page.webextract.subtitle': '웹 페이지에서 테이블 데이터를 추출합니다.',
+        'webextract.url':           'URL',
+        'webextract.selector':      'CSS 선택자',
+        'webextract.fetch':         '추출',
         'page.settings.title':      '설정',
         'page.settings.subtitle':   '앱 설정을 관리합니다.',
         'settings.section.profile':  '솔루션 프로필',
@@ -415,7 +556,113 @@ var LOCALES = {
         'settings.label.outputLang':    '결과물 언어',
         'status.initializing': '초기화 중',
         'status.ready':        '준비됨',
-        'status.profile.prefix': '프로필'
+        'status.profile.prefix': '프로필',
+        'state.loading':                 '불러오는 중...',
+        'dashboard.stat.totalRuns':      '총 실행 횟수',
+        'dashboard.stat.todayRuns':      '오늘 실행',
+        'dashboard.stat.successRate':    '성공률',
+        'dashboard.stat.lastRun':        '마지막 실행',
+        'dashboard.empty.title':         '아직 실행된 작업이 없습니다',
+        'dashboard.empty.desc':          '데이터 뷰어에서 파일을 불러와 작업을 시작하세요.',
+        'dv.btn.openFile':               '파일 열기',
+        'dv.empty.title':                '불러온 파일이 없습니다',
+        'dv.empty.desc':                 '파일 열기 버튼을 눌러 CSV 파일을 선택하세요.',
+        'dv.loading.text':               '파일을 불러오는 중...',
+        'dv.error.title':                '파일을 불러오지 못했습니다',
+        'tf.empty.title':                '불러온 데이터가 없습니다',
+        'tf.empty.desc':                 '데이터 뷰어에서 파일을 먼저 불러오세요.',
+        'tf.step.trim':                  '공백 제거 (trim)',
+        'tf.step.renameColumn':          '컬럼명 변경',
+        'tf.step.replaceValue':          '값 치환',
+        'tf.column.all':                 '(전체 컬럼)',
+        'tf.btn.addStep':                '단계 추가',
+        'tf.btn.apply':                  '변환 적용',
+        'tf.btn.clear':                  '단계 초기화',
+        'tf.loading.text':               '변환 중...',
+        'tf.error.title':                '변환에 실패했습니다',
+        'tf.param.newName':              '새 표시명',
+        'tf.param.findValue':            '찾을 값',
+        'tf.param.replaceWith':          '바꿀 값',
+        'tf.alert.selectColumn.rename':  '컬럼명 변경은 대상 컬럼을 선택해야 합니다.',
+        'tf.alert.selectColumn.replace': '값 치환은 대상 컬럼을 선택해야 합니다.',
+        'ex.empty.title':                '내보낼 데이터가 없습니다',
+        'ex.empty.desc':                 '데이터 뷰어에서 파일을 먼저 불러오세요.',
+        'ex.stat.file':                  '파일',
+        'ex.stat.rows':                  '행',
+        'ex.stat.cols':                  '열',
+        'ex.stat.format':                '형식',
+        'ex.format.csv':                 'CSV (UTF-8 BOM)',
+        'ex.format.xlsx':                'XLSX',
+        'ex.format.html':                'HTML 보고서',
+        'ex.format.docx':                'Word 문서 (.docx)',
+        'ex.format.pdf':                 'PDF 문서',
+        'ex.btn.export':                 '내보내기',
+        'ex.loading.text':               '내보내는 중...',
+        'ex.error.title':                '내보내기에 실패했습니다',
+        'ex.done.title':                 '내보내기 완료',
+        'ex.artifacts.title':            '내보낸 결과물',
+        'hs.col.time':                   '시간',
+        'hs.col.type':                   '유형',
+        'hs.col.source':                 '소스',
+        'hs.col.rows':                   '행',
+        'hs.col.cols':                   '열',
+        'hs.col.result':                 '결과',
+        'hs.col.outputPath':             '출력 경로',
+        'hs.loading.text':               '이력을 불러오는 중...',
+        'hs.empty.title':                '실행 이력이 없습니다',
+        'hs.empty.desc':                 '데이터를 가져오거나 변환, 내보내기를 실행하면 이력이 쌓입니다.',
+        'hs.error.title':                '이력을 불러오지 못했습니다',
+        'hs.op.import':                  '가져오기',
+        'hs.op.transform':               '변환',
+        'hs.op.export':                  '내보내기',
+        'hs.result.success':             '✓ 성공',
+        'hs.result.fail':                '✕ 실패',
+        'st.loading.text':               '설정을 불러오는 중...',
+        'st.error.title':                '설정을 불러오지 못했습니다',
+        'wf.btn.back':                   '← 목록으로',
+        'wf.label.name':                 '워크플로우 이름',
+        'wf.section.steps':              'Steps',
+        'wf.btn.save':                   '저장',
+        'wf.detail.btn.cancel':          '취소',
+        'wf.step.type.import':           'Import (파일 가져오기)',
+        'wf.step.type.webExtract':       'Web Extract (웹 추출)',
+        'wf.step.type.transform':        'Transform (데이터 변환)',
+        'wf.step.type.export':           'Export (내보내기)',
+        'wf.step.type.sendEmail':        'Send Email (이메일 발송)',
+        'wf.step.type.callApi':          'Call API (API 전송)',
+        'wf.btn.addStep':                '+ Step 추가',
+        'wf.card.btn.edit':              '편집',
+        'wf.card.btn.run':               '실행',
+        'wf.card.btn.delete':            '삭제',
+        'wf.card.steps.singular':        '개 단계',
+        'wf.error.unknown':              '알 수 없는 오류',
+        'wf.prompt.name':                '워크플로우 이름을 입력하세요.',
+        'wf.running.starting':           '시작 중...',
+        'wf.step.placeholder.name':      'Step 이름 (선택)',
+        'wf.step.btn.remove':            '제거',
+        'wf.progress.suffix':            ' 단계',
+        'wf.field.filePath':             '파일 경로',
+        'wf.field.outputFilePath':       '출력 파일 경로',
+        'wf.field.format':               '형식',
+        'wf.field.url':                  'URL',
+        'wf.field.cssSelector':          'CSS 선택자',
+        'wf.field.recipients':           '수신자 (쉼표 구분)',
+        'wf.field.subject':              '제목',
+        'wf.field.body':                 '본문',
+        'wf.field.attachFilePath':       '첨부 파일 경로 (선택)',
+        'wf.field.method':               '메서드 (POST/GET/PUT/DELETE)',
+        'wf.field.headers':              '헤더 (JSON)',
+        'wf.field.bodyJson':             '본문 (JSON 문자열)',
+        'wf.rules.btn.add':              '+ 규칙 추가',
+        'wx.error.emptyUrl':             'URL을 입력하세요.',
+        'plugin.name.import':            '데이터 가져오기',
+        'plugin.name.transform':         '데이터 변환',
+        'plugin.name.export':            '내보내기',
+        'plugin.name.history':           '실행 이력',
+        'plugin.name.workflow':          '워크플로우',
+        'plugin.name.webextract':        '웹 추출',
+        'unit.rows':                     '행',
+        'unit.cols':                     '열'
     },
     en: {
         'nav.section.main':     'Main',
@@ -425,6 +672,8 @@ var LOCALES = {
         'nav.transform':        'Transform',
         'nav.export':           'Export',
         'nav.history':          'History',
+        'nav.workflow':         'Workflow',
+        'nav.webextract':       'Web Extract',
         'nav.settings':         'Settings',
         'page.dashboard.title':     'Dashboard',
         'page.dashboard.subtitle':  'Overview of your automation activity.',
@@ -436,6 +685,20 @@ var LOCALES = {
         'page.export.subtitle':     'Export processed data to a file.',
         'page.history.title':       'History',
         'page.history.subtitle':    'Review previous execution results.',
+        'page.workflow.title':      'Workflow',
+        'page.workflow.subtitle':   'Manage and run automation workflows.',
+        'page.workflow.loading':    'Loading workflows...',
+        'page.workflow.empty.title':'No workflows yet',
+        'page.workflow.empty.desc': 'Create a new workflow to get started.',
+        'page.workflow.error.title':'Failed to load workflows',
+        'page.workflow.running.title':'Running',
+        'page.workflow.btn.new':    'New Workflow',
+        'page.workflow.btn.cancel': 'Cancel',
+        'page.webextract.title':    'Web Extract',
+        'page.webextract.subtitle': 'Extract table data from web pages.',
+        'webextract.url':           'URL',
+        'webextract.selector':      'CSS Selector',
+        'webextract.fetch':         'Extract',
         'page.settings.title':      'Settings',
         'page.settings.subtitle':   'Manage application settings.',
         'settings.section.profile':  'Solution Profile',
@@ -447,7 +710,113 @@ var LOCALES = {
         'settings.label.outputLang':    'Output Language',
         'status.initializing': 'Initializing',
         'status.ready':        'Ready',
-        'status.profile.prefix': 'Profile'
+        'status.profile.prefix': 'Profile',
+        'state.loading':                 'Loading...',
+        'dashboard.stat.totalRuns':      'Total Runs',
+        'dashboard.stat.todayRuns':      'Today',
+        'dashboard.stat.successRate':    'Success Rate',
+        'dashboard.stat.lastRun':        'Last Run',
+        'dashboard.empty.title':         'No executions yet',
+        'dashboard.empty.desc':          'Start by loading a file in the Data Viewer.',
+        'dv.btn.openFile':               'Open File',
+        'dv.empty.title':                'No file loaded',
+        'dv.empty.desc':                 'Click Open File to select a CSV or Excel file.',
+        'dv.loading.text':               'Loading file...',
+        'dv.error.title':                'Failed to load file',
+        'tf.empty.title':                'No data loaded',
+        'tf.empty.desc':                 'Load a file in the Data Viewer first.',
+        'tf.step.trim':                  'Trim whitespace',
+        'tf.step.renameColumn':          'Rename Column',
+        'tf.step.replaceValue':          'Replace Value',
+        'tf.column.all':                 '(All columns)',
+        'tf.btn.addStep':                'Add Step',
+        'tf.btn.apply':                  'Apply Transform',
+        'tf.btn.clear':                  'Clear Steps',
+        'tf.loading.text':               'Transforming...',
+        'tf.error.title':                'Transform failed',
+        'tf.param.newName':              'New display name',
+        'tf.param.findValue':            'Find value',
+        'tf.param.replaceWith':          'Replace with',
+        'tf.alert.selectColumn.rename':  'Select a target column for Rename Column.',
+        'tf.alert.selectColumn.replace': 'Select a target column for Replace Value.',
+        'ex.empty.title':                'No data to export',
+        'ex.empty.desc':                 'Load a file in the Data Viewer first.',
+        'ex.stat.file':                  'File',
+        'ex.stat.rows':                  'Rows',
+        'ex.stat.cols':                  'Columns',
+        'ex.stat.format':                'Format',
+        'ex.format.csv':                 'CSV (UTF-8 BOM)',
+        'ex.format.xlsx':                'XLSX',
+        'ex.format.html':                'HTML Report',
+        'ex.format.docx':                'Word Document (.docx)',
+        'ex.format.pdf':                 'PDF Document',
+        'ex.btn.export':                 'Export',
+        'ex.loading.text':               'Exporting...',
+        'ex.error.title':                'Export failed',
+        'ex.done.title':                 'Export complete',
+        'ex.artifacts.title':            'Exported artifacts',
+        'hs.col.time':                   'Time',
+        'hs.col.type':                   'Type',
+        'hs.col.source':                 'Source',
+        'hs.col.rows':                   'Rows',
+        'hs.col.cols':                   'Cols',
+        'hs.col.result':                 'Result',
+        'hs.col.outputPath':             'Output Path',
+        'hs.loading.text':               'Loading history...',
+        'hs.empty.title':                'No execution history',
+        'hs.empty.desc':                 'Run an import, transform, or export to build history.',
+        'hs.error.title':                'Failed to load history',
+        'hs.op.import':                  'Import',
+        'hs.op.transform':               'Transform',
+        'hs.op.export':                  'Export',
+        'hs.result.success':             '✓ Success',
+        'hs.result.fail':                '✕ Failed',
+        'st.loading.text':               'Loading settings...',
+        'st.error.title':                'Failed to load settings',
+        'wf.btn.back':                   '← Back to list',
+        'wf.label.name':                 'Workflow name',
+        'wf.section.steps':              'Steps',
+        'wf.btn.save':                   'Save',
+        'wf.detail.btn.cancel':          'Cancel',
+        'wf.step.type.import':           'Import (from file)',
+        'wf.step.type.webExtract':       'Web Extract',
+        'wf.step.type.transform':        'Transform',
+        'wf.step.type.export':           'Export',
+        'wf.step.type.sendEmail':        'Send Email',
+        'wf.step.type.callApi':          'Call API',
+        'wf.btn.addStep':                '+ Add Step',
+        'wf.card.btn.edit':              'Edit',
+        'wf.card.btn.run':               'Run',
+        'wf.card.btn.delete':            'Delete',
+        'wf.card.steps.singular':        ' steps',
+        'wf.error.unknown':              'Unknown error',
+        'wf.prompt.name':                'Enter workflow name.',
+        'wf.running.starting':           'Starting...',
+        'wf.step.placeholder.name':      'Step name (optional)',
+        'wf.step.btn.remove':            'Remove',
+        'wf.progress.suffix':            ' steps',
+        'wf.field.filePath':             'File path',
+        'wf.field.outputFilePath':       'Output file path',
+        'wf.field.format':               'Format',
+        'wf.field.url':                  'URL',
+        'wf.field.cssSelector':          'CSS Selector',
+        'wf.field.recipients':           'Recipients (comma separated)',
+        'wf.field.subject':              'Subject',
+        'wf.field.body':                 'Body',
+        'wf.field.attachFilePath':       'Attachment path (optional)',
+        'wf.field.method':               'Method (POST/GET/PUT/DELETE)',
+        'wf.field.headers':              'Headers (JSON)',
+        'wf.field.bodyJson':             'Body (JSON string)',
+        'wf.rules.btn.add':              '+ Add Rule',
+        'wx.error.emptyUrl':             'Please enter a URL.',
+        'plugin.name.import':            'Data Import',
+        'plugin.name.transform':         'Data Transform',
+        'plugin.name.export':            'Export',
+        'plugin.name.history':           'Execution History',
+        'plugin.name.workflow':          'Workflow',
+        'plugin.name.webextract':        'Web Extract',
+        'unit.rows':                     'rows',
+        'unit.cols':                     'cols'
     }
 };
 
@@ -460,6 +829,8 @@ var PAGE_I18N_KEYS = {
     'transform':   'nav.transform',
     'export':      'nav.export',
     'history':     'nav.history',
+    'workflow':    'nav.workflow',
+    'webextract':  'nav.webextract',
     'settings':    'nav.settings'
 };
 
@@ -624,7 +995,7 @@ function getColDisplayName(col) {
         if (nameEl) nameEl.textContent = tableData.sourceName || '';
 
         var metaEl = document.getElementById('dv-meta');
-        if (metaEl) metaEl.textContent = tableData.rowCount + '행  ·  ' + tableData.columnCount + '열';
+        if (metaEl) metaEl.textContent = tableData.rowCount + ' ' + t('unit.rows') + '  ·  ' + tableData.columnCount + ' ' + t('unit.cols');
 
         window._currentTableData = tableData;
     }
@@ -670,7 +1041,7 @@ function getColDisplayName(col) {
 
     function rebuildColumnSelect(columns) {
         var sel = document.getElementById('tf-step-column');
-        sel.innerHTML = '<option value="">(전체 컬럼)</option>';
+        sel.innerHTML = '<option value="">' + t('tf.column.all') + '</option>';
         columns.forEach(function (col) {
             var opt = document.createElement('option');
             opt.value = col.internalName;
@@ -717,7 +1088,7 @@ function getColDisplayName(col) {
         var nameEl = document.getElementById('tf-filename');
         if (nameEl) nameEl.textContent = tableData.sourceName || '';
         var metaEl = document.getElementById('tf-meta');
-        if (metaEl) metaEl.textContent = tableData.rowCount + '행  ·  ' + tableData.columnCount + '열';
+        if (metaEl) metaEl.textContent = tableData.rowCount + ' ' + t('unit.rows') + '  ·  ' + tableData.columnCount + ' ' + t('unit.cols');
         rebuildColumnSelect(tableData.columns);
     }
 
@@ -752,14 +1123,14 @@ function getColDisplayName(col) {
             p1.disabled = true;
             p2.disabled = true;
         } else if (type === 'renameColumn') {
-            p1.placeholder = '새 표시명';
+            p1.placeholder = t('tf.param.newName');
             p2.placeholder = '';
             p1.disabled = false;
             p2.disabled = true;
             p2.value = '';
         } else if (type === 'replaceValue') {
-            p1.placeholder = '찾을 값';
-            p2.placeholder = '바꿀 값';
+            p1.placeholder = t('tf.param.findValue');
+            p2.placeholder = t('tf.param.replaceWith');
             p1.disabled = false;
             p2.disabled = false;
         }
@@ -783,11 +1154,11 @@ function getColDisplayName(col) {
         var param2 = document.getElementById('tf-param2').value.trim();
 
         if (type === 'renameColumn' && !column) {
-            alert('컬럼명 변경은 대상 컬럼을 선택해야 합니다.');
+            alert(t('tf.alert.selectColumn.rename'));
             return;
         }
         if (type === 'replaceValue' && !column) {
-            alert('값 치환은 대상 컬럼을 선택해야 합니다.');
+            alert(t('tf.alert.selectColumn.replace'));
             return;
         }
 
@@ -848,8 +1219,8 @@ function getColDisplayName(col) {
         });
     });
 
-    var FORMAT_LABELS  = { csv: 'CSV', xlsx: 'XLSX', html: 'HTML' };
-    var FORMAT_ACTIONS = { csv: 'exportCsv', xlsx: 'exportXlsx', html: 'exportHtml' };
+    var FORMAT_LABELS  = { csv: 'CSV', xlsx: 'XLSX', html: 'HTML', docx: 'DOCX', pdf: 'PDF' };
+    var FORMAT_ACTIONS = { csv: 'exportCsv', xlsx: 'exportXlsx', html: 'exportHtml', docx: 'exportWord', pdf: 'exportPdf' };
 
     function loadArtifacts() {
         bridgeClient.sendCommand('artifact.export', 'getArtifacts', {})
@@ -923,9 +1294,9 @@ function getColDisplayName(col) {
 
 (function () {
     var OP_LABELS = {
-        'import':    '가져오기',
-        'transform': '변환',
-        'export':    '내보내기'
+        'import':    function() { return t('hs.op.import'); },
+        'transform': function() { return t('hs.op.transform'); },
+        'export':    function() { return t('hs.op.export'); }
     };
 
     function setHistoryState(state, info) {
@@ -951,7 +1322,7 @@ function getColDisplayName(col) {
             tr.appendChild(tdTime);
 
             var tdOp = document.createElement('td');
-            tdOp.textContent = OP_LABELS[rec.operationType] || rec.operationType;
+            tdOp.textContent = (OP_LABELS[rec.operationType] ? OP_LABELS[rec.operationType]() : null) || rec.operationType;
             tr.appendChild(tdOp);
 
             var tdSrc = document.createElement('td');
@@ -968,8 +1339,8 @@ function getColDisplayName(col) {
 
             var tdResult = document.createElement('td');
             tdResult.innerHTML = rec.success
-                ? '<span style="color:var(--ok);">✓ 성공</span>'
-                : '<span style="color:var(--error, #e74c3c);">✕ 실패</span>';
+                ? '<span style="color:var(--ok);">' + t('hs.result.success') + '</span>'
+                : '<span style="color:var(--error, #e74c3c);">' + t('hs.result.fail') + '</span>';
             tr.appendChild(tdResult);
 
             var tdPath = document.createElement('td');
@@ -1011,7 +1382,9 @@ function getColDisplayName(col) {
         'import':    'data-viewer',
         'transform': 'transform',
         'export':    'export',
-        'history':   'history'
+        'history':    'history',
+        'workflow':   'workflow',
+        'webextract': 'webextract'
     };
 
     function applySidebarVisibility(plugins) {
@@ -1044,7 +1417,7 @@ function getColDisplayName(col) {
 
             var label = document.createElement('div');
             label.className = 'settings-label';
-            label.textContent = plugin.pluginName || plugin.pluginId;
+            label.textContent = t('plugin.name.' + plugin.pluginId) || plugin.pluginName || plugin.pluginId;
 
             var toggle = document.createElement('label');
             toggle.className = 'plugin-toggle';
@@ -1152,6 +1525,9 @@ function getColDisplayName(col) {
             if (el.dataset.page === 'settings') {
                 loadSettings();
             }
+            if (el.dataset.page === 'workflow') {
+                loadWorkflows();
+            }
         });
     });
 
@@ -1174,6 +1550,420 @@ function getColDisplayName(col) {
             }
         })
         .catch(function () {});
+    });
+})();
+
+(function () {
+    var _runningWorkflowId = null;
+    var _editingWorkflow   = null;
+
+    function setWfState(state) {
+        document.getElementById('wf-state-loading').classList.toggle('hidden', state !== 'loading');
+        document.getElementById('wf-state-empty').classList.toggle('hidden', state !== 'empty');
+        document.getElementById('wf-state-error').classList.toggle('hidden', state !== 'error');
+        document.getElementById('wf-state-data').classList.toggle('hidden', state !== 'data');
+        document.getElementById('wf-detail-view').classList.toggle('hidden', state !== 'detail');
+    }
+
+    /* ── List view ─────────────────────────────────────── */
+
+    function renderWorkflows(workflows) {
+        var list = document.getElementById('wf-list');
+        list.innerHTML = '';
+        workflows.forEach(function (wf) {
+            var card = document.createElement('div');
+            card.className = 'settings-card';
+            card.style.cssText = 'padding:16px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;';
+
+            var info = document.createElement('div');
+            var nameEl = document.createElement('div');
+            nameEl.style.cssText = 'font-weight:600;font-size:14px;';
+            nameEl.textContent = wf.name || wf.id;
+            var descEl = document.createElement('div');
+            descEl.style.cssText = 'font-size:12px;color:var(--text-secondary);margin-top:2px;';
+            descEl.textContent = (wf.steps ? wf.steps.length : 0) + t('wf.card.steps.singular');
+            info.appendChild(nameEl);
+            info.appendChild(descEl);
+
+            var actions = document.createElement('div');
+            actions.style.cssText = 'display:flex;gap:8px;';
+
+            var editBtn = document.createElement('button');
+            editBtn.className = 'btn-secondary';
+            editBtn.style.cssText = 'font-size:12px;padding:6px 14px;';
+            editBtn.textContent = t('wf.card.btn.edit');
+            editBtn.addEventListener('click', function () { openDetail(wf); });
+
+            var runBtn = document.createElement('button');
+            runBtn.className = 'btn-primary';
+            runBtn.style.cssText = 'font-size:12px;padding:6px 14px;';
+            runBtn.textContent = t('wf.card.btn.run');
+            runBtn.addEventListener('click', function () { runWorkflow(wf.id); });
+
+            var delBtn = document.createElement('button');
+            delBtn.className = 'btn-secondary';
+            delBtn.style.cssText = 'font-size:12px;padding:6px 14px;';
+            delBtn.textContent = t('wf.card.btn.delete');
+            delBtn.addEventListener('click', function () { deleteWorkflow(wf.id); });
+
+            actions.appendChild(editBtn);
+            actions.appendChild(runBtn);
+            actions.appendChild(delBtn);
+            card.appendChild(info);
+            card.appendChild(actions);
+            list.appendChild(card);
+        });
+    }
+
+    function loadWorkflows() {
+        setWfState('loading');
+        bridgeClient.sendCommand('workflow', 'getWorkflows', {})
+            .then(function (workflows) {
+                if (!workflows || workflows.length === 0) {
+                    setWfState('empty');
+                } else {
+                    renderWorkflows(workflows);
+                    setWfState('data');
+                }
+            })
+            .catch(function (err) {
+                document.getElementById('wf-error-message').textContent = err && err.message ? err.message : t('wf.error.unknown');
+                setWfState('error');
+            });
+    }
+
+    function createWorkflow() {
+        var name = window.prompt(t('wf.prompt.name'));
+        if (!name || !name.trim()) return;
+        bridgeClient.sendCommand('workflow', 'createWorkflow', { name: name.trim(), description: '' })
+            .then(function (wf) { openDetail(wf); })
+            .catch(function () {});
+    }
+
+    function deleteWorkflow(id) {
+        bridgeClient.sendCommand('workflow', 'deleteWorkflow', { id: id })
+            .then(function () { loadWorkflows(); })
+            .catch(function () {});
+    }
+
+    function runWorkflow(id) {
+        _runningWorkflowId = id;
+        document.getElementById('wf-running-panel').classList.remove('hidden');
+        document.getElementById('wf-progress-bar').style.width = '0%';
+        document.getElementById('wf-progress-label').textContent = t('wf.running.starting');
+        bridgeClient.sendCommand('workflow', 'runWorkflow', { id: id })
+            .catch(function () {
+                document.getElementById('wf-running-panel').classList.add('hidden');
+                _runningWorkflowId = null;
+            });
+    }
+
+    /* ── Detail / Step Editor ───────────────────────────── */
+
+    function openDetail(wf) {
+        _editingWorkflow = JSON.parse(JSON.stringify(wf));
+        if (!_editingWorkflow.steps) _editingWorkflow.steps = [];
+        document.getElementById('wf-detail-name').value = _editingWorkflow.name || '';
+        renderStepList();
+        setWfState('detail');
+    }
+
+    function renderStepList() {
+        var container = document.getElementById('wf-steps-container');
+        container.innerHTML = '';
+        (_editingWorkflow.steps || []).forEach(function (step, idx) {
+            container.appendChild(buildStepCard(step, idx));
+        });
+    }
+
+    function buildStepCard(step, idx) {
+        var card = document.createElement('div');
+        card.className = 'settings-card';
+        card.style.cssText = 'padding:14px;margin-bottom:10px;';
+
+        var header = document.createElement('div');
+        header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;';
+
+        var badge = document.createElement('span');
+        badge.style.cssText = 'background:var(--primary);color:#fff;border-radius:4px;padding:2px 8px;font-size:11px;font-weight:600;';
+        badge.textContent = step.stepType || 'step';
+
+        var nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.placeholder = t('wf.step.placeholder.name');
+        nameInput.value = step.name || '';
+        nameInput.style.cssText = 'flex:1;margin:0 10px;padding:5px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg-secondary);color:var(--text-primary);font-size:12px;';
+        nameInput.addEventListener('input', function () {
+            _editingWorkflow.steps[idx].name = nameInput.value;
+        });
+
+        var removeBtn = document.createElement('button');
+        removeBtn.className = 'btn-secondary';
+        removeBtn.style.cssText = 'font-size:11px;padding:4px 10px;';
+        removeBtn.textContent = t('wf.step.btn.remove');
+        removeBtn.addEventListener('click', function () {
+            _editingWorkflow.steps.splice(idx, 1);
+            renderStepList();
+        });
+
+        header.appendChild(badge);
+        header.appendChild(nameInput);
+        header.appendChild(removeBtn);
+        card.appendChild(header);
+        card.appendChild(buildConfigForm(step, idx));
+        return card;
+    }
+
+    function buildConfigForm(step, idx) {
+        var form = document.createElement('div');
+        var config = {};
+        try { config = JSON.parse(step.configJson || '{}'); } catch (e) {}
+
+        if (step.stepType === 'import') {
+            form.appendChild(makeField(t('wf.field.filePath'), 'text', config.filePath || '', function (v) {
+                updateConfig(idx, 'filePath', v);
+            }));
+        } else if (step.stepType === 'transform') {
+            var rules = config.rules || [];
+            var rulesDiv = document.createElement('div');
+            rulesDiv.id = 'wf-rules-' + idx;
+
+            function renderRules() {
+                rulesDiv.innerHTML = '';
+                rules.forEach(function (rule, rIdx) {
+                    var row = document.createElement('div');
+                    row.style.cssText = 'display:flex;gap:6px;align-items:center;margin-bottom:6px;flex-wrap:wrap;';
+
+                    var typeSelect = document.createElement('select');
+                    typeSelect.style.cssText = 'padding:5px;border:1px solid var(--border);border-radius:4px;background:var(--bg-secondary);color:var(--text-primary);font-size:12px;';
+                    ['trim', 'renameColumn', 'replaceValue'].forEach(function (t) {
+                        var opt = document.createElement('option');
+                        opt.value = t; opt.textContent = t;
+                        if (rule.type === t) opt.selected = true;
+                        typeSelect.appendChild(opt);
+                    });
+                    typeSelect.addEventListener('change', function () { rules[rIdx].type = typeSelect.value; setRulesConfig(); });
+
+                    var colInput = makeInlineInput(rule.column || '', t('tf.step.renameColumn'), function (v) { rules[rIdx].column = v; setRulesConfig(); });
+                    var p1Input  = makeInlineInput(rule.param1 || '', t('tf.param.findValue'), function (v) { rules[rIdx].param1 = v; setRulesConfig(); });
+                    var p2Input  = makeInlineInput(rule.param2 || '', t('tf.param.replaceWith'), function (v) { rules[rIdx].param2 = v; setRulesConfig(); });
+
+                    var delBtn = document.createElement('button');
+                    delBtn.className = 'btn-secondary';
+                    delBtn.style.cssText = 'font-size:11px;padding:3px 8px;';
+                    delBtn.textContent = '×';
+                    delBtn.addEventListener('click', function () { rules.splice(rIdx, 1); setRulesConfig(); renderRules(); });
+
+                    row.appendChild(typeSelect);
+                    row.appendChild(colInput);
+                    row.appendChild(p1Input);
+                    row.appendChild(p2Input);
+                    row.appendChild(delBtn);
+                    rulesDiv.appendChild(row);
+                });
+            }
+
+            function setRulesConfig() {
+                _editingWorkflow.steps[idx].configJson = JSON.stringify({ rules: rules });
+            }
+
+            var addRuleBtn = document.createElement('button');
+            addRuleBtn.className = 'btn-secondary';
+            addRuleBtn.style.cssText = 'font-size:12px;padding:5px 10px;margin-top:6px;';
+            addRuleBtn.textContent = t('wf.rules.btn.add');
+            addRuleBtn.addEventListener('click', function () {
+                rules.push({ type: 'trim', column: '', param1: '', param2: '' });
+                setRulesConfig();
+                renderRules();
+            });
+
+            renderRules();
+            form.appendChild(rulesDiv);
+            form.appendChild(addRuleBtn);
+        } else if (step.stepType === 'export') {
+            form.appendChild(makeField(t('wf.field.outputFilePath'), 'text', config.filePath || '', function (v) { updateConfig(idx, 'filePath', v); }));
+
+            var fmtRow = document.createElement('div');
+            fmtRow.style.cssText = 'margin-bottom:8px;';
+            var fmtLabel = document.createElement('label');
+            fmtLabel.style.cssText = 'font-size:12px;color:var(--text-secondary);display:block;margin-bottom:4px;';
+            fmtLabel.textContent = t('wf.field.format');
+            var fmtSelect = document.createElement('select');
+            fmtSelect.style.cssText = 'padding:6px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg-secondary);color:var(--text-primary);font-size:13px;';
+            ['csv', 'xlsx', 'html'].forEach(function (f) {
+                var opt = document.createElement('option');
+                opt.value = f; opt.textContent = f.toUpperCase();
+                if ((config.format || 'csv') === f) opt.selected = true;
+                fmtSelect.appendChild(opt);
+            });
+            fmtSelect.addEventListener('change', function () { updateConfig(idx, 'format', fmtSelect.value); });
+            fmtRow.appendChild(fmtLabel);
+            fmtRow.appendChild(fmtSelect);
+            form.appendChild(fmtRow);
+        } else if (step.stepType === 'webExtract') {
+            form.appendChild(makeField(t('wf.field.url'), 'text', config.url || '', function (v) { updateConfig(idx, 'url', v); }));
+            form.appendChild(makeField(t('wf.field.cssSelector'), 'text', config.selector || '', function (v) { updateConfig(idx, 'selector', v); }));
+        } else if (step.stepType === 'sendEmail') {
+            form.appendChild(makeField(t('wf.field.recipients'), 'text', config.recipients || '', function (v) { updateConfig(idx, 'recipients', v); }));
+            form.appendChild(makeField(t('wf.field.subject'), 'text', config.subject || '', function (v) { updateConfig(idx, 'subject', v); }));
+            form.appendChild(makeField(t('wf.field.body'), 'text', config.body || '', function (v) { updateConfig(idx, 'body', v); }));
+            form.appendChild(makeField(t('wf.field.attachFilePath'), 'text', config.attachFilePath || '', function (v) { updateConfig(idx, 'attachFilePath', v); }));
+        } else if (step.stepType === 'callApi') {
+            form.appendChild(makeField(t('wf.field.url'), 'text', config.url || '', function (v) { updateConfig(idx, 'url', v); }));
+            form.appendChild(makeField(t('wf.field.method'), 'text', config.method || 'POST', function (v) { updateConfig(idx, 'method', v); }));
+            form.appendChild(makeField(t('wf.field.headers'), 'text', config.headers || '', function (v) { updateConfig(idx, 'headers', v); }));
+            form.appendChild(makeField(t('wf.field.bodyJson'), 'text', config.body || '', function (v) { updateConfig(idx, 'body', v); }));
+        }
+
+        return form;
+    }
+
+    function makeField(label, type, value, onChange) {
+        var wrap = document.createElement('div');
+        wrap.style.cssText = 'margin-bottom:8px;';
+        var lbl = document.createElement('label');
+        lbl.style.cssText = 'font-size:12px;color:var(--text-secondary);display:block;margin-bottom:4px;';
+        lbl.textContent = label;
+        var inp = document.createElement('input');
+        inp.type = type;
+        inp.value = value;
+        inp.style.cssText = 'width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg-secondary);color:var(--text-primary);font-size:13px;';
+        inp.addEventListener('input', function () { onChange(inp.value); });
+        wrap.appendChild(lbl);
+        wrap.appendChild(inp);
+        return wrap;
+    }
+
+    function makeInlineInput(value, placeholder, onChange) {
+        var inp = document.createElement('input');
+        inp.type = 'text';
+        inp.value = value;
+        inp.placeholder = placeholder;
+        inp.style.cssText = 'width:90px;padding:5px 6px;border:1px solid var(--border);border-radius:4px;background:var(--bg-secondary);color:var(--text-primary);font-size:12px;';
+        inp.addEventListener('input', function () { onChange(inp.value); });
+        return inp;
+    }
+
+    function updateConfig(idx, key, value) {
+        var config = {};
+        try { config = JSON.parse(_editingWorkflow.steps[idx].configJson || '{}'); } catch (e) {}
+        config[key] = value;
+        _editingWorkflow.steps[idx].configJson = JSON.stringify(config);
+    }
+
+    function saveDetail() {
+        _editingWorkflow.name = document.getElementById('wf-detail-name').value.trim() || _editingWorkflow.name;
+        bridgeClient.sendCommand('workflow', 'updateWorkflow', {
+            id:          _editingWorkflow.id,
+            name:        _editingWorkflow.name,
+            description: _editingWorkflow.description || '',
+            steps:       _editingWorkflow.steps
+        })
+        .then(function () { loadWorkflows(); })
+        .catch(function () {});
+    }
+
+    window.loadWorkflows = loadWorkflows;
+
+    document.getElementById('wf-btn-new').addEventListener('click', createWorkflow);
+    document.getElementById('wf-btn-new-empty').addEventListener('click', createWorkflow);
+    document.getElementById('wf-btn-cancel').addEventListener('click', function () {
+        bridgeClient.sendCommand('workflow', 'cancelWorkflow', {}).catch(function () {});
+    });
+    document.getElementById('wf-btn-back').addEventListener('click', function () { loadWorkflows(); });
+    document.getElementById('wf-btn-back2').addEventListener('click', function () { loadWorkflows(); });
+    document.getElementById('wf-btn-save-detail').addEventListener('click', saveDetail);
+    document.getElementById('wf-btn-add-step').addEventListener('click', function () {
+        var type = document.getElementById('wf-step-type-select').value;
+        _editingWorkflow.steps.push({ id: '', stepType: type, name: '', configJson: '{}' });
+        renderStepList();
+    });
+
+    window.addEventListener('bridge:workflow:progress', function (e) {
+        var payload = e.detail || {};
+        var step  = payload.step  || 0;
+        var total = payload.total || 1;
+        var pct   = Math.round((step / total) * 100);
+        document.getElementById('wf-progress-bar').style.width = pct + '%';
+        document.getElementById('wf-progress-label').textContent = step + ' / ' + total + t('wf.progress.suffix');
+    });
+
+    window.addEventListener('bridge:workflow:complete', function (e) {
+        document.getElementById('wf-running-panel').classList.add('hidden');
+        _runningWorkflowId = null;
+        loadWorkflows();
+    });
+})();
+
+(function () {
+    function setWxState(state, info) {
+        document.getElementById('wx-state-loading').classList.toggle('hidden', state !== 'loading');
+        document.getElementById('wx-state-error').classList.toggle('hidden', state !== 'error');
+        document.getElementById('wx-state-data').classList.toggle('hidden', state !== 'data');
+        if (state === 'error' && info && info.message) {
+            document.getElementById('wx-error-msg').textContent = info.message;
+        }
+    }
+
+    function renderTable(payload) {
+        var head = document.getElementById('wx-table-head');
+        var body = document.getElementById('wx-table-body');
+        head.innerHTML = '';
+        body.innerHTML = '';
+
+        var tr = document.createElement('tr');
+        (payload.columns || []).forEach(function (col) {
+            var th = document.createElement('th');
+            th.textContent = getColDisplayName(col);
+            tr.appendChild(th);
+        });
+        head.appendChild(tr);
+
+        (payload.rows || []).forEach(function (rowArr) {
+            var tr2 = document.createElement('tr');
+            rowArr.forEach(function (cell) {
+                var td = document.createElement('td');
+                td.textContent = cell;
+                tr2.appendChild(td);
+            });
+            body.appendChild(tr2);
+        });
+
+        var info = document.getElementById('wx-info');
+        info.textContent = (payload.rowCount || 0) + ' ' + t('unit.rows') + ' · ' + (payload.columnCount || 0) + ' ' + t('unit.cols');
+        setWxState('data');
+    }
+
+    document.getElementById('wx-btn-fetch').addEventListener('click', function () {
+        var url      = document.getElementById('wx-input-url').value.trim();
+        var selector = document.getElementById('wx-input-selector').value.trim();
+
+        if (!url) {
+            setWxState('error', { message: t('wx.error.emptyUrl') });
+            return;
+        }
+
+        setWxState('loading');
+
+        bridgeClient.sendCommand('webExtract', 'fetchAndExtract', { url: url, selector: selector })
+            .then(function (payload) {
+                renderTable(payload);
+            })
+            .catch(function (err) {
+                setWxState('error', { message: err.message });
+            });
+    });
+
+    document.querySelectorAll('.nav-item[data-page]').forEach(function (el) {
+        el.addEventListener('click', function () {
+            if (el.dataset.page === 'webextract') {
+                setWxState('data');
+                if (!document.getElementById('wx-table-body').firstChild) {
+                    setWxState('data');
+                    document.getElementById('wx-state-data').classList.add('hidden');
+                }
+            }
+        });
     });
 })();
 </script>

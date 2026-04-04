@@ -97,17 +97,19 @@ SageNexus는 이러한 차이를 **기능 조합형 구조**로 수용합니다.
 - Plugin Manager
 - Profile Resolver
 
-### Modules
+### Modules (구현 완료)
 - CSV Import
 - XLSX Import
-- Data Transform
-- Web Extract
+- Data Transform (trim / rename / replace)
+- Web Extract (WinHTTP + HTML 파싱)
 - CSV Export
 - XLSX Export
 - HTML Report Export
+- Workflow Builder (Step 편집 + 실행)
+
+### Modules (예정)
 - Word Export
 - PDF Export
-- Workflow Builder
 - Scheduler
 - API Connector
 
@@ -139,35 +141,35 @@ SageNexus는 **UI 언어**와 **결과물 언어**를 분리합니다.
 
 ## Development Direction
 
-현재 SageNexus는 다음 방향으로 설계 및 구현을 진행합니다.
+SageNexus는 다음 방향으로 설계 및 구현을 진행합니다.
 
 - Phase 기반 점진 개발
 - MVP 우선 구현
 - 코어와 플러그인 구조 먼저 정립
-- CSV / XLSX 기반 데이터 처리 루프 우선 완성
-- 이후 Web Extract / Workflow / Document 기능 확장
+- CSV / XLSX 기반 데이터 처리 루프 → Web Extract / Workflow 순으로 완성
+- 이후 Word / PDF Export, 이메일/API 액션, 운영성 강화 확장
 
 ---
 
 ## Planned Phases
 
-### Phase 1
+### Phase 1 ✅
 플랫폼 셸 및 공통 뼈대 구축
 
-### Phase 2-A
-CSV 중심 데이터 처리 MVP
+### Phase 2 ✅
+CSV / XLSX 데이터 처리 MVP, Data Viewer, Transform, Export, 실행 이력
 
-### Phase 2-B
-XLSX 지원 및 실행 이력 강화
+### Phase 3 ✅
+플러그인 런타임, 메뉴 동적 제어, XLSX / HTML Export, Output Language, i18n 기초
 
-### Phase 3
-플러그인 런타임 적용 및 Export 1차
+### Phase 4 ✅
+Workflow Builder, Web Extract 모듈, progress 브릿지
 
-### Phase 4
-Workflow / Web Extract 확장
+### Phase 5 (진행 예정)
+Word / PDF Export, 이메일 / API 액션, i18n 고도화
 
-### Phase 5
-고급 기능 및 고객사 맞춤 확장
+### Phase 6 (계획)
+운영성 강화, 배치 실행, 제품화 정리
 
 ---
 
@@ -217,8 +219,9 @@ SageNexus는 단순한 자동화 프로그램이 아니라,
 
 ## Status
 
-**In planning / early implementation**
+**Phase 4 완료 / Phase 5 진행 예정**
 
-SageNexus는 현재 구조 설계, UI 규칙 정리, 개발 계획 수립, 초기 구현 단계를 진행 중입니다.
+Phase 1~4 구현 완료. CSV/XLSX 입출력, Data Transform, Web Extract, Workflow Builder, Plugin Manager, i18n 기초까지 동작하는 빌드가 존재합니다.
+현재 Word/PDF Export 및 액션 확장(Phase 5)을 준비 중입니다.
 
 ---

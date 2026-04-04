@@ -3,6 +3,8 @@
 #include "app/infrastructure/writers/CsvWriter.h"
 #include "app/infrastructure/writers/XlsxWriter.h"
 #include "app/infrastructure/exporters/HtmlReportExporter.h"
+#include "app/infrastructure/exporters/WordExporter.h"
+#include "app/infrastructure/exporters/PdfExporter.h"
 
 BOOL ExportService::ExportToCsv(const DataTable& table, const CString& strFilePath, const CString& strLang, CString& strError)
 {
@@ -55,5 +57,41 @@ BOOL ExportService::ExportToHtml(const DataTable& table, const CString& strFileP
     }
 
     HtmlReportExporter exporter;
+    return exporter.Export(table, strFilePath, strLang, strError);
+}
+
+BOOL ExportService::ExportToWord(const DataTable& table, const CString& strFilePath, const CString& strLang, CString& strError)
+{
+    if (table.IsEmpty())
+    {
+        strError = L"내보낼 데이터가 없습니다.";
+        return FALSE;
+    }
+
+    if (strFilePath.IsEmpty())
+    {
+        strError = L"저장 경로가 비어 있습니다.";
+        return FALSE;
+    }
+
+    WordExporter exporter;
+    return exporter.Export(table, strFilePath, strLang, strError);
+}
+
+BOOL ExportService::ExportToPdf(const DataTable& table, const CString& strFilePath, const CString& strLang, CString& strError)
+{
+    if (table.IsEmpty())
+    {
+        strError = L"내보낼 데이터가 없습니다.";
+        return FALSE;
+    }
+
+    if (strFilePath.IsEmpty())
+    {
+        strError = L"저장 경로가 비어 있습니다.";
+        return FALSE;
+    }
+
+    PdfExporter exporter;
     return exporter.Export(table, strFilePath, strLang, strError);
 }

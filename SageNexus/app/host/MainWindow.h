@@ -7,6 +7,10 @@
 #include "app/infrastructure/bridge/ExportBridgeHandler.h"
 #include "app/infrastructure/bridge/HistoryBridgeHandler.h"
 #include "app/infrastructure/bridge/SettingsBridgeHandler.h"
+#include "app/infrastructure/bridge/WorkflowBridgeHandler.h"
+#include "app/infrastructure/bridge/WebExtractBridgeHandler.h"
+#include "app/infrastructure/bridge/EmailBridgeHandler.h"
+#include "app/infrastructure/bridge/ApiCallBridgeHandler.h"
 
 class MainWindow
 {
@@ -24,6 +28,8 @@ private:
     void OnSize(int nWidth, int nHeight);
     void OnGetMinMaxInfo(MINMAXINFO* pInfo) const;
     void OnWebViewReady(BOOL bSuccess);
+    void OnWorkflowProgress(int nStep, int nTotal);
+    void OnWorkflowComplete(BOOL bSuccess);
     void OnDestroy();
 
     void NavigateToShell();
@@ -37,4 +43,8 @@ private:
     ExportBridgeHandler     m_exportBridgeHandler;
     HistoryBridgeHandler    m_historyBridgeHandler;
     SettingsBridgeHandler   m_settingsBridgeHandler;
+    WorkflowBridgeHandler     m_workflowBridgeHandler;
+    WebExtractBridgeHandler   m_webExtractBridgeHandler;
+    EmailBridgeHandler        m_emailBridgeHandler;
+    ApiCallBridgeHandler      m_apiCallBridgeHandler;
 };

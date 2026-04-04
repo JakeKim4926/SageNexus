@@ -100,6 +100,12 @@
     <Filter Include="헤더 파일\app\infrastructure\exporters">
       <UniqueIdentifier>{C0000002-0004-0008-0000-000000000001}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\app\infrastructure\workflow">
+      <UniqueIdentifier>{C0000001-0004-0009-0000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\app\infrastructure\workflow">
+      <UniqueIdentifier>{C0000002-0004-0009-0000-000000000001}</UniqueIdentifier>
+    </Filter>
     <Filter Include="리소스 파일">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
     </Filter>
@@ -171,6 +177,12 @@
     <ClCompile Include="app\infrastructure\exporters\HtmlReportExporter.cpp">
       <Filter>소스 파일\app\infrastructure\exporters</Filter>
     </ClCompile>
+    <ClCompile Include="app\infrastructure\exporters\WordExporter.cpp">
+      <Filter>소스 파일\app\infrastructure\exporters</Filter>
+    </ClCompile>
+    <ClCompile Include="app\infrastructure\exporters\PdfExporter.cpp">
+      <Filter>소스 파일\app\infrastructure\exporters</Filter>
+    </ClCompile>
     <ClCompile Include="app\infrastructure\writers\CsvWriter.cpp">
       <Filter>소스 파일\app\infrastructure\writers</Filter>
     </ClCompile>
@@ -203,6 +215,33 @@
     </ClCompile>
     <ClCompile Include="app\infrastructure\plugins\PluginManager.cpp">
       <Filter>소스 파일\app\infrastructure\plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="app\infrastructure\workflow\WorkflowStore.cpp">
+      <Filter>소스 파일\app\infrastructure\workflow</Filter>
+    </ClCompile>
+    <ClCompile Include="app\application\services\WorkflowService.cpp">
+      <Filter>소스 파일\app\application\services</Filter>
+    </ClCompile>
+    <ClCompile Include="app\infrastructure\bridge\WorkflowBridgeHandler.cpp">
+      <Filter>소스 파일\app\infrastructure\bridge</Filter>
+    </ClCompile>
+    <ClCompile Include="app\application\services\WebExtractService.cpp">
+      <Filter>소스 파일\app\application\services</Filter>
+    </ClCompile>
+    <ClCompile Include="app\infrastructure\bridge\WebExtractBridgeHandler.cpp">
+      <Filter>소스 파일\app\infrastructure\bridge</Filter>
+    </ClCompile>
+    <ClCompile Include="app\application\services\EmailService.cpp">
+      <Filter>소스 파일\app\application\services</Filter>
+    </ClCompile>
+    <ClCompile Include="app\infrastructure\bridge\EmailBridgeHandler.cpp">
+      <Filter>소스 파일\app\infrastructure\bridge</Filter>
+    </ClCompile>
+    <ClCompile Include="app\application\services\ApiCallService.cpp">
+      <Filter>소스 파일\app\application\services</Filter>
+    </ClCompile>
+    <ClCompile Include="app\infrastructure\bridge\ApiCallBridgeHandler.cpp">
+      <Filter>소스 파일\app\infrastructure\bridge</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -287,6 +326,12 @@
     <ClInclude Include="app\infrastructure\exporters\HtmlReportExporter.h">
       <Filter>헤더 파일\app\infrastructure\exporters</Filter>
     </ClInclude>
+    <ClInclude Include="app\infrastructure\exporters\WordExporter.h">
+      <Filter>헤더 파일\app\infrastructure\exporters</Filter>
+    </ClInclude>
+    <ClInclude Include="app\infrastructure\exporters\PdfExporter.h">
+      <Filter>헤더 파일\app\infrastructure\exporters</Filter>
+    </ClInclude>
     <ClInclude Include="app\domain\model\Artifact.h">
       <Filter>헤더 파일\app\domain\model</Filter>
     </ClInclude>
@@ -304,6 +349,45 @@
     </ClInclude>
     <ClInclude Include="app\infrastructure\plugins\PluginManager.h">
       <Filter>헤더 파일\app\infrastructure\plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="app\domain\model\WorkflowStep.h">
+      <Filter>헤더 파일\app\domain\model</Filter>
+    </ClInclude>
+    <ClInclude Include="app\domain\model\WorkflowDefinition.h">
+      <Filter>헤더 파일\app\domain\model</Filter>
+    </ClInclude>
+    <ClInclude Include="app\infrastructure\workflow\WorkflowStore.h">
+      <Filter>헤더 파일\app\infrastructure\workflow</Filter>
+    </ClInclude>
+    <ClInclude Include="app\application\services\WorkflowService.h">
+      <Filter>헤더 파일\app\application\services</Filter>
+    </ClInclude>
+    <ClInclude Include="app\infrastructure\bridge\WorkflowBridgeHandler.h">
+      <Filter>헤더 파일\app\infrastructure\bridge</Filter>
+    </ClInclude>
+    <ClInclude Include="app\application\services\WebExtractService.h">
+      <Filter>헤더 파일\app\application\services</Filter>
+    </ClInclude>
+    <ClInclude Include="app\infrastructure\bridge\WebExtractBridgeHandler.h">
+      <Filter>헤더 파일\app\infrastructure\bridge</Filter>
+    </ClInclude>
+    <ClInclude Include="app\domain\model\EmailAction.h">
+      <Filter>헤더 파일\app\domain\model</Filter>
+    </ClInclude>
+    <ClInclude Include="app\application\services\EmailService.h">
+      <Filter>헤더 파일\app\application\services</Filter>
+    </ClInclude>
+    <ClInclude Include="app\infrastructure\bridge\EmailBridgeHandler.h">
+      <Filter>헤더 파일\app\infrastructure\bridge</Filter>
+    </ClInclude>
+    <ClInclude Include="app\domain\model\ApiCallAction.h">
+      <Filter>헤더 파일\app\domain\model</Filter>
+    </ClInclude>
+    <ClInclude Include="app\application\services\ApiCallService.h">
+      <Filter>헤더 파일\app\application\services</Filter>
+    </ClInclude>
+    <ClInclude Include="app\infrastructure\bridge\ApiCallBridgeHandler.h">
+      <Filter>헤더 파일\app\infrastructure\bridge</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

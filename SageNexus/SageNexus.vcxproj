@@ -194,6 +194,8 @@
     <ClCompile Include="app\application\services\TransformService.cpp" />
     <ClCompile Include="app\infrastructure\bridge\TransformBridgeHandler.cpp" />
     <ClCompile Include="app\infrastructure\exporters\HtmlReportExporter.cpp" />
+    <ClCompile Include="app\infrastructure\exporters\WordExporter.cpp" />
+    <ClCompile Include="app\infrastructure\exporters\PdfExporter.cpp" />
     <ClCompile Include="app\infrastructure\writers\CsvWriter.cpp" />
     <ClCompile Include="app\infrastructure\writers\XlsxWriter.cpp" />
     <ClCompile Include="app\application\services\ExportService.cpp" />
@@ -205,6 +207,15 @@
     <ClCompile Include="app\infrastructure\bridge\HistoryBridgeHandler.cpp" />
     <ClCompile Include="app\infrastructure\bridge\SettingsBridgeHandler.cpp" />
     <ClCompile Include="app\infrastructure\plugins\PluginManager.cpp" />
+    <ClCompile Include="app\infrastructure\workflow\WorkflowStore.cpp" />
+    <ClCompile Include="app\application\services\WorkflowService.cpp" />
+    <ClCompile Include="app\infrastructure\bridge\WorkflowBridgeHandler.cpp" />
+    <ClCompile Include="app\application\services\WebExtractService.cpp" />
+    <ClCompile Include="app\infrastructure\bridge\WebExtractBridgeHandler.cpp" />
+    <ClCompile Include="app\application\services\EmailService.cpp" />
+    <ClCompile Include="app\infrastructure\bridge\EmailBridgeHandler.cpp" />
+    <ClCompile Include="app\application\services\ApiCallService.cpp" />
+    <ClCompile Include="app\infrastructure\bridge\ApiCallBridgeHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -234,12 +245,27 @@
     <ClInclude Include="app\infrastructure\history\ExecutionHistoryStore.h" />
     <ClInclude Include="app\infrastructure\history\ArtifactStore.h" />
     <ClInclude Include="app\infrastructure\exporters\HtmlReportExporter.h" />
+    <ClInclude Include="app\infrastructure\exporters\WordExporter.h" />
+    <ClInclude Include="app\infrastructure\exporters\PdfExporter.h" />
     <ClInclude Include="app\domain\model\Artifact.h" />
     <ClInclude Include="app\application\services\HistoryService.h" />
     <ClInclude Include="app\infrastructure\bridge\HistoryBridgeHandler.h" />
     <ClInclude Include="app\infrastructure\bridge\SettingsBridgeHandler.h" />
     <ClInclude Include="app\domain\interfaces\IPlugin.h" />
     <ClInclude Include="app\infrastructure\plugins\PluginManager.h" />
+    <ClInclude Include="app\domain\model\WorkflowStep.h" />
+    <ClInclude Include="app\domain\model\WorkflowDefinition.h" />
+    <ClInclude Include="app\infrastructure\workflow\WorkflowStore.h" />
+    <ClInclude Include="app\application\services\WorkflowService.h" />
+    <ClInclude Include="app\infrastructure\bridge\WorkflowBridgeHandler.h" />
+    <ClInclude Include="app\application\services\WebExtractService.h" />
+    <ClInclude Include="app\infrastructure\bridge\WebExtractBridgeHandler.h" />
+    <ClInclude Include="app\domain\model\EmailAction.h" />
+    <ClInclude Include="app\application\services\EmailService.h" />
+    <ClInclude Include="app\infrastructure\bridge\EmailBridgeHandler.h" />
+    <ClInclude Include="app\domain\model\ApiCallAction.h" />
+    <ClInclude Include="app\application\services\ApiCallService.h" />
+    <ClInclude Include="app\infrastructure\bridge\ApiCallBridgeHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

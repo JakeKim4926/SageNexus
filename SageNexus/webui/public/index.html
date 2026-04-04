@@ -89,26 +89,26 @@
                 </div>
                 <div class="dashboard-grid">
                     <div class="stat-card">
-                        <div class="stat-label">총 실행 횟수</div>
+                        <div class="stat-label" data-i18n="dashboard.stat.totalRuns">총 실행 횟수</div>
                         <div class="stat-value" id="stat-total-runs">—</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-label">오늘 실행</div>
+                        <div class="stat-label" data-i18n="dashboard.stat.todayRuns">오늘 실행</div>
                         <div class="stat-value" id="stat-today-runs">—</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-label">성공률</div>
+                        <div class="stat-label" data-i18n="dashboard.stat.successRate">성공률</div>
                         <div class="stat-value" id="stat-success-rate">—</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-label">마지막 실행</div>
+                        <div class="stat-label" data-i18n="dashboard.stat.lastRun">마지막 실행</div>
                         <div class="stat-value" id="stat-last-run">—</div>
                     </div>
                 </div>
                 <div class="empty-state" id="dashboard-empty">
                     <div class="empty-icon">⊞</div>
-                    <div class="empty-title">아직 실행된 작업이 없습니다</div>
-                    <div class="empty-desc">데이터 뷰어에서 파일을 불러와 작업을 시작하세요.</div>
+                    <div class="empty-title" data-i18n="dashboard.empty.title">아직 실행된 작업이 없습니다</div>
+                    <div class="empty-desc" data-i18n="dashboard.empty.desc">데이터 뷰어에서 파일을 불러와 작업을 시작하세요.</div>
                 </div>
             </div>
 
@@ -119,23 +119,23 @@
                     <div class="page-subtitle" data-i18n="page.dataViewer.subtitle">파일을 불러와 데이터를 확인합니다.</div>
                 </div>
                 <div class="page-toolbar">
-                    <button class="btn btn-primary" id="btn-open-file">파일 열기</button>
+                    <button class="btn btn-primary" id="btn-open-file" data-i18n="dv.btn.openFile">파일 열기</button>
                     <span class="file-info-name" id="dv-filename"></span>
                     <span class="file-info-meta" id="dv-meta"></span>
                 </div>
                 <div class="page-body">
                     <div class="empty-state" id="dv-state-empty">
                         <div class="empty-icon">⊟</div>
-                        <div class="empty-title">불러온 파일이 없습니다</div>
-                        <div class="empty-desc">파일 열기 버튼을 눌러 CSV 파일을 선택하세요.</div>
+                        <div class="empty-title" data-i18n="dv.empty.title">불러온 파일이 없습니다</div>
+                        <div class="empty-desc" data-i18n="dv.empty.desc">파일 열기 버튼을 눌러 CSV 파일을 선택하세요.</div>
                     </div>
                     <div class="loading-state hidden" id="dv-state-loading">
                         <div class="loading-spinner"></div>
-                        <div class="loading-text">파일을 불러오는 중...</div>
+                        <div class="loading-text" data-i18n="dv.loading.text">파일을 불러오는 중...</div>
                     </div>
                     <div class="error-state hidden" id="dv-state-error">
                         <div class="error-icon">⚠</div>
-                        <div class="error-title">파일을 불러오지 못했습니다</div>
+                        <div class="error-title" data-i18n="dv.error.title">파일을 불러오지 못했습니다</div>
                         <div class="error-desc" id="dv-error-message"></div>
                     </div>
                     <div class="table-wrapper hidden" id="dv-state-data">
@@ -157,8 +157,8 @@
                 <!-- no data loaded -->
                 <div class="empty-state" id="tf-state-no-data">
                     <div class="empty-icon">⇌</div>
-                    <div class="empty-title">불러온 데이터가 없습니다</div>
-                    <div class="empty-desc">데이터 뷰어에서 파일을 먼저 불러오세요.</div>
+                    <div class="empty-title" data-i18n="tf.empty.title">불러온 데이터가 없습니다</div>
+                    <div class="empty-desc" data-i18n="tf.empty.desc">데이터 뷰어에서 파일을 먼저 불러오세요.</div>
                 </div>
 
                 <!-- transform builder (shown when data is available) -->
@@ -171,35 +171,35 @@
                     <!-- step form -->
                     <div class="tf-form">
                         <select class="tf-select" id="tf-step-type">
-                            <option value="trim">공백 제거 (trim)</option>
-                            <option value="renameColumn">컬럼명 변경</option>
-                            <option value="replaceValue">값 치환</option>
+                            <option value="trim" data-i18n="tf.step.trim">공백 제거 (trim)</option>
+                            <option value="renameColumn" data-i18n="tf.step.renameColumn">컬럼명 변경</option>
+                            <option value="replaceValue" data-i18n="tf.step.replaceValue">값 치환</option>
                         </select>
                         <select class="tf-select" id="tf-step-column">
-                            <option value="">(전체 컬럼)</option>
+                            <option value="" data-i18n="tf.column.all">(전체 컬럼)</option>
                         </select>
                         <input class="tf-input" type="text" id="tf-param1" placeholder="param1" />
                         <input class="tf-input" type="text" id="tf-param2" placeholder="param2" />
-                        <button class="btn" id="tf-btn-add-step">단계 추가</button>
+                        <button class="btn" id="tf-btn-add-step" data-i18n="tf.btn.addStep">단계 추가</button>
                     </div>
 
                     <!-- step list -->
                     <div class="tf-step-list" id="tf-step-list"></div>
 
                     <div class="tf-actions">
-                        <button class="btn btn-primary" id="tf-btn-apply" disabled>변환 적용</button>
-                        <button class="btn" id="tf-btn-clear-steps">단계 초기화</button>
+                        <button class="btn btn-primary" id="tf-btn-apply" disabled data-i18n="tf.btn.apply">변환 적용</button>
+                        <button class="btn" id="tf-btn-clear-steps" data-i18n="tf.btn.clear">단계 초기화</button>
                     </div>
 
                     <!-- result states -->
                     <div class="page-body" id="tf-result-area" style="margin-top:16px;">
                         <div class="loading-state hidden" id="tf-state-loading">
                             <div class="loading-spinner"></div>
-                            <div class="loading-text">변환 중...</div>
+                            <div class="loading-text" data-i18n="tf.loading.text">변환 중...</div>
                         </div>
                         <div class="error-state hidden" id="tf-state-error">
                             <div class="error-icon">⚠</div>
-                            <div class="error-title">변환에 실패했습니다</div>
+                            <div class="error-title" data-i18n="tf.error.title">변환에 실패했습니다</div>
                             <div class="error-desc" id="tf-error-message"></div>
                         </div>
                         <div class="table-wrapper hidden" id="tf-state-data">
@@ -222,61 +222,61 @@
                 <!-- no data -->
                 <div class="empty-state" id="ex-state-no-data">
                     <div class="empty-icon">↑</div>
-                    <div class="empty-title">내보낼 데이터가 없습니다</div>
-                    <div class="empty-desc">데이터 뷰어에서 파일을 먼저 불러오세요.</div>
+                    <div class="empty-title" data-i18n="ex.empty.title">내보낼 데이터가 없습니다</div>
+                    <div class="empty-desc" data-i18n="ex.empty.desc">데이터 뷰어에서 파일을 먼저 불러오세요.</div>
                 </div>
 
                 <!-- export panel -->
                 <div class="hidden" id="ex-panel">
                     <div class="ex-summary">
                         <div class="stat-card">
-                            <div class="stat-label">파일</div>
+                            <div class="stat-label" data-i18n="ex.stat.file">파일</div>
                             <div class="stat-value" id="ex-summary-name" style="font-size:14px;">—</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-label">행</div>
+                            <div class="stat-label" data-i18n="ex.stat.rows">행</div>
                             <div class="stat-value" id="ex-summary-rows">—</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-label">열</div>
+                            <div class="stat-label" data-i18n="ex.stat.cols">열</div>
                             <div class="stat-value" id="ex-summary-cols">—</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-label">형식</div>
+                            <div class="stat-label" data-i18n="ex.stat.format">형식</div>
                             <div class="stat-value" style="font-size:14px;" id="ex-format-label">CSV</div>
                         </div>
                     </div>
 
                     <div class="ex-actions">
                         <select id="ex-format-select" class="format-select">
-                            <option value="csv">CSV (UTF-8 BOM)</option>
-                            <option value="xlsx">XLSX</option>
-                            <option value="html">HTML 보고서</option>
-                            <option value="docx">Word 문서 (.docx)</option>
-                            <option value="pdf">PDF 문서</option>
+                            <option value="csv" data-i18n="ex.format.csv">CSV (UTF-8 BOM)</option>
+                            <option value="xlsx" data-i18n="ex.format.xlsx">XLSX</option>
+                            <option value="html" data-i18n="ex.format.html">HTML 보고서</option>
+                            <option value="docx" data-i18n="ex.format.docx">Word 문서 (.docx)</option>
+                            <option value="pdf" data-i18n="ex.format.pdf">PDF 문서</option>
                         </select>
-                        <button class="btn btn-primary" id="ex-btn-export">내보내기</button>
+                        <button class="btn btn-primary" id="ex-btn-export" data-i18n="ex.btn.export">내보내기</button>
                     </div>
 
                     <div class="loading-state hidden" id="ex-state-loading">
                         <div class="loading-spinner"></div>
-                        <div class="loading-text">내보내는 중...</div>
+                        <div class="loading-text" data-i18n="ex.loading.text">내보내는 중...</div>
                     </div>
                     <div class="error-state hidden" id="ex-state-error">
                         <div class="error-icon">⚠</div>
-                        <div class="error-title">내보내기에 실패했습니다</div>
+                        <div class="error-title" data-i18n="ex.error.title">내보내기에 실패했습니다</div>
                         <div class="error-desc" id="ex-error-message"></div>
                     </div>
                     <div class="empty-state hidden" id="ex-state-done">
                         <div class="empty-icon" style="color:var(--ok);opacity:1;">✓</div>
-                        <div class="empty-title" style="color:var(--ok);">내보내기 완료</div>
+                        <div class="empty-title" style="color:var(--ok);" data-i18n="ex.done.title">내보내기 완료</div>
                         <div class="empty-desc" id="ex-done-path"></div>
                     </div>
 
                     <!-- artifacts list -->
                     <div id="ex-artifacts-section" class="hidden">
                         <div class="section-divider"></div>
-                        <div class="section-label">내보낸 결과물</div>
+                        <div class="section-label" data-i18n="ex.artifacts.title">내보낸 결과물</div>
                         <div id="ex-artifacts-list" class="artifacts-list"></div>
                     </div>
                 </div>
@@ -290,16 +290,16 @@
                 </div>
                 <div class="loading-state hidden" id="hs-state-loading">
                     <div class="loading-spinner"></div>
-                    <div class="loading-text">이력을 불러오는 중...</div>
+                    <div class="loading-text" data-i18n="hs.loading.text">이력을 불러오는 중...</div>
                 </div>
                 <div class="empty-state hidden" id="hs-state-empty">
                     <div class="empty-icon">◷</div>
-                    <div class="empty-title">실행 이력이 없습니다</div>
-                    <div class="empty-desc">데이터를 가져오거나 변환, 내보내기를 실행하면 이력이 쌓입니다.</div>
+                    <div class="empty-title" data-i18n="hs.empty.title">실행 이력이 없습니다</div>
+                    <div class="empty-desc" data-i18n="hs.empty.desc">데이터를 가져오거나 변환, 내보내기를 실행하면 이력이 쌓입니다.</div>
                 </div>
                 <div class="error-state hidden" id="hs-state-error">
                     <div class="error-icon">⚠</div>
-                    <div class="error-title">이력을 불러오지 못했습니다</div>
+                    <div class="error-title" data-i18n="hs.error.title">이력을 불러오지 못했습니다</div>
                     <div class="error-desc" id="hs-error-message"></div>
                 </div>
                 <div class="page-body">
@@ -307,13 +307,13 @@
                         <table class="data-table">
                             <thead>
                                 <tr>
-                                    <th>시간</th>
-                                    <th>유형</th>
-                                    <th>소스</th>
-                                    <th>행</th>
-                                    <th>열</th>
-                                    <th>결과</th>
-                                    <th>출력 경로</th>
+                                    <th data-i18n="hs.col.time">시간</th>
+                                    <th data-i18n="hs.col.type">유형</th>
+                                    <th data-i18n="hs.col.source">소스</th>
+                                    <th data-i18n="hs.col.rows">행</th>
+                                    <th data-i18n="hs.col.cols">열</th>
+                                    <th data-i18n="hs.col.result">결과</th>
+                                    <th data-i18n="hs.col.outputPath">출력 경로</th>
                                 </tr>
                             </thead>
                             <tbody id="hs-table-body"></tbody>
@@ -353,28 +353,28 @@
                 <!-- Step 편집기 (detail view) -->
                 <div class="hidden" id="wf-detail-view">
                     <div style="margin-bottom:16px;">
-                        <button class="btn-secondary" id="wf-btn-back">← 목록으로</button>
+                        <button class="btn-secondary" id="wf-btn-back" data-i18n="wf.btn.back">← 목록으로</button>
                     </div>
                     <div class="settings-card" style="padding:16px;margin-bottom:16px;">
-                        <label style="font-size:12px;color:var(--text-secondary);display:block;margin-bottom:4px;">워크플로우 이름</label>
+                        <label style="font-size:12px;color:var(--text-secondary);display:block;margin-bottom:4px;" data-i18n="wf.label.name">워크플로우 이름</label>
                         <input type="text" id="wf-detail-name" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-secondary);color:var(--text-primary);font-size:14px;">
                     </div>
-                    <div class="settings-section-title" style="margin-bottom:8px;">Steps</div>
+                    <div class="settings-section-title" style="margin-bottom:8px;" data-i18n="wf.section.steps">Steps</div>
                     <div id="wf-steps-container"></div>
                     <div style="margin-top:12px;display:flex;gap:8px;align-items:center;">
                         <select id="wf-step-type-select" style="padding:7px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg-secondary);color:var(--text-primary);font-size:13px;">
-                            <option value="import">Import (파일 가져오기)</option>
-                            <option value="webExtract">Web Extract (웹 추출)</option>
-                            <option value="transform">Transform (데이터 변환)</option>
-                            <option value="export">Export (내보내기)</option>
-                            <option value="sendEmail">Send Email (이메일 발송)</option>
-                            <option value="callApi">Call API (API 전송)</option>
+                            <option value="import" data-i18n="wf.step.type.import">Import (파일 가져오기)</option>
+                            <option value="webExtract" data-i18n="wf.step.type.webExtract">Web Extract (웹 추출)</option>
+                            <option value="transform" data-i18n="wf.step.type.transform">Transform (데이터 변환)</option>
+                            <option value="export" data-i18n="wf.step.type.export">Export (내보내기)</option>
+                            <option value="sendEmail" data-i18n="wf.step.type.sendEmail">Send Email (이메일 발송)</option>
+                            <option value="callApi" data-i18n="wf.step.type.callApi">Call API (API 전송)</option>
                         </select>
-                        <button class="btn-secondary" id="wf-btn-add-step">+ Step 추가</button>
+                        <button class="btn-secondary" id="wf-btn-add-step" data-i18n="wf.btn.addStep">+ Step 추가</button>
                     </div>
                     <div style="margin-top:20px;display:flex;gap:8px;">
-                        <button class="btn-primary" id="wf-btn-save-detail">저장</button>
-                        <button class="btn-secondary" id="wf-btn-back2">취소</button>
+                        <button class="btn-primary" id="wf-btn-save-detail" data-i18n="wf.btn.save">저장</button>
+                        <button class="btn-secondary" id="wf-btn-back2" data-i18n="wf.detail.btn.cancel">취소</button>
                     </div>
                 </div>
 
@@ -445,11 +445,11 @@
                 </div>
                 <div class="loading-state hidden" id="st-state-loading">
                     <div class="loading-spinner"></div>
-                    <div class="loading-text">설정을 불러오는 중...</div>
+                    <div class="loading-text" data-i18n="st.loading.text">설정을 불러오는 중...</div>
                 </div>
                 <div class="error-state hidden" id="st-state-error">
                     <div class="error-icon">⚠</div>
-                    <div class="error-title">설정을 불러오지 못했습니다</div>
+                    <div class="error-title" data-i18n="st.error.title">설정을 불러오지 못했습니다</div>
                     <div class="error-desc" id="st-error-message"></div>
                 </div>
                 <div class="hidden" id="st-profile-section">
@@ -556,7 +556,113 @@ var LOCALES = {
         'settings.label.outputLang':    '결과물 언어',
         'status.initializing': '초기화 중',
         'status.ready':        '준비됨',
-        'status.profile.prefix': '프로필'
+        'status.profile.prefix': '프로필',
+        'state.loading':                 '불러오는 중...',
+        'dashboard.stat.totalRuns':      '총 실행 횟수',
+        'dashboard.stat.todayRuns':      '오늘 실행',
+        'dashboard.stat.successRate':    '성공률',
+        'dashboard.stat.lastRun':        '마지막 실행',
+        'dashboard.empty.title':         '아직 실행된 작업이 없습니다',
+        'dashboard.empty.desc':          '데이터 뷰어에서 파일을 불러와 작업을 시작하세요.',
+        'dv.btn.openFile':               '파일 열기',
+        'dv.empty.title':                '불러온 파일이 없습니다',
+        'dv.empty.desc':                 '파일 열기 버튼을 눌러 CSV 파일을 선택하세요.',
+        'dv.loading.text':               '파일을 불러오는 중...',
+        'dv.error.title':                '파일을 불러오지 못했습니다',
+        'tf.empty.title':                '불러온 데이터가 없습니다',
+        'tf.empty.desc':                 '데이터 뷰어에서 파일을 먼저 불러오세요.',
+        'tf.step.trim':                  '공백 제거 (trim)',
+        'tf.step.renameColumn':          '컬럼명 변경',
+        'tf.step.replaceValue':          '값 치환',
+        'tf.column.all':                 '(전체 컬럼)',
+        'tf.btn.addStep':                '단계 추가',
+        'tf.btn.apply':                  '변환 적용',
+        'tf.btn.clear':                  '단계 초기화',
+        'tf.loading.text':               '변환 중...',
+        'tf.error.title':                '변환에 실패했습니다',
+        'tf.param.newName':              '새 표시명',
+        'tf.param.findValue':            '찾을 값',
+        'tf.param.replaceWith':          '바꿀 값',
+        'tf.alert.selectColumn.rename':  '컬럼명 변경은 대상 컬럼을 선택해야 합니다.',
+        'tf.alert.selectColumn.replace': '값 치환은 대상 컬럼을 선택해야 합니다.',
+        'ex.empty.title':                '내보낼 데이터가 없습니다',
+        'ex.empty.desc':                 '데이터 뷰어에서 파일을 먼저 불러오세요.',
+        'ex.stat.file':                  '파일',
+        'ex.stat.rows':                  '행',
+        'ex.stat.cols':                  '열',
+        'ex.stat.format':                '형식',
+        'ex.format.csv':                 'CSV (UTF-8 BOM)',
+        'ex.format.xlsx':                'XLSX',
+        'ex.format.html':                'HTML 보고서',
+        'ex.format.docx':                'Word 문서 (.docx)',
+        'ex.format.pdf':                 'PDF 문서',
+        'ex.btn.export':                 '내보내기',
+        'ex.loading.text':               '내보내는 중...',
+        'ex.error.title':                '내보내기에 실패했습니다',
+        'ex.done.title':                 '내보내기 완료',
+        'ex.artifacts.title':            '내보낸 결과물',
+        'hs.col.time':                   '시간',
+        'hs.col.type':                   '유형',
+        'hs.col.source':                 '소스',
+        'hs.col.rows':                   '행',
+        'hs.col.cols':                   '열',
+        'hs.col.result':                 '결과',
+        'hs.col.outputPath':             '출력 경로',
+        'hs.loading.text':               '이력을 불러오는 중...',
+        'hs.empty.title':                '실행 이력이 없습니다',
+        'hs.empty.desc':                 '데이터를 가져오거나 변환, 내보내기를 실행하면 이력이 쌓입니다.',
+        'hs.error.title':                '이력을 불러오지 못했습니다',
+        'hs.op.import':                  '가져오기',
+        'hs.op.transform':               '변환',
+        'hs.op.export':                  '내보내기',
+        'hs.result.success':             '✓ 성공',
+        'hs.result.fail':                '✕ 실패',
+        'st.loading.text':               '설정을 불러오는 중...',
+        'st.error.title':                '설정을 불러오지 못했습니다',
+        'wf.btn.back':                   '← 목록으로',
+        'wf.label.name':                 '워크플로우 이름',
+        'wf.section.steps':              'Steps',
+        'wf.btn.save':                   '저장',
+        'wf.detail.btn.cancel':          '취소',
+        'wf.step.type.import':           'Import (파일 가져오기)',
+        'wf.step.type.webExtract':       'Web Extract (웹 추출)',
+        'wf.step.type.transform':        'Transform (데이터 변환)',
+        'wf.step.type.export':           'Export (내보내기)',
+        'wf.step.type.sendEmail':        'Send Email (이메일 발송)',
+        'wf.step.type.callApi':          'Call API (API 전송)',
+        'wf.btn.addStep':                '+ Step 추가',
+        'wf.card.btn.edit':              '편집',
+        'wf.card.btn.run':               '실행',
+        'wf.card.btn.delete':            '삭제',
+        'wf.card.steps.singular':        '개 단계',
+        'wf.error.unknown':              '알 수 없는 오류',
+        'wf.prompt.name':                '워크플로우 이름을 입력하세요.',
+        'wf.running.starting':           '시작 중...',
+        'wf.step.placeholder.name':      'Step 이름 (선택)',
+        'wf.step.btn.remove':            '제거',
+        'wf.progress.suffix':            ' 단계',
+        'wf.field.filePath':             '파일 경로',
+        'wf.field.outputFilePath':       '출력 파일 경로',
+        'wf.field.format':               '형식',
+        'wf.field.url':                  'URL',
+        'wf.field.cssSelector':          'CSS 선택자',
+        'wf.field.recipients':           '수신자 (쉼표 구분)',
+        'wf.field.subject':              '제목',
+        'wf.field.body':                 '본문',
+        'wf.field.attachFilePath':       '첨부 파일 경로 (선택)',
+        'wf.field.method':               '메서드 (POST/GET/PUT/DELETE)',
+        'wf.field.headers':              '헤더 (JSON)',
+        'wf.field.bodyJson':             '본문 (JSON 문자열)',
+        'wf.rules.btn.add':              '+ 규칙 추가',
+        'wx.error.emptyUrl':             'URL을 입력하세요.',
+        'plugin.name.import':            '데이터 가져오기',
+        'plugin.name.transform':         '데이터 변환',
+        'plugin.name.export':            '내보내기',
+        'plugin.name.history':           '실행 이력',
+        'plugin.name.workflow':          '워크플로우',
+        'plugin.name.webextract':        '웹 추출',
+        'unit.rows':                     '행',
+        'unit.cols':                     '열'
     },
     en: {
         'nav.section.main':     'Main',
@@ -604,7 +710,113 @@ var LOCALES = {
         'settings.label.outputLang':    'Output Language',
         'status.initializing': 'Initializing',
         'status.ready':        'Ready',
-        'status.profile.prefix': 'Profile'
+        'status.profile.prefix': 'Profile',
+        'state.loading':                 'Loading...',
+        'dashboard.stat.totalRuns':      'Total Runs',
+        'dashboard.stat.todayRuns':      'Today',
+        'dashboard.stat.successRate':    'Success Rate',
+        'dashboard.stat.lastRun':        'Last Run',
+        'dashboard.empty.title':         'No executions yet',
+        'dashboard.empty.desc':          'Start by loading a file in the Data Viewer.',
+        'dv.btn.openFile':               'Open File',
+        'dv.empty.title':                'No file loaded',
+        'dv.empty.desc':                 'Click Open File to select a CSV or Excel file.',
+        'dv.loading.text':               'Loading file...',
+        'dv.error.title':                'Failed to load file',
+        'tf.empty.title':                'No data loaded',
+        'tf.empty.desc':                 'Load a file in the Data Viewer first.',
+        'tf.step.trim':                  'Trim whitespace',
+        'tf.step.renameColumn':          'Rename Column',
+        'tf.step.replaceValue':          'Replace Value',
+        'tf.column.all':                 '(All columns)',
+        'tf.btn.addStep':                'Add Step',
+        'tf.btn.apply':                  'Apply Transform',
+        'tf.btn.clear':                  'Clear Steps',
+        'tf.loading.text':               'Transforming...',
+        'tf.error.title':                'Transform failed',
+        'tf.param.newName':              'New display name',
+        'tf.param.findValue':            'Find value',
+        'tf.param.replaceWith':          'Replace with',
+        'tf.alert.selectColumn.rename':  'Select a target column for Rename Column.',
+        'tf.alert.selectColumn.replace': 'Select a target column for Replace Value.',
+        'ex.empty.title':                'No data to export',
+        'ex.empty.desc':                 'Load a file in the Data Viewer first.',
+        'ex.stat.file':                  'File',
+        'ex.stat.rows':                  'Rows',
+        'ex.stat.cols':                  'Columns',
+        'ex.stat.format':                'Format',
+        'ex.format.csv':                 'CSV (UTF-8 BOM)',
+        'ex.format.xlsx':                'XLSX',
+        'ex.format.html':                'HTML Report',
+        'ex.format.docx':                'Word Document (.docx)',
+        'ex.format.pdf':                 'PDF Document',
+        'ex.btn.export':                 'Export',
+        'ex.loading.text':               'Exporting...',
+        'ex.error.title':                'Export failed',
+        'ex.done.title':                 'Export complete',
+        'ex.artifacts.title':            'Exported artifacts',
+        'hs.col.time':                   'Time',
+        'hs.col.type':                   'Type',
+        'hs.col.source':                 'Source',
+        'hs.col.rows':                   'Rows',
+        'hs.col.cols':                   'Cols',
+        'hs.col.result':                 'Result',
+        'hs.col.outputPath':             'Output Path',
+        'hs.loading.text':               'Loading history...',
+        'hs.empty.title':                'No execution history',
+        'hs.empty.desc':                 'Run an import, transform, or export to build history.',
+        'hs.error.title':                'Failed to load history',
+        'hs.op.import':                  'Import',
+        'hs.op.transform':               'Transform',
+        'hs.op.export':                  'Export',
+        'hs.result.success':             '✓ Success',
+        'hs.result.fail':                '✕ Failed',
+        'st.loading.text':               'Loading settings...',
+        'st.error.title':                'Failed to load settings',
+        'wf.btn.back':                   '← Back to list',
+        'wf.label.name':                 'Workflow name',
+        'wf.section.steps':              'Steps',
+        'wf.btn.save':                   'Save',
+        'wf.detail.btn.cancel':          'Cancel',
+        'wf.step.type.import':           'Import (from file)',
+        'wf.step.type.webExtract':       'Web Extract',
+        'wf.step.type.transform':        'Transform',
+        'wf.step.type.export':           'Export',
+        'wf.step.type.sendEmail':        'Send Email',
+        'wf.step.type.callApi':          'Call API',
+        'wf.btn.addStep':                '+ Add Step',
+        'wf.card.btn.edit':              'Edit',
+        'wf.card.btn.run':               'Run',
+        'wf.card.btn.delete':            'Delete',
+        'wf.card.steps.singular':        ' steps',
+        'wf.error.unknown':              'Unknown error',
+        'wf.prompt.name':                'Enter workflow name.',
+        'wf.running.starting':           'Starting...',
+        'wf.step.placeholder.name':      'Step name (optional)',
+        'wf.step.btn.remove':            'Remove',
+        'wf.progress.suffix':            ' steps',
+        'wf.field.filePath':             'File path',
+        'wf.field.outputFilePath':       'Output file path',
+        'wf.field.format':               'Format',
+        'wf.field.url':                  'URL',
+        'wf.field.cssSelector':          'CSS Selector',
+        'wf.field.recipients':           'Recipients (comma separated)',
+        'wf.field.subject':              'Subject',
+        'wf.field.body':                 'Body',
+        'wf.field.attachFilePath':       'Attachment path (optional)',
+        'wf.field.method':               'Method (POST/GET/PUT/DELETE)',
+        'wf.field.headers':              'Headers (JSON)',
+        'wf.field.bodyJson':             'Body (JSON string)',
+        'wf.rules.btn.add':              '+ Add Rule',
+        'wx.error.emptyUrl':             'Please enter a URL.',
+        'plugin.name.import':            'Data Import',
+        'plugin.name.transform':         'Data Transform',
+        'plugin.name.export':            'Export',
+        'plugin.name.history':           'Execution History',
+        'plugin.name.workflow':          'Workflow',
+        'plugin.name.webextract':        'Web Extract',
+        'unit.rows':                     'rows',
+        'unit.cols':                     'cols'
     }
 };
 
@@ -783,7 +995,7 @@ function getColDisplayName(col) {
         if (nameEl) nameEl.textContent = tableData.sourceName || '';
 
         var metaEl = document.getElementById('dv-meta');
-        if (metaEl) metaEl.textContent = tableData.rowCount + '행  ·  ' + tableData.columnCount + '열';
+        if (metaEl) metaEl.textContent = tableData.rowCount + ' ' + t('unit.rows') + '  ·  ' + tableData.columnCount + ' ' + t('unit.cols');
 
         window._currentTableData = tableData;
     }
@@ -829,7 +1041,7 @@ function getColDisplayName(col) {
 
     function rebuildColumnSelect(columns) {
         var sel = document.getElementById('tf-step-column');
-        sel.innerHTML = '<option value="">(전체 컬럼)</option>';
+        sel.innerHTML = '<option value="">' + t('tf.column.all') + '</option>';
         columns.forEach(function (col) {
             var opt = document.createElement('option');
             opt.value = col.internalName;
@@ -876,7 +1088,7 @@ function getColDisplayName(col) {
         var nameEl = document.getElementById('tf-filename');
         if (nameEl) nameEl.textContent = tableData.sourceName || '';
         var metaEl = document.getElementById('tf-meta');
-        if (metaEl) metaEl.textContent = tableData.rowCount + '행  ·  ' + tableData.columnCount + '열';
+        if (metaEl) metaEl.textContent = tableData.rowCount + ' ' + t('unit.rows') + '  ·  ' + tableData.columnCount + ' ' + t('unit.cols');
         rebuildColumnSelect(tableData.columns);
     }
 
@@ -911,14 +1123,14 @@ function getColDisplayName(col) {
             p1.disabled = true;
             p2.disabled = true;
         } else if (type === 'renameColumn') {
-            p1.placeholder = '새 표시명';
+            p1.placeholder = t('tf.param.newName');
             p2.placeholder = '';
             p1.disabled = false;
             p2.disabled = true;
             p2.value = '';
         } else if (type === 'replaceValue') {
-            p1.placeholder = '찾을 값';
-            p2.placeholder = '바꿀 값';
+            p1.placeholder = t('tf.param.findValue');
+            p2.placeholder = t('tf.param.replaceWith');
             p1.disabled = false;
             p2.disabled = false;
         }
@@ -942,11 +1154,11 @@ function getColDisplayName(col) {
         var param2 = document.getElementById('tf-param2').value.trim();
 
         if (type === 'renameColumn' && !column) {
-            alert('컬럼명 변경은 대상 컬럼을 선택해야 합니다.');
+            alert(t('tf.alert.selectColumn.rename'));
             return;
         }
         if (type === 'replaceValue' && !column) {
-            alert('값 치환은 대상 컬럼을 선택해야 합니다.');
+            alert(t('tf.alert.selectColumn.replace'));
             return;
         }
 
@@ -1082,9 +1294,9 @@ function getColDisplayName(col) {
 
 (function () {
     var OP_LABELS = {
-        'import':    '가져오기',
-        'transform': '변환',
-        'export':    '내보내기'
+        'import':    function() { return t('hs.op.import'); },
+        'transform': function() { return t('hs.op.transform'); },
+        'export':    function() { return t('hs.op.export'); }
     };
 
     function setHistoryState(state, info) {
@@ -1110,7 +1322,7 @@ function getColDisplayName(col) {
             tr.appendChild(tdTime);
 
             var tdOp = document.createElement('td');
-            tdOp.textContent = OP_LABELS[rec.operationType] || rec.operationType;
+            tdOp.textContent = (OP_LABELS[rec.operationType] ? OP_LABELS[rec.operationType]() : null) || rec.operationType;
             tr.appendChild(tdOp);
 
             var tdSrc = document.createElement('td');
@@ -1127,8 +1339,8 @@ function getColDisplayName(col) {
 
             var tdResult = document.createElement('td');
             tdResult.innerHTML = rec.success
-                ? '<span style="color:var(--ok);">✓ 성공</span>'
-                : '<span style="color:var(--error, #e74c3c);">✕ 실패</span>';
+                ? '<span style="color:var(--ok);">' + t('hs.result.success') + '</span>'
+                : '<span style="color:var(--error, #e74c3c);">' + t('hs.result.fail') + '</span>';
             tr.appendChild(tdResult);
 
             var tdPath = document.createElement('td');
@@ -1205,7 +1417,7 @@ function getColDisplayName(col) {
 
             var label = document.createElement('div');
             label.className = 'settings-label';
-            label.textContent = plugin.pluginName || plugin.pluginId;
+            label.textContent = t('plugin.name.' + plugin.pluginId) || plugin.pluginName || plugin.pluginId;
 
             var toggle = document.createElement('label');
             toggle.className = 'plugin-toggle';
@@ -1369,7 +1581,7 @@ function getColDisplayName(col) {
             nameEl.textContent = wf.name || wf.id;
             var descEl = document.createElement('div');
             descEl.style.cssText = 'font-size:12px;color:var(--text-secondary);margin-top:2px;';
-            descEl.textContent = wf.steps ? wf.steps.length + '개 단계' : '0개 단계';
+            descEl.textContent = (wf.steps ? wf.steps.length : 0) + t('wf.card.steps.singular');
             info.appendChild(nameEl);
             info.appendChild(descEl);
 
@@ -1379,19 +1591,19 @@ function getColDisplayName(col) {
             var editBtn = document.createElement('button');
             editBtn.className = 'btn-secondary';
             editBtn.style.cssText = 'font-size:12px;padding:6px 14px;';
-            editBtn.textContent = '편집';
+            editBtn.textContent = t('wf.card.btn.edit');
             editBtn.addEventListener('click', function () { openDetail(wf); });
 
             var runBtn = document.createElement('button');
             runBtn.className = 'btn-primary';
             runBtn.style.cssText = 'font-size:12px;padding:6px 14px;';
-            runBtn.textContent = '실행';
+            runBtn.textContent = t('wf.card.btn.run');
             runBtn.addEventListener('click', function () { runWorkflow(wf.id); });
 
             var delBtn = document.createElement('button');
             delBtn.className = 'btn-secondary';
             delBtn.style.cssText = 'font-size:12px;padding:6px 14px;';
-            delBtn.textContent = '삭제';
+            delBtn.textContent = t('wf.card.btn.delete');
             delBtn.addEventListener('click', function () { deleteWorkflow(wf.id); });
 
             actions.appendChild(editBtn);
@@ -1415,13 +1627,13 @@ function getColDisplayName(col) {
                 }
             })
             .catch(function (err) {
-                document.getElementById('wf-error-message').textContent = err && err.message ? err.message : '알 수 없는 오류';
+                document.getElementById('wf-error-message').textContent = err && err.message ? err.message : t('wf.error.unknown');
                 setWfState('error');
             });
     }
 
     function createWorkflow() {
-        var name = window.prompt('워크플로우 이름을 입력하세요.');
+        var name = window.prompt(t('wf.prompt.name'));
         if (!name || !name.trim()) return;
         bridgeClient.sendCommand('workflow', 'createWorkflow', { name: name.trim(), description: '' })
             .then(function (wf) { openDetail(wf); })
@@ -1438,7 +1650,7 @@ function getColDisplayName(col) {
         _runningWorkflowId = id;
         document.getElementById('wf-running-panel').classList.remove('hidden');
         document.getElementById('wf-progress-bar').style.width = '0%';
-        document.getElementById('wf-progress-label').textContent = '시작 중...';
+        document.getElementById('wf-progress-label').textContent = t('wf.running.starting');
         bridgeClient.sendCommand('workflow', 'runWorkflow', { id: id })
             .catch(function () {
                 document.getElementById('wf-running-panel').classList.add('hidden');
@@ -1478,7 +1690,7 @@ function getColDisplayName(col) {
 
         var nameInput = document.createElement('input');
         nameInput.type = 'text';
-        nameInput.placeholder = 'Step 이름 (선택)';
+        nameInput.placeholder = t('wf.step.placeholder.name');
         nameInput.value = step.name || '';
         nameInput.style.cssText = 'flex:1;margin:0 10px;padding:5px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg-secondary);color:var(--text-primary);font-size:12px;';
         nameInput.addEventListener('input', function () {
@@ -1488,7 +1700,7 @@ function getColDisplayName(col) {
         var removeBtn = document.createElement('button');
         removeBtn.className = 'btn-secondary';
         removeBtn.style.cssText = 'font-size:11px;padding:4px 10px;';
-        removeBtn.textContent = '제거';
+        removeBtn.textContent = t('wf.step.btn.remove');
         removeBtn.addEventListener('click', function () {
             _editingWorkflow.steps.splice(idx, 1);
             renderStepList();
@@ -1508,7 +1720,7 @@ function getColDisplayName(col) {
         try { config = JSON.parse(step.configJson || '{}'); } catch (e) {}
 
         if (step.stepType === 'import') {
-            form.appendChild(makeField('파일 경로', 'text', config.filePath || '', function (v) {
+            form.appendChild(makeField(t('wf.field.filePath'), 'text', config.filePath || '', function (v) {
                 updateConfig(idx, 'filePath', v);
             }));
         } else if (step.stepType === 'transform') {
@@ -1532,9 +1744,9 @@ function getColDisplayName(col) {
                     });
                     typeSelect.addEventListener('change', function () { rules[rIdx].type = typeSelect.value; setRulesConfig(); });
 
-                    var colInput = makeInlineInput(rule.column || '', '컬럼명', function (v) { rules[rIdx].column = v; setRulesConfig(); });
-                    var p1Input  = makeInlineInput(rule.param1 || '', '값1', function (v) { rules[rIdx].param1 = v; setRulesConfig(); });
-                    var p2Input  = makeInlineInput(rule.param2 || '', '값2', function (v) { rules[rIdx].param2 = v; setRulesConfig(); });
+                    var colInput = makeInlineInput(rule.column || '', t('tf.step.renameColumn'), function (v) { rules[rIdx].column = v; setRulesConfig(); });
+                    var p1Input  = makeInlineInput(rule.param1 || '', t('tf.param.findValue'), function (v) { rules[rIdx].param1 = v; setRulesConfig(); });
+                    var p2Input  = makeInlineInput(rule.param2 || '', t('tf.param.replaceWith'), function (v) { rules[rIdx].param2 = v; setRulesConfig(); });
 
                     var delBtn = document.createElement('button');
                     delBtn.className = 'btn-secondary';
@@ -1558,7 +1770,7 @@ function getColDisplayName(col) {
             var addRuleBtn = document.createElement('button');
             addRuleBtn.className = 'btn-secondary';
             addRuleBtn.style.cssText = 'font-size:12px;padding:5px 10px;margin-top:6px;';
-            addRuleBtn.textContent = '+ 규칙 추가';
+            addRuleBtn.textContent = t('wf.rules.btn.add');
             addRuleBtn.addEventListener('click', function () {
                 rules.push({ type: 'trim', column: '', param1: '', param2: '' });
                 setRulesConfig();
@@ -1569,13 +1781,13 @@ function getColDisplayName(col) {
             form.appendChild(rulesDiv);
             form.appendChild(addRuleBtn);
         } else if (step.stepType === 'export') {
-            form.appendChild(makeField('출력 파일 경로', 'text', config.filePath || '', function (v) { updateConfig(idx, 'filePath', v); }));
+            form.appendChild(makeField(t('wf.field.outputFilePath'), 'text', config.filePath || '', function (v) { updateConfig(idx, 'filePath', v); }));
 
             var fmtRow = document.createElement('div');
             fmtRow.style.cssText = 'margin-bottom:8px;';
             var fmtLabel = document.createElement('label');
             fmtLabel.style.cssText = 'font-size:12px;color:var(--text-secondary);display:block;margin-bottom:4px;';
-            fmtLabel.textContent = '형식';
+            fmtLabel.textContent = t('wf.field.format');
             var fmtSelect = document.createElement('select');
             fmtSelect.style.cssText = 'padding:6px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg-secondary);color:var(--text-primary);font-size:13px;';
             ['csv', 'xlsx', 'html'].forEach(function (f) {
@@ -1589,18 +1801,18 @@ function getColDisplayName(col) {
             fmtRow.appendChild(fmtSelect);
             form.appendChild(fmtRow);
         } else if (step.stepType === 'webExtract') {
-            form.appendChild(makeField('URL', 'text', config.url || '', function (v) { updateConfig(idx, 'url', v); }));
-            form.appendChild(makeField('CSS 선택자', 'text', config.selector || '', function (v) { updateConfig(idx, 'selector', v); }));
+            form.appendChild(makeField(t('wf.field.url'), 'text', config.url || '', function (v) { updateConfig(idx, 'url', v); }));
+            form.appendChild(makeField(t('wf.field.cssSelector'), 'text', config.selector || '', function (v) { updateConfig(idx, 'selector', v); }));
         } else if (step.stepType === 'sendEmail') {
-            form.appendChild(makeField('수신자 (쉼표 구분)', 'text', config.recipients || '', function (v) { updateConfig(idx, 'recipients', v); }));
-            form.appendChild(makeField('제목', 'text', config.subject || '', function (v) { updateConfig(idx, 'subject', v); }));
-            form.appendChild(makeField('본문', 'text', config.body || '', function (v) { updateConfig(idx, 'body', v); }));
-            form.appendChild(makeField('첨부 파일 경로 (선택)', 'text', config.attachFilePath || '', function (v) { updateConfig(idx, 'attachFilePath', v); }));
+            form.appendChild(makeField(t('wf.field.recipients'), 'text', config.recipients || '', function (v) { updateConfig(idx, 'recipients', v); }));
+            form.appendChild(makeField(t('wf.field.subject'), 'text', config.subject || '', function (v) { updateConfig(idx, 'subject', v); }));
+            form.appendChild(makeField(t('wf.field.body'), 'text', config.body || '', function (v) { updateConfig(idx, 'body', v); }));
+            form.appendChild(makeField(t('wf.field.attachFilePath'), 'text', config.attachFilePath || '', function (v) { updateConfig(idx, 'attachFilePath', v); }));
         } else if (step.stepType === 'callApi') {
-            form.appendChild(makeField('URL', 'text', config.url || '', function (v) { updateConfig(idx, 'url', v); }));
-            form.appendChild(makeField('메서드 (POST/GET/PUT/DELETE)', 'text', config.method || 'POST', function (v) { updateConfig(idx, 'method', v); }));
-            form.appendChild(makeField('헤더 (JSON, 예: {"Content-Type":"application/json"})', 'text', config.headers || '', function (v) { updateConfig(idx, 'headers', v); }));
-            form.appendChild(makeField('본문 (JSON 문자열)', 'text', config.body || '', function (v) { updateConfig(idx, 'body', v); }));
+            form.appendChild(makeField(t('wf.field.url'), 'text', config.url || '', function (v) { updateConfig(idx, 'url', v); }));
+            form.appendChild(makeField(t('wf.field.method'), 'text', config.method || 'POST', function (v) { updateConfig(idx, 'method', v); }));
+            form.appendChild(makeField(t('wf.field.headers'), 'text', config.headers || '', function (v) { updateConfig(idx, 'headers', v); }));
+            form.appendChild(makeField(t('wf.field.bodyJson'), 'text', config.body || '', function (v) { updateConfig(idx, 'body', v); }));
         }
 
         return form;
@@ -1673,7 +1885,7 @@ function getColDisplayName(col) {
         var total = payload.total || 1;
         var pct   = Math.round((step / total) * 100);
         document.getElementById('wf-progress-bar').style.width = pct + '%';
-        document.getElementById('wf-progress-label').textContent = step + ' / ' + total + ' 단계';
+        document.getElementById('wf-progress-label').textContent = step + ' / ' + total + t('wf.progress.suffix');
     });
 
     window.addEventListener('bridge:workflow:complete', function (e) {
@@ -1702,7 +1914,7 @@ function getColDisplayName(col) {
         var tr = document.createElement('tr');
         (payload.columns || []).forEach(function (col) {
             var th = document.createElement('th');
-            th.textContent = col.displayNameKo || col.internalName;
+            th.textContent = getColDisplayName(col);
             tr.appendChild(th);
         });
         head.appendChild(tr);
@@ -1718,7 +1930,7 @@ function getColDisplayName(col) {
         });
 
         var info = document.getElementById('wx-info');
-        info.textContent = (payload.rowCount || 0) + ' 행 · ' + (payload.columnCount || 0) + ' 열';
+        info.textContent = (payload.rowCount || 0) + ' ' + t('unit.rows') + ' · ' + (payload.columnCount || 0) + ' ' + t('unit.cols');
         setWxState('data');
     }
 
@@ -1727,13 +1939,13 @@ function getColDisplayName(col) {
         var selector = document.getElementById('wx-input-selector').value.trim();
 
         if (!url) {
-            setWxState('error', { message: 'URL을 입력하세요.' });
+            setWxState('error', { message: t('wx.error.emptyUrl') });
             return;
         }
 
         setWxState('loading');
 
-        bridgeClient.request('webExtract', 'fetchAndExtract', { url: url, selector: selector })
+        bridgeClient.sendCommand('webExtract', 'fetchAndExtract', { url: url, selector: selector })
             .then(function (payload) {
                 renderTable(payload);
             })

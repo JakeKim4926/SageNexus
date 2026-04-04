@@ -4,6 +4,12 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 
 ---
 
+## [2026-04-04] feature/phase5-step5-i18n
+- **목적**: Phase 5 Step 5 — i18n 고도화 + Output Language QA + Phase 5 마무리
+- **변경 내용**: ko.json/en.json 전체 키 동기화 (workflow/webextract/상태 누락 키 추가), 인라인 LOCALES에 신규 키 100여 개 추가, 하드코딩 텍스트 data-i18n 속성 및 t() 호출로 전면 교체 (Dashboard/DataViewer/Transform/Export/History/Settings/Workflow/WebExtract), 플러그인명 i18n(plugin.name.* 키), WebExtract Output Language 적용(getColDisplayName 사용), bridgeClient.request → sendCommand 버그 수정, Word/PDF Output Language 적용 확인
+- **PR 링크**: pending
+- **결과**: pending
+
 ## [2026-04-03] feature/api-call-action
 - **목적**: Phase 5 Step 4 — API 전송 액션 (WinHTTP POST)
 - **변경 내용**: ApiCallAction 도메인 모델, ApiCallService(WinHTTP HTTP 요청, 커스텀 헤더/바디/타임아웃), ApiCallBridgeHandler(workflow.api::callApi), WorkflowService callApi step 추가, Workflow 편집기 callApi 폼 추가

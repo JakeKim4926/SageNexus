@@ -4,6 +4,12 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 
 ---
 
+## [2026-04-05] feature/phase6-step1-job-queue
+- **목적**: Phase 6 Step 1 — JobQueue (작업 큐 + 배치 실행)
+- **변경 내용**: ExecutionJob 도메인 모델, JobStatus enum, WM_JOB_QUEUE_CHANGED, JobQueueService(CRITICAL_SECTION 큐 + 워커 스레드 순차 실행 + cancel), WorkflowService::RunSync(동기 실행), JobQueueBridgeHandler(execution.queue::enqueue/getQueue/cancelJob), MainWindow WM_JOB_QUEUE_CHANGED → bridge:queue:changed 이벤트, History 페이지 큐 섹션 + i18n
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/33
+- **결과**: pending
+
 ## [2026-04-04] feature/phase5-step5-i18n
 - **목적**: Phase 5 Step 5 — i18n 고도화 + Output Language QA + Phase 5 마무리
 - **변경 내용**: ko.json/en.json 전체 키 동기화 (workflow/webextract/상태 누락 키 추가), 인라인 LOCALES에 신규 키 100여 개 추가, 하드코딩 텍스트 data-i18n 속성 및 t() 호출로 전면 교체 (Dashboard/DataViewer/Transform/Export/History/Settings/Workflow/WebExtract), 플러그인명 i18n(plugin.name.* 키), WebExtract Output Language 적용(getColDisplayName 사용), bridgeClient.request → sendCommand 버그 수정, Word/PDF Output Language 적용 확인

@@ -4,6 +4,12 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 
 ---
 
+## [2026-04-05] feature/phase6-step2-progress-summary
+- **목적**: Phase 6 Step 2 — 진행률/취소/성공-실패 집계 고도화
+- **변경 내용**: WorkflowService m_strCurrentStepName 추적 + GetCurrentStepName(), JobQueueService/BridgeHandler GetCurrentStepName() 노출, MainWindow OnWorkflowProgress에 percent+stepName 포함, execution.queue::cancelAll 추가, execution.summary::getSummary 추가(total/success/failed), Workflow cancel 버튼 cancelAll 통합, History 페이지 집계 카드 UI + summary-card CSS
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/34
+- **결과**: merged ✅
+
 ## [2026-04-05] feature/phase6-step1-job-queue
 - **목적**: Phase 6 Step 1 — JobQueue (작업 큐 + 배치 실행)
 - **변경 내용**: ExecutionJob 도메인 모델, JobStatus enum, WM_JOB_QUEUE_CHANGED, JobQueueService(CRITICAL_SECTION 큐 + 워커 스레드 순차 실행 + cancel), WorkflowService::RunSync(동기 실행), JobQueueBridgeHandler(execution.queue::enqueue/getQueue/cancelJob), MainWindow WM_JOB_QUEUE_CHANGED → bridge:queue:changed 이벤트, History 페이지 큐 섹션 + i18n

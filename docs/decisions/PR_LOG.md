@@ -4,6 +4,12 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 
 ---
 
+## [2026-04-05] hotfix — Phase 6 Step 1/2 빌드 오류 수정 (develop 직접)
+- **목적**: Phase 6 Step 1/2 작업 이후 발생한 빌드 오류 3건 수정
+- **변경 내용**: ApiCallService.h에 winhttp.h include 추가(HINTERNET 타입 미인식), WorkflowBridgeHandler::GetCurrentStepName public으로 이동, RunSync EmailAction 필드명 m_strTo → m_strRecipients 수정
+- **PR 링크**: develop 직접 커밋 (b53e3ec, cf1f474, e4f30f9)
+- **결과**: merged ✅
+
 ## [2026-04-05] feature/phase6-step2-progress-summary
 - **목적**: Phase 6 Step 2 — 진행률/취소/성공-실패 집계 고도화
 - **변경 내용**: WorkflowService m_strCurrentStepName 추적 + GetCurrentStepName(), JobQueueService/BridgeHandler GetCurrentStepName() 노출, MainWindow OnWorkflowProgress에 percent+stepName 포함, execution.queue::cancelAll 추가, execution.summary::getSummary 추가(total/success/failed), Workflow cancel 버튼 cancelAll 통합, History 페이지 집계 카드 UI + summary-card CSS

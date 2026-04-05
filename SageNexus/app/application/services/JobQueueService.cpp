@@ -86,6 +86,44 @@ void JobQueueService::CancelJob(const CString& strJobId)
     LeaveCriticalSection(&m_cs);
 }
 
+BOOL JobQueueService::RetryJob(const CString& strJobId, HWND hNotifyWnd, CString& strError)
+{
+    if (strJobId.IsEmpty())
+    {
+        strError = L"jobId가 비어 있습니다.";
+        return FALSE;
+    }
+
+    CString strWorkflowId;
+    CString strWorkflowName;
+
+    EnterCriticalSection(&m_cs);
+    for (ExecutionJob& job : m_arrJobs)
+    {
+        if (job.m_strJobId == strJobId)
+        {
+            if (job.m_eStatus != JobStatus::Failed && job.m_eStatus != JobStatus::Cancelled)
+            {
+                LeaveCriticalSection(&m_cs);
+                strError = L"실패 또는 취소된 Job만 재실행할 수 있습니다.";
+                return FALSE;
+            }
+            strWorkflowId   = job.m_strWorkflowId;
+            strWorkflowName = job.m_strWorkflowName;
+            break;
+        }
+    }
+    LeaveCriticalSection(&m_cs);
+
+    if (strWorkflowId.IsEmpty())
+    {
+        strError = L"해당 jobId를 찾을 수 없습니다.";
+        return FALSE;
+    }
+
+    return EnqueueJob(strWorkflowId, strWorkflowName, hNotifyWnd, strError);
+}
+
 const CString& JobQueueService::GetRunningJobId() const
 {
     return m_strRunningJobId;

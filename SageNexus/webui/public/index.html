@@ -302,6 +302,22 @@
                     <div class="error-title" data-i18n="hs.error.title">이력을 불러오지 못했습니다</div>
                     <div class="error-desc" id="hs-error-message"></div>
                 </div>
+                <!-- 집계 카드 -->
+                <div id="hs-summary-bar" style="display:flex;gap:12px;margin-bottom:16px;">
+                    <div class="summary-card" id="hs-summary-total">
+                        <div class="summary-value" id="hs-summary-total-val">—</div>
+                        <div class="summary-label" data-i18n="hs.summary.total">전체</div>
+                    </div>
+                    <div class="summary-card" id="hs-summary-success">
+                        <div class="summary-value" id="hs-summary-success-val" style="color:var(--ok);">—</div>
+                        <div class="summary-label" data-i18n="hs.summary.success">성공</div>
+                    </div>
+                    <div class="summary-card" id="hs-summary-failed">
+                        <div class="summary-value" id="hs-summary-failed-val" style="color:var(--error,#e74c3c);">—</div>
+                        <div class="summary-label" data-i18n="hs.summary.failed">실패</div>
+                    </div>
+                </div>
+
                 <div class="page-body">
                     <!-- Job Queue Section -->
                     <div class="section-card" id="hs-queue-section">
@@ -628,6 +644,9 @@ var LOCALES = {
         'hs.empty.title':                '실행 이력이 없습니다',
         'hs.empty.desc':                 '데이터를 가져오거나 변환, 내보내기를 실행하면 이력이 쌓입니다.',
         'hs.error.title':                '이력을 불러오지 못했습니다',
+        'hs.summary.total':              '전체',
+        'hs.summary.success':            '성공',
+        'hs.summary.failed':             '실패',
         'hs.queue.title':                '작업 큐',
         'hs.queue.refresh':              '새로고침',
         'hs.queue.empty':                '대기 중인 작업이 없습니다.',
@@ -791,6 +810,9 @@ var LOCALES = {
         'hs.empty.title':                'No execution history',
         'hs.empty.desc':                 'Run an import, transform, or export to build history.',
         'hs.error.title':                'Failed to load history',
+        'hs.summary.total':              'Total',
+        'hs.summary.success':            'Success',
+        'hs.summary.failed':             'Failed',
         'hs.queue.title':                'Job Queue',
         'hs.queue.refresh':              'Refresh',
         'hs.queue.empty':                'No jobs in queue.',
@@ -1386,6 +1408,16 @@ function getColDisplayName(col) {
         });
     }
 
+    function loadSummary() {
+        bridgeClient.sendCommand('execution.summary', 'getSummary', {})
+            .then(function (result) {
+                document.getElementById('hs-summary-total-val').textContent   = result.total   != null ? result.total   : '—';
+                document.getElementById('hs-summary-success-val').textContent = result.success != null ? result.success : '—';
+                document.getElementById('hs-summary-failed-val').textContent  = result.failed  != null ? result.failed  : '—';
+            })
+            .catch(function () {});
+    }
+
     function loadHistory() {
         setHistoryState('loading');
         bridgeClient.sendCommand('history.query', 'getHistory', {})
@@ -1497,6 +1529,7 @@ function getColDisplayName(col) {
     document.querySelectorAll('.nav-item[data-page]').forEach(function (el) {
         el.addEventListener('click', function () {
             if (el.dataset.page === 'history') {
+                loadSummary();
                 loadHistory();
                 loadQueue();
             }
@@ -1996,6 +2029,7 @@ function getColDisplayName(col) {
     document.getElementById('wf-btn-new-empty').addEventListener('click', createWorkflow);
     document.getElementById('wf-btn-cancel').addEventListener('click', function () {
         bridgeClient.sendCommand('workflow', 'cancelWorkflow', {}).catch(function () {});
+        bridgeClient.sendCommand('execution.queue', 'cancelAll', {}).catch(function () {});
     });
     document.getElementById('wf-btn-back').addEventListener('click', function () { loadWorkflows(); });
     document.getElementById('wf-btn-back2').addEventListener('click', function () { loadWorkflows(); });
@@ -2007,12 +2041,15 @@ function getColDisplayName(col) {
     });
 
     window.addEventListener('bridge:workflow:progress', function (e) {
-        var payload = e.detail || {};
-        var step  = payload.step  || 0;
-        var total = payload.total || 1;
-        var pct   = Math.round((step / total) * 100);
+        var payload   = e.detail || {};
+        var step      = payload.step    || 0;
+        var total     = payload.total   || 1;
+        var pct       = payload.percent != null ? payload.percent : Math.round((step / total) * 100);
+        var stepName  = payload.stepName || '';
         document.getElementById('wf-progress-bar').style.width = pct + '%';
-        document.getElementById('wf-progress-label').textContent = step + ' / ' + total + t('wf.progress.suffix');
+        var label = step + ' / ' + total + t('wf.progress.suffix');
+        if (stepName) label += '  —  ' + stepName;
+        document.getElementById('wf-progress-label').textContent = label;
     });
 
     window.addEventListener('bridge:workflow:complete', function (e) {

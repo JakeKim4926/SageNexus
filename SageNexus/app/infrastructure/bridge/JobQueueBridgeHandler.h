@@ -9,11 +9,13 @@ public:
     JobQueueBridgeHandler();
 
     void RegisterHandlers(BridgeDispatcher& dispatcher, HWND hMainWnd);
+    const CString& GetCurrentStepName() const;
 
 private:
     CString HandleEnqueue(const BridgeMessage& msg);
     CString HandleGetQueue(const BridgeMessage& msg);
     CString HandleCancelJob(const BridgeMessage& msg);
+    CString HandleCancelAll(const BridgeMessage& msg);
 
     CString SerializeJob(const ExecutionJob& job) const;
     CString JobStatusToString(JobStatus eStatus) const;

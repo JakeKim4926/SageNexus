@@ -26,6 +26,7 @@ public:
 
     BOOL           IsRunning() const;
     const CString& GetLastError() const;
+    const CString& GetCurrentStepName() const;
 
 private:
     struct RunContext
@@ -46,4 +47,5 @@ private:
     BOOL                   m_bRunning;
     volatile BOOL          m_bCancelRequested;
     CString                m_strLastError;
+    CString                m_strCurrentStepName;
 };

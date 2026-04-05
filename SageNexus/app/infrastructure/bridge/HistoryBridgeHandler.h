@@ -12,6 +12,7 @@ public:
 
 private:
     CString HandleGetHistory(const BridgeMessage& msg);
+    CString HandleGetSummary(const BridgeMessage& msg);
 
     CString SerializeRecords(const std::vector<ExecutionRecord>& arrRecords) const;
     CString SerializeRecord(const ExecutionRecord& record) const;

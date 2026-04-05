@@ -168,6 +168,11 @@ CString WorkflowBridgeHandler::HandleCancelWorkflow(const BridgeMessage& msg)
            L"\",\"success\":true,\"payload\":{\"status\":\"cancelling\"}}";
 }
 
+const CString& WorkflowBridgeHandler::GetCurrentStepName() const
+{
+    return m_service.GetCurrentStepName();
+}
+
 CString WorkflowBridgeHandler::SerializeWorkflow(const WorkflowDefinition& wf) const
 {
     CString strSteps = L"[";

@@ -91,6 +91,11 @@ const CString& JobQueueService::GetRunningJobId() const
     return m_strRunningJobId;
 }
 
+const CString& JobQueueService::GetCurrentStepName() const
+{
+    return m_workflowService.GetCurrentStepName();
+}
+
 DWORD WINAPI JobQueueService::QueueThread(LPVOID pParam)
 {
     QueueContext* pCtx = reinterpret_cast<QueueContext*>(pParam);

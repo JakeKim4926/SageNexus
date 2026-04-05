@@ -188,8 +188,24 @@ void MainWindow::OnWorkflowProgress(int nStep, int nTotal)
     if (!m_pWebViewHost || !m_pWebViewHost->IsReady())
         return;
 
+    int nPercent = (nTotal > 0) ? (nStep * 100 / nTotal) : 0;
+
+    CString strStepName = m_workflowBridgeHandler.GetCurrentStepName();
+    if (strStepName.IsEmpty())
+        strStepName = m_jobQueueBridgeHandler.GetCurrentStepName();
+
+    CString strEscaped;
+    for (int i = 0; i < strStepName.GetLength(); ++i)
+    {
+        wchar_t ch = strStepName[i];
+        if (ch == L'"')       strEscaped += L"\\\"";
+        else if (ch == L'\\') strEscaped += L"\\\\";
+        else                  strEscaped += ch;
+    }
+
     CString strPayload;
-    strPayload.Format(L"{\"step\":%d,\"total\":%d}", nStep, nTotal);
+    strPayload.Format(L"{\"step\":%d,\"total\":%d,\"percent\":%d,\"stepName\":\"%s\"}",
+        nStep, nTotal, nPercent, (LPCWSTR)strEscaped);
     m_pWebViewHost->SendEvent(L"workflow:progress", strPayload);
 }
 

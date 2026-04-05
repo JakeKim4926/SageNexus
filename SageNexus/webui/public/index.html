@@ -303,6 +303,22 @@
                     <div class="error-desc" id="hs-error-message"></div>
                 </div>
                 <div class="page-body">
+                    <!-- Job Queue Section -->
+                    <div class="section-card" id="hs-queue-section">
+                        <div class="section-header">
+                            <span class="section-title" data-i18n="hs.queue.title">작업 큐</span>
+                            <button class="btn btn-secondary btn-sm" id="hs-queue-refresh-btn" data-i18n="hs.queue.refresh">새로고침</button>
+                        </div>
+                        <div class="loading-state hidden" id="hs-queue-loading">
+                            <div class="loading-spinner"></div>
+                        </div>
+                        <div class="empty-state hidden" id="hs-queue-empty">
+                            <div class="empty-desc" data-i18n="hs.queue.empty">대기 중인 작업이 없습니다.</div>
+                        </div>
+                        <div id="hs-queue-list"></div>
+                    </div>
+
+                    <!-- Execution History Section -->
                     <div class="table-wrapper hidden" id="hs-state-data">
                         <table class="data-table">
                             <thead>
@@ -612,6 +628,15 @@ var LOCALES = {
         'hs.empty.title':                '실행 이력이 없습니다',
         'hs.empty.desc':                 '데이터를 가져오거나 변환, 내보내기를 실행하면 이력이 쌓입니다.',
         'hs.error.title':                '이력을 불러오지 못했습니다',
+        'hs.queue.title':                '작업 큐',
+        'hs.queue.refresh':              '새로고침',
+        'hs.queue.empty':                '대기 중인 작업이 없습니다.',
+        'hs.queue.status.pending':       '대기',
+        'hs.queue.status.running':       '실행 중',
+        'hs.queue.status.completed':     '완료',
+        'hs.queue.status.failed':        '실패',
+        'hs.queue.status.cancelled':     '취소됨',
+        'hs.queue.btn.cancel':           '취소',
         'hs.op.import':                  '가져오기',
         'hs.op.transform':               '변환',
         'hs.op.export':                  '내보내기',
@@ -766,6 +791,15 @@ var LOCALES = {
         'hs.empty.title':                'No execution history',
         'hs.empty.desc':                 'Run an import, transform, or export to build history.',
         'hs.error.title':                'Failed to load history',
+        'hs.queue.title':                'Job Queue',
+        'hs.queue.refresh':              'Refresh',
+        'hs.queue.empty':                'No jobs in queue.',
+        'hs.queue.status.pending':       'Pending',
+        'hs.queue.status.running':       'Running',
+        'hs.queue.status.completed':     'Completed',
+        'hs.queue.status.failed':        'Failed',
+        'hs.queue.status.cancelled':     'Cancelled',
+        'hs.queue.btn.cancel':           'Cancel',
         'hs.op.import':                  'Import',
         'hs.op.transform':               'Transform',
         'hs.op.export':                  'Export',
@@ -1368,10 +1402,103 @@ function getColDisplayName(col) {
             });
     }
 
+    var STATUS_LABELS = {
+        'pending':   function () { return t('hs.queue.status.pending'); },
+        'running':   function () { return t('hs.queue.status.running'); },
+        'completed': function () { return t('hs.queue.status.completed'); },
+        'failed':    function () { return t('hs.queue.status.failed'); },
+        'cancelled': function () { return t('hs.queue.status.cancelled'); }
+    };
+
+    var STATUS_COLORS = {
+        'pending':   'var(--text-sub)',
+        'running':   'var(--accent)',
+        'completed': 'var(--ok)',
+        'failed':    'var(--error, #e74c3c)',
+        'cancelled': 'var(--text-sub)'
+    };
+
+    function renderQueue(jobs) {
+        var listEl = document.getElementById('hs-queue-list');
+        var emptyEl = document.getElementById('hs-queue-empty');
+        listEl.innerHTML = '';
+
+        if (!jobs || jobs.length === 0) {
+            emptyEl.classList.remove('hidden');
+            return;
+        }
+        emptyEl.classList.add('hidden');
+
+        jobs.forEach(function (job) {
+            var row = document.createElement('div');
+            row.className = 'queue-item';
+            row.style.cssText = 'display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);';
+
+            var statusEl = document.createElement('span');
+            statusEl.textContent = (STATUS_LABELS[job.status] ? STATUS_LABELS[job.status]() : job.status);
+            statusEl.style.cssText = 'min-width:60px;font-size:12px;font-weight:600;color:' + (STATUS_COLORS[job.status] || 'inherit') + ';';
+            row.appendChild(statusEl);
+
+            var nameEl = document.createElement('span');
+            nameEl.textContent = job.workflowName || job.workflowId;
+            nameEl.style.cssText = 'flex:1;font-size:13px;';
+            row.appendChild(nameEl);
+
+            var timeEl = document.createElement('span');
+            timeEl.textContent = job.createdAt || '';
+            timeEl.style.cssText = 'font-size:12px;color:var(--text-sub);';
+            row.appendChild(timeEl);
+
+            if (job.status === 'pending' || job.status === 'running') {
+                var cancelBtn = document.createElement('button');
+                cancelBtn.textContent = t('hs.queue.btn.cancel');
+                cancelBtn.className = 'btn btn-secondary btn-sm';
+                cancelBtn.addEventListener('click', function () {
+                    bridgeClient.sendCommand('execution.queue', 'cancelJob', { jobId: job.jobId });
+                });
+                row.appendChild(cancelBtn);
+            }
+
+            if (job.errorMessage) {
+                var errEl = document.createElement('span');
+                errEl.textContent = job.errorMessage;
+                errEl.style.cssText = 'font-size:11px;color:var(--error, #e74c3c);';
+                row.appendChild(errEl);
+            }
+
+            listEl.appendChild(row);
+        });
+    }
+
+    function loadQueue() {
+        var loadingEl = document.getElementById('hs-queue-loading');
+        loadingEl.classList.remove('hidden');
+        bridgeClient.sendCommand('execution.queue', 'getQueue', {})
+            .then(function (result) {
+                loadingEl.classList.add('hidden');
+                renderQueue(result.jobs || []);
+            })
+            .catch(function () {
+                loadingEl.classList.add('hidden');
+            });
+    }
+
+    var refreshBtn = document.getElementById('hs-queue-refresh-btn');
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', function () { loadQueue(); });
+    }
+
+    window.addEventListener('bridge:queue:changed', function () {
+        if (document.getElementById('page-history').classList.contains('active')) {
+            loadQueue();
+        }
+    });
+
     document.querySelectorAll('.nav-item[data-page]').forEach(function (el) {
         el.addEventListener('click', function () {
             if (el.dataset.page === 'history') {
                 loadHistory();
+                loadQueue();
             }
         });
     });

@@ -243,6 +243,12 @@
     <ClCompile Include="app\infrastructure\bridge\ApiCallBridgeHandler.cpp">
       <Filter>소스 파일\app\infrastructure\bridge</Filter>
     </ClCompile>
+    <ClCompile Include="app\application\services\JobQueueService.cpp">
+      <Filter>소스 파일\app\application\services</Filter>
+    </ClCompile>
+    <ClCompile Include="app\infrastructure\bridge\JobQueueBridgeHandler.cpp">
+      <Filter>소스 파일\app\infrastructure\bridge</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -387,6 +393,15 @@
       <Filter>헤더 파일\app\application\services</Filter>
     </ClInclude>
     <ClInclude Include="app\infrastructure\bridge\ApiCallBridgeHandler.h">
+      <Filter>헤더 파일\app\infrastructure\bridge</Filter>
+    </ClInclude>
+    <ClInclude Include="app\domain\model\ExecutionJob.h">
+      <Filter>헤더 파일\app\domain\model</Filter>
+    </ClInclude>
+    <ClInclude Include="app\application\services\JobQueueService.h">
+      <Filter>헤더 파일\app\application\services</Filter>
+    </ClInclude>
+    <ClInclude Include="app\infrastructure\bridge\JobQueueBridgeHandler.h">
       <Filter>헤더 파일\app\infrastructure\bridge</Filter>
     </ClInclude>
   </ItemGroup>

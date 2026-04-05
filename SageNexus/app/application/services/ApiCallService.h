@@ -1,5 +1,6 @@
 #pragma once
 #include "pch.h"
+#include <winhttp.h>
 #include "app/domain/model/ApiCallAction.h"
 
 class ApiCallService

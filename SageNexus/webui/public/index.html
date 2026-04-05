@@ -656,6 +656,8 @@ var LOCALES = {
         'hs.queue.status.failed':        '실패',
         'hs.queue.status.cancelled':     '취소됨',
         'hs.queue.btn.cancel':           '취소',
+        'hs.queue.btn.retry':            '재실행',
+        'hs.queue.retry.failed':         '재실행에 실패했습니다.',
         'hs.op.import':                  '가져오기',
         'hs.op.transform':               '변환',
         'hs.op.export':                  '내보내기',
@@ -822,6 +824,8 @@ var LOCALES = {
         'hs.queue.status.failed':        'Failed',
         'hs.queue.status.cancelled':     'Cancelled',
         'hs.queue.btn.cancel':           'Cancel',
+        'hs.queue.btn.retry':            'Retry',
+        'hs.queue.retry.failed':         'Failed to retry the job.',
         'hs.op.import':                  'Import',
         'hs.op.transform':               'Transform',
         'hs.op.export':                  'Export',
@@ -1462,9 +1466,12 @@ function getColDisplayName(col) {
         emptyEl.classList.add('hidden');
 
         jobs.forEach(function (job) {
+            var wrapper = document.createElement('div');
+            wrapper.style.cssText = 'border-bottom:1px solid var(--border);padding:8px 0;';
+
             var row = document.createElement('div');
             row.className = 'queue-item';
-            row.style.cssText = 'display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);';
+            row.style.cssText = 'display:flex;align-items:center;gap:12px;';
 
             var statusEl = document.createElement('span');
             statusEl.textContent = (STATUS_LABELS[job.status] ? STATUS_LABELS[job.status]() : job.status);
@@ -1485,20 +1492,39 @@ function getColDisplayName(col) {
                 var cancelBtn = document.createElement('button');
                 cancelBtn.textContent = t('hs.queue.btn.cancel');
                 cancelBtn.className = 'btn btn-secondary btn-sm';
-                cancelBtn.addEventListener('click', function () {
-                    bridgeClient.sendCommand('execution.queue', 'cancelJob', { jobId: job.jobId });
-                });
+                cancelBtn.addEventListener('click', (function (jobId) {
+                    return function () {
+                        bridgeClient.sendCommand('execution.queue', 'cancelJob', { jobId: jobId });
+                    };
+                }(job.jobId)));
                 row.appendChild(cancelBtn);
             }
 
-            if (job.errorMessage) {
-                var errEl = document.createElement('span');
-                errEl.textContent = job.errorMessage;
-                errEl.style.cssText = 'font-size:11px;color:var(--error, #e74c3c);';
-                row.appendChild(errEl);
+            if (job.status === 'failed' || job.status === 'cancelled') {
+                var retryBtn = document.createElement('button');
+                retryBtn.textContent = t('hs.queue.btn.retry');
+                retryBtn.className = 'btn btn-primary btn-sm';
+                retryBtn.addEventListener('click', (function (jobId) {
+                    return function () {
+                        bridgeClient.sendCommand('execution.queue', 'retryJob', { jobId: jobId })
+                            .catch(function (err) {
+                                alert(err.message || t('hs.queue.retry.failed'));
+                            });
+                    };
+                }(job.jobId)));
+                row.appendChild(retryBtn);
             }
 
-            listEl.appendChild(row);
+            wrapper.appendChild(row);
+
+            if (job.errorMessage) {
+                var errEl = document.createElement('div');
+                errEl.textContent = job.errorMessage;
+                errEl.style.cssText = 'font-size:11px;color:var(--error, #e74c3c);margin-top:4px;padding-left:72px;';
+                wrapper.appendChild(errEl);
+            }
+
+            listEl.appendChild(wrapper);
         });
     }
 

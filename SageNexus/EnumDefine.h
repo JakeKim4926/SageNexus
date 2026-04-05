@@ -43,3 +43,12 @@ enum class NavigationItem
     WebExtract,
     Settings
 };
+
+enum class JobStatus
+{
+    Pending,
+    Running,
+    Completed,
+    Failed,
+    Cancelled
+};

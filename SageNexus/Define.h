@@ -7,6 +7,7 @@
 #define WM_BRIDGE_MESSAGE       (WM_USER + 2)
 #define WM_WORKFLOW_PROGRESS    (WM_USER + 3)
 #define WM_WORKFLOW_COMPLETE    (WM_USER + 4)
+#define WM_JOB_QUEUE_CHANGED    (WM_USER + 5)
 
 // ============================================================
 // Window

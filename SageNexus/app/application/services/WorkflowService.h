@@ -21,6 +21,7 @@ public:
     BOOL DeleteWorkflow(const CString& strId, CString& strError);
 
     BOOL RunWorkflow(const CString& strId, HWND hNotifyWnd, CString& strError);
+    BOOL RunSync(const CString& strId, volatile BOOL& bCancelRef, HWND hNotifyWnd, CString& strError);
     void CancelWorkflow();
 
     BOOL           IsRunning() const;

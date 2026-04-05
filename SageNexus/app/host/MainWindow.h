@@ -11,6 +11,7 @@
 #include "app/infrastructure/bridge/WebExtractBridgeHandler.h"
 #include "app/infrastructure/bridge/EmailBridgeHandler.h"
 #include "app/infrastructure/bridge/ApiCallBridgeHandler.h"
+#include "app/infrastructure/bridge/JobQueueBridgeHandler.h"
 
 class MainWindow
 {
@@ -30,6 +31,7 @@ private:
     void OnWebViewReady(BOOL bSuccess);
     void OnWorkflowProgress(int nStep, int nTotal);
     void OnWorkflowComplete(BOOL bSuccess);
+    void OnJobQueueChanged();
     void OnDestroy();
 
     void NavigateToShell();
@@ -47,4 +49,5 @@ private:
     WebExtractBridgeHandler   m_webExtractBridgeHandler;
     EmailBridgeHandler        m_emailBridgeHandler;
     ApiCallBridgeHandler      m_apiCallBridgeHandler;
+    JobQueueBridgeHandler     m_jobQueueBridgeHandler;
 };

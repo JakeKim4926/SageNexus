@@ -21,6 +21,9 @@ void JobQueueBridgeHandler::RegisterHandlers(BridgeDispatcher& dispatcher, HWND 
 
     dispatcher.RegisterHandler(L"execution.queue", L"cancelJob",
         [this](const BridgeMessage& msg) -> CString { return HandleCancelJob(msg); });
+
+    dispatcher.RegisterHandler(L"execution.queue", L"cancelAll",
+        [this](const BridgeMessage& msg) -> CString { return HandleCancelAll(msg); });
 }
 
 CString JobQueueBridgeHandler::HandleEnqueue(const BridgeMessage& msg)
@@ -76,6 +79,26 @@ CString JobQueueBridgeHandler::HandleCancelJob(const BridgeMessage& msg)
 
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
            L"\",\"success\":true,\"payload\":{\"jobId\":\"" + EscapeJson(strJobId) + L"\"}}";
+}
+
+const CString& JobQueueBridgeHandler::GetCurrentStepName() const
+{
+    return m_service.GetCurrentStepName();
+}
+
+CString JobQueueBridgeHandler::HandleCancelAll(const BridgeMessage& msg)
+{
+    std::vector<ExecutionJob> arrJobs;
+    m_service.GetQueue(arrJobs);
+
+    for (const ExecutionJob& job : arrJobs)
+    {
+        if (job.m_eStatus == JobStatus::Pending || job.m_eStatus == JobStatus::Running)
+            m_service.CancelJob(job.m_strJobId);
+    }
+
+    return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+           L"\",\"success\":true,\"payload\":{\"cancelled\":true}}";
 }
 
 CString JobQueueBridgeHandler::SerializeJob(const ExecutionJob& job) const

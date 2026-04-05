@@ -18,6 +18,7 @@ private:
     CString HandleRunWorkflow(const BridgeMessage& msg);
     CString HandleCancelWorkflow(const BridgeMessage& msg);
 
+    const CString& GetCurrentStepName() const;
     CString SerializeWorkflow(const WorkflowDefinition& wf) const;
     CString SerializeStep(const WorkflowStep& step) const;
     CString ExtractPayloadString(const CString& strJson, const CString& strKey) const;

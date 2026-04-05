@@ -114,9 +114,11 @@ BOOL WorkflowService::RunSync(const CString& strId, volatile BOOL& bCancelRef, H
             break;
         }
 
+        const WorkflowStep& step = workflow.m_arrSteps[i];
+
+        m_strCurrentStepName = step.m_strName.IsEmpty() ? step.m_strStepType : step.m_strName;
         PostMessage(hNotifyWnd, WM_WORKFLOW_PROGRESS, (WPARAM)(i + 1), (LPARAM)nTotal);
 
-        const WorkflowStep& step = workflow.m_arrSteps[i];
         CString strStepError;
 
         sageMgr.GetLogger().Log(LogLevel::Info,
@@ -272,6 +274,11 @@ const CString& WorkflowService::GetLastError() const
     return m_strLastError;
 }
 
+const CString& WorkflowService::GetCurrentStepName() const
+{
+    return m_strCurrentStepName;
+}
+
 DWORD WINAPI WorkflowService::RunThread(LPVOID pParam)
 {
     RunContext* pCtx = reinterpret_cast<RunContext*>(pParam);
@@ -297,9 +304,11 @@ void WorkflowService::ExecuteSteps(const WorkflowDefinition& workflow, HWND hNot
             break;
         }
 
+        const WorkflowStep& step = workflow.m_arrSteps[i];
+
+        m_strCurrentStepName = step.m_strName.IsEmpty() ? step.m_strStepType : step.m_strName;
         PostMessage(hNotifyWnd, WM_WORKFLOW_PROGRESS, (WPARAM)(i + 1), (LPARAM)nTotal);
 
-        const WorkflowStep& step = workflow.m_arrSteps[i];
         CString strError;
 
         sageMgr.GetLogger().Log(LogLevel::Info,

@@ -14,6 +14,7 @@ public:
     void GetQueue(std::vector<ExecutionJob>& arrJobs) const;
     void CancelJob(const CString& strJobId);
     const CString& GetRunningJobId() const;
+    const CString& GetCurrentStepName() const;
 
 private:
     struct QueueContext

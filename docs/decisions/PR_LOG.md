@@ -4,6 +4,12 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 
 ---
 
+## [2026-04-06] feature/phase6-step3-exception-log-retry
+- **목적**: Phase 6 Step 3 — 예외/로그/복구 흐름 정리
+- **변경 내용**: FileLogger 세션별 로그 파일(YYYYMMDD_HHMMSS.log), JobQueueService::RetryJob() 추가, execution.queue::retryJob 브릿지 핸들러, History 큐 UI 재실행 버튼 + 에러 메시지 레이아웃 개선 + cancelJob 클로저 버그 수정
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/35
+- **결과**: pending
+
 ## [2026-04-05] hotfix — Phase 6 Step 1/2 빌드 오류 수정 (develop 직접)
 - **목적**: Phase 6 Step 1/2 작업 이후 발생한 빌드 오류 3건 수정
 - **변경 내용**: ApiCallService.h에 winhttp.h include 추가(HINTERNET 타입 미인식), WorkflowBridgeHandler::GetCurrentStepName public으로 이동, RunSync EmailAction 필드명 m_strTo → m_strRecipients 수정

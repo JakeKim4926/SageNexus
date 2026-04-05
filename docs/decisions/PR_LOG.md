@@ -8,7 +8,7 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 - **목적**: Phase 6 Step 1 — JobQueue (작업 큐 + 배치 실행)
 - **변경 내용**: ExecutionJob 도메인 모델, JobStatus enum, WM_JOB_QUEUE_CHANGED, JobQueueService(CRITICAL_SECTION 큐 + 워커 스레드 순차 실행 + cancel), WorkflowService::RunSync(동기 실행), JobQueueBridgeHandler(execution.queue::enqueue/getQueue/cancelJob), MainWindow WM_JOB_QUEUE_CHANGED → bridge:queue:changed 이벤트, History 페이지 큐 섹션 + i18n
 - **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/33
-- **결과**: pending
+- **결과**: merged ✅
 
 ## [2026-04-04] feature/phase5-step5-i18n
 - **목적**: Phase 5 Step 5 — i18n 고도화 + Output Language QA + Phase 5 마무리

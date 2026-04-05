@@ -204,9 +204,9 @@ BOOL WorkflowService::RunSync(const CString& strId, volatile BOOL& bCancelRef, H
         else if (step.m_strStepType == L"sendEmail")
         {
             EmailAction action;
-            action.m_strTo      = ExtractConfigString(step.m_strConfigJson, L"to");
-            action.m_strSubject = ExtractConfigString(step.m_strConfigJson, L"subject");
-            action.m_strBody    = ExtractConfigString(step.m_strConfigJson, L"body");
+            action.m_strRecipients = ExtractConfigString(step.m_strConfigJson, L"to");
+            action.m_strSubject    = ExtractConfigString(step.m_strConfigJson, L"subject");
+            action.m_strBody       = ExtractConfigString(step.m_strConfigJson, L"body");
             EmailService svc;
             if (!svc.SendEmail(action, strStepError))
             {

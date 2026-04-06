@@ -368,7 +368,10 @@
                     <div class="empty-icon">▶</div>
                     <div class="empty-title" data-i18n="page.workflow.empty.title">워크플로우가 없습니다</div>
                     <div class="empty-desc" data-i18n="page.workflow.empty.desc">새 워크플로우를 만들어 자동화 작업을 구성하세요.</div>
-                    <button class="btn-primary" id="wf-btn-new-empty" data-i18n="page.workflow.btn.new">새 워크플로우</button>
+                    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:4px;">
+                        <button class="btn-primary" id="wf-btn-new-empty" data-i18n="page.workflow.btn.new">새 워크플로우</button>
+                        <button class="btn-secondary" id="wf-btn-from-template-empty" data-i18n="page.workflow.btn.fromTemplate">템플릿에서 시작</button>
+                    </div>
                 </div>
                 <div class="error-state hidden" id="wf-state-error">
                     <div class="error-icon">⚠</div>
@@ -376,8 +379,9 @@
                     <div class="error-desc" id="wf-error-message"></div>
                 </div>
                 <div class="hidden" id="wf-state-data">
-                    <div class="page-actions" style="margin-bottom:16px;">
+                    <div class="page-actions" style="margin-bottom:16px;display:flex;gap:8px;">
                         <button class="btn-primary" id="wf-btn-new" data-i18n="page.workflow.btn.new">새 워크플로우</button>
+                        <button class="btn-secondary" id="wf-btn-from-template" data-i18n="page.workflow.btn.fromTemplate">템플릿에서 시작</button>
                     </div>
                     <div id="wf-list"></div>
                 </div>
@@ -525,6 +529,17 @@
             </div>
 
         </main>
+    </div>
+
+    <!-- Template Picker Modal -->
+    <div id="wf-template-modal" class="hidden" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;display:flex;align-items:center;justify-content:center;">
+        <div style="background:var(--bg-primary);border-radius:12px;padding:24px;min-width:360px;max-width:520px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                <div style="font-size:16px;font-weight:600;" data-i18n="wf.template.modal.title">템플릿 선택</div>
+                <button class="btn-secondary" id="wf-template-modal-close" style="padding:4px 10px;font-size:12px;" data-i18n="wf.template.modal.close">닫기</button>
+            </div>
+            <div id="wf-template-list" style="display:flex;flex-direction:column;gap:10px;"></div>
+        </div>
     </div>
 
     <!-- Status Bar -->
@@ -708,7 +723,39 @@ var LOCALES = {
         'plugin.name.workflow':          '워크플로우',
         'plugin.name.webextract':        '웹 추출',
         'unit.rows':                     '행',
-        'unit.cols':                     '열'
+        'unit.cols':                     '열',
+        'page.workflow.btn.fromTemplate': '템플릿에서 시작',
+        'wf.template.modal.title':        '템플릿 선택',
+        'wf.template.modal.close':        '닫기',
+        'wf.template.btn.use':            '이 템플릿 사용',
+        'wf.template.steps.count':        '개 단계',
+        'error.SNX_FILE_001':            '파일 경로가 비어 있습니다.',
+        'error.SNX_FILE_002':            '파일을 불러오지 못했습니다.',
+        'error.SNX_TF_001':              '변환할 데이터가 없습니다.',
+        'error.SNX_TF_002':              '데이터를 불러오지 못했습니다.',
+        'error.SNX_TF_003':              '변환 단계가 없습니다.',
+        'error.SNX_TF_004':              '변환에 실패했습니다.',
+        'error.SNX_EX_001':              '내보낼 데이터가 없습니다.',
+        'error.SNX_EX_002':              '저장이 취소되었습니다.',
+        'error.SNX_EX_003':              '파일 저장에 실패했습니다.',
+        'error.SNX_EX_010':              '내보내기에 실패했습니다.',
+        'error.SNX_WEB_001':             'URL이 비어 있습니다.',
+        'error.SNX_WEB_002':             '웹 데이터 추출에 실패했습니다.',
+        'error.SNX_EM_001':              '수신자 주소가 비어 있습니다.',
+        'error.SNX_EM_002':              '이메일 발송에 실패했습니다.',
+        'error.SNX_API_001':             'URL이 비어 있습니다.',
+        'error.SNX_API_002':             'API 요청에 실패했습니다.',
+        'error.SNX_HI_001':              '이력을 불러오지 못했습니다.',
+        'error.SNX_HI_002':              '이력 항목을 찾을 수 없습니다.',
+        'error.LOAD_FAILED':             '데이터를 불러오지 못했습니다.',
+        'error.SAVE_FAILED':             '저장에 실패했습니다.',
+        'error.DELETE_FAILED':           '삭제에 실패했습니다.',
+        'error.RUN_FAILED':              '실행에 실패했습니다.',
+        'error.NOT_FOUND':               '항목을 찾을 수 없습니다.',
+        'error.INVALID_PAYLOAD':         '요청 데이터가 올바르지 않습니다.',
+        'error.ENQUEUE_FAILED':          '작업 큐에 추가하지 못했습니다.',
+        'error.RETRY_FAILED':            '재실행에 실패했습니다.',
+        'error.CREATE_FAILED':           '생성에 실패했습니다.'
     },
     en: {
         'nav.section.main':     'Main',
@@ -876,7 +923,39 @@ var LOCALES = {
         'plugin.name.workflow':          'Workflow',
         'plugin.name.webextract':        'Web Extract',
         'unit.rows':                     'rows',
-        'unit.cols':                     'cols'
+        'unit.cols':                     'cols',
+        'page.workflow.btn.fromTemplate': 'Start from Template',
+        'wf.template.modal.title':        'Select Template',
+        'wf.template.modal.close':        'Close',
+        'wf.template.btn.use':            'Use This Template',
+        'wf.template.steps.count':        ' steps',
+        'error.SNX_FILE_001':            'File path is empty.',
+        'error.SNX_FILE_002':            'Failed to load the file.',
+        'error.SNX_TF_001':              'No data to transform.',
+        'error.SNX_TF_002':              'Failed to load data.',
+        'error.SNX_TF_003':              'No transform steps defined.',
+        'error.SNX_TF_004':              'Transform failed.',
+        'error.SNX_EX_001':              'No data to export.',
+        'error.SNX_EX_002':              'Save was cancelled.',
+        'error.SNX_EX_003':              'Failed to save the file.',
+        'error.SNX_EX_010':              'Export failed.',
+        'error.SNX_WEB_001':             'URL is empty.',
+        'error.SNX_WEB_002':             'Failed to extract web data.',
+        'error.SNX_EM_001':              'Recipient address is empty.',
+        'error.SNX_EM_002':              'Failed to send email.',
+        'error.SNX_API_001':             'URL is empty.',
+        'error.SNX_API_002':             'API request failed.',
+        'error.SNX_HI_001':              'Failed to load history.',
+        'error.SNX_HI_002':              'History entry not found.',
+        'error.LOAD_FAILED':             'Failed to load data.',
+        'error.SAVE_FAILED':             'Save failed.',
+        'error.DELETE_FAILED':           'Delete failed.',
+        'error.RUN_FAILED':              'Execution failed.',
+        'error.NOT_FOUND':               'Item not found.',
+        'error.INVALID_PAYLOAD':         'Invalid request data.',
+        'error.ENQUEUE_FAILED':          'Failed to add job to queue.',
+        'error.RETRY_FAILED':            'Retry failed.',
+        'error.CREATE_FAILED':           'Creation failed.'
     }
 };
 
@@ -896,6 +975,15 @@ var PAGE_I18N_KEYS = {
 
 function t(key) {
     return (LOCALES[_interfaceLanguage] || LOCALES['ko'])[key] || key;
+}
+
+function resolveErrorMessage(err) {
+    if (!err) return t('wf.error.unknown');
+    if (err.code) {
+        var mapped = t('error.' + err.code);
+        if (mapped !== 'error.' + err.code) return mapped;
+    }
+    return err.message || t('wf.error.unknown');
 }
 
 function applyLocale() {
@@ -1813,7 +1901,7 @@ function getColDisplayName(col) {
                 }
             })
             .catch(function (err) {
-                document.getElementById('wf-error-message').textContent = err && err.message ? err.message : t('wf.error.unknown');
+                document.getElementById('wf-error-message').textContent = resolveErrorMessage(err);
                 setWfState('error');
             });
     }
@@ -2050,6 +2138,63 @@ function getColDisplayName(col) {
     }
 
     window.loadWorkflows = loadWorkflows;
+
+    function openTemplateModal() {
+        var modal = document.getElementById('wf-template-modal');
+        var list  = document.getElementById('wf-template-list');
+        modal.classList.remove('hidden');
+        list.innerHTML = '<div style="color:var(--text-secondary);font-size:13px;">' + t('page.workflow.loading') + '</div>';
+
+        bridgeClient.sendCommand('workflow.templates', 'getTemplates', {})
+            .then(function (templates) {
+                list.innerHTML = '';
+                (templates || []).forEach(function (tpl) {
+                    var card = document.createElement('div');
+                    card.className = 'settings-card';
+                    card.style.cssText = 'padding:14px;display:flex;align-items:center;justify-content:space-between;';
+
+                    var info = document.createElement('div');
+                    var nameEl = document.createElement('div');
+                    nameEl.style.cssText = 'font-weight:600;font-size:14px;margin-bottom:4px;';
+                    nameEl.textContent = tpl.name;
+                    var descEl = document.createElement('div');
+                    descEl.style.cssText = 'font-size:12px;color:var(--text-secondary);margin-bottom:4px;';
+                    descEl.textContent = tpl.description;
+                    var countEl = document.createElement('div');
+                    countEl.style.cssText = 'font-size:11px;color:var(--text-secondary);';
+                    countEl.textContent = (tpl.steps ? tpl.steps.length : 0) + t('wf.template.steps.count');
+                    info.appendChild(nameEl);
+                    info.appendChild(descEl);
+                    info.appendChild(countEl);
+
+                    var useBtn = document.createElement('button');
+                    useBtn.className = 'btn-primary';
+                    useBtn.style.cssText = 'font-size:12px;padding:6px 12px;white-space:nowrap;margin-left:12px;';
+                    useBtn.textContent = t('wf.template.btn.use');
+                    useBtn.addEventListener('click', function () {
+                        modal.classList.add('hidden');
+                        bridgeClient.sendCommand('workflow.templates', 'createFromTemplate', { templateId: tpl.id })
+                            .then(function (wf) { openDetail(wf); })
+                            .catch(function (err) {
+                                alert(resolveErrorMessage(err));
+                            });
+                    });
+
+                    card.appendChild(info);
+                    card.appendChild(useBtn);
+                    list.appendChild(card);
+                });
+            })
+            .catch(function (err) {
+                list.innerHTML = '<div style="color:var(--error);font-size:13px;">' + resolveErrorMessage(err) + '</div>';
+            });
+    }
+
+    document.getElementById('wf-template-modal-close').addEventListener('click', function () {
+        document.getElementById('wf-template-modal').classList.add('hidden');
+    });
+    document.getElementById('wf-btn-from-template').addEventListener('click', openTemplateModal);
+    document.getElementById('wf-btn-from-template-empty').addEventListener('click', openTemplateModal);
 
     document.getElementById('wf-btn-new').addEventListener('click', createWorkflow);
     document.getElementById('wf-btn-new-empty').addEventListener('click', createWorkflow);

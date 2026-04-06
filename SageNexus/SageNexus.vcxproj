@@ -257,6 +257,7 @@
     <ClInclude Include="app\infrastructure\plugins\PluginManager.h" />
     <ClInclude Include="app\domain\model\WorkflowStep.h" />
     <ClInclude Include="app\domain\model\WorkflowDefinition.h" />
+    <ClInclude Include="app\domain\model\WorkflowTemplate.h" />
     <ClInclude Include="app\infrastructure\workflow\WorkflowStore.h" />
     <ClInclude Include="app\application\services\WorkflowService.h" />
     <ClInclude Include="app\infrastructure\bridge\WorkflowBridgeHandler.h" />

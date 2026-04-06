@@ -8,7 +8,7 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 - **목적**: Phase 6 Step 5 — 설치 폴더/사용자 데이터 폴더 분리 + 배포 정책 문서화
 - **변경 내용**: SageApp::InitializePaths() → SHGetFolderPathW(CSIDL_APPDATA) 기반으로 변경, GetUserDataDir() 추가(설치 폴더와 사용자 데이터 폴더 명시적 구분), settings.json/Logs/Data/WebViewData → %APPDATA%\SageNexus\ 기준으로 이동, profile.json은 설치 폴더 유지, ArtifactStore/ExecutionHistoryStore/WorkflowStore GetDataDir() 직접 사용으로 통일, ADR-001-deployment-paths.md 경로 분리 정책 확정, SolutionProfile-packaging.md 패키징 단위 문서화
 - **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/37
-- **결과**: pending
+- **결과**: merged ✅
 
 ---
 

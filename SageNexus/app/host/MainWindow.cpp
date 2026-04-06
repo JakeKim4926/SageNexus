@@ -124,7 +124,7 @@ void MainWindow::OnCreate()
 
     m_pWebViewHost = new WebViewHost(m_hWnd);
 
-    CString strUserDataDir = sageMgr.GetAppDir() + L"\\" + WEBVIEW_USER_DATA_FOLDER;
+    CString strUserDataDir = sageMgr.GetUserDataDir() + L"\\" + WEBVIEW_USER_DATA_FOLDER;
     m_pWebViewHost->Initialize(strUserDataDir);
 }
 

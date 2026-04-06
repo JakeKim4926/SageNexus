@@ -4,6 +4,7 @@
 #define NOMINMAX
 
 #include <windows.h>
+#include <shlobj.h>
 #include <atlbase.h>
 #include <atlstr.h>
 #include <wrl.h>

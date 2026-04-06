@@ -16,6 +16,7 @@ SageApp::SageApp()
 {
 }
 
+
 SageApp::~SageApp()
 {
     Shutdown();
@@ -38,7 +39,7 @@ BOOL SageApp::Initialize(HINSTANCE hInstance)
         return FALSE;
     }
 
-    m_pConfigStore = new JsonConfigStore(m_strAppDir);
+    m_pConfigStore = new JsonConfigStore(m_strUserDataDir);
     m_pConfigStore->Load();
 
     m_profile.SetDefault();
@@ -85,6 +86,7 @@ void SageApp::Shutdown()
 
     m_hInstance = nullptr;
     m_strAppDir.Empty();
+    m_strUserDataDir.Empty();
     m_strDataDir.Empty();
     m_strLogDir.Empty();
     m_bInitialized = FALSE;
@@ -101,19 +103,27 @@ void SageApp::ReleaseResources()
 
 BOOL SageApp::InitializePaths()
 {
-    wchar_t szPath[MAX_PATH] = {};
-    if (!GetModuleFileNameW(m_hInstance, szPath, MAX_PATH))
+    // 설치 폴더: exe 위치 (webui, templates, profile.json 등 읽기 전용 리소스)
+    wchar_t szExePath[MAX_PATH] = {};
+    if (!GetModuleFileNameW(m_hInstance, szExePath, MAX_PATH))
         return FALSE;
 
-    m_strAppDir = szPath;
+    m_strAppDir = szExePath;
     int nSlash = m_strAppDir.ReverseFind(L'\\');
     if (nSlash < 0)
         return FALSE;
+    m_strAppDir = m_strAppDir.Left(nSlash);
 
-    m_strAppDir  = m_strAppDir.Left(nSlash);
-    m_strDataDir = m_strAppDir + L"\\" + DATA_DIR_NAME;
-    m_strLogDir  = m_strAppDir + L"\\" + LOG_DIR_NAME;
+    // 사용자 데이터 폴더: %APPDATA%\SageNexus\ (settings, logs, data, WebViewData)
+    wchar_t szAppData[MAX_PATH] = {};
+    if (FAILED(SHGetFolderPathW(nullptr, CSIDL_APPDATA, nullptr, SHGFP_TYPE_CURRENT, szAppData)))
+        return FALSE;
 
+    m_strUserDataDir = CString(szAppData) + L"\\" + USER_DATA_APP_NAME;
+    m_strDataDir     = m_strUserDataDir + L"\\" + DATA_DIR_NAME;
+    m_strLogDir      = m_strUserDataDir + L"\\" + LOG_DIR_NAME;
+
+    CreateDirectoryW(m_strUserDataDir, nullptr);
     CreateDirectoryW(m_strDataDir, nullptr);
     CreateDirectoryW(m_strLogDir, nullptr);
     return TRUE;
@@ -183,6 +193,11 @@ HINSTANCE SageApp::GetHInstance() const
 const CString& SageApp::GetAppDir() const
 {
     return m_strAppDir;
+}
+
+const CString& SageApp::GetUserDataDir() const
+{
+    return m_strUserDataDir;
 }
 
 const CString& SageApp::GetDataDir() const

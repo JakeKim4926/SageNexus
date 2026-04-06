@@ -16,9 +16,10 @@ public:
     void Shutdown();
 
     HINSTANCE       GetHInstance() const;
-    const CString&  GetAppDir() const;
-    const CString&  GetDataDir() const;
-    const CString&  GetLogDir() const;
+    const CString&  GetAppDir() const;      // 설치 폴더 (exe 위치, 읽기 전용 리소스)
+    const CString&  GetUserDataDir() const; // 사용자 데이터 폴더 (%APPDATA%/SageNexus)
+    const CString&  GetDataDir() const;     // 데이터 폴더 (UserDataDir/Data)
+    const CString&  GetLogDir() const;      // 로그 폴더 (UserDataDir/Logs)
 
     FileLogger&       GetLogger();
     JsonConfigStore&  GetConfigStore();
@@ -38,6 +39,7 @@ private:
 
     HINSTANCE        m_hInstance;
     CString          m_strAppDir;
+    CString          m_strUserDataDir;
     CString          m_strDataDir;
     CString          m_strLogDir;
     BOOL             m_bInitialized;

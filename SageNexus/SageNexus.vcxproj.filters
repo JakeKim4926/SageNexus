@@ -362,6 +362,9 @@
     <ClInclude Include="app\domain\model\WorkflowDefinition.h">
       <Filter>헤더 파일\app\domain\model</Filter>
     </ClInclude>
+    <ClInclude Include="app\domain\model\WorkflowTemplate.h">
+      <Filter>헤더 파일\app\domain\model</Filter>
+    </ClInclude>
     <ClInclude Include="app\infrastructure\workflow\WorkflowStore.h">
       <Filter>헤더 파일\app\infrastructure\workflow</Filter>
     </ClInclude>

@@ -47,6 +47,97 @@ BOOL WorkflowService::DeleteWorkflow(const CString& strId, CString& strError)
     return m_store.DeleteWorkflow(strId, strError);
 }
 
+BOOL WorkflowService::GetTemplates(std::vector<WorkflowTemplate>& arrTemplates, CString& strError)
+{
+    arrTemplates.clear();
+
+    WorkflowTemplate tplCsvXlsx;
+    tplCsvXlsx.m_strId          = L"tpl-csv-to-xlsx";
+    tplCsvXlsx.m_strName        = L"CSV 정리 → XLSX 저장";
+    tplCsvXlsx.m_strDescription = L"CSV 파일을 불러와 공백을 제거하고 XLSX로 저장합니다.";
+    tplCsvXlsx.m_strCategory    = L"data";
+
+    WorkflowStep stepImport;
+    stepImport.m_strId       = L"";
+    stepImport.m_strStepType = L"import";
+    stepImport.m_strName     = L"CSV 불러오기";
+    stepImport.m_strConfigJson = L"{\"filePath\":\"\"}";
+    tplCsvXlsx.m_arrSteps.push_back(stepImport);
+
+    WorkflowStep stepTransform;
+    stepTransform.m_strId       = L"";
+    stepTransform.m_strStepType = L"transform";
+    stepTransform.m_strName     = L"공백 제거";
+    stepTransform.m_strConfigJson = L"{\"rules\":[{\"type\":\"trim\",\"column\":\"\",\"param1\":\"\",\"param2\":\"\"}]}";
+    tplCsvXlsx.m_arrSteps.push_back(stepTransform);
+
+    WorkflowStep stepExport;
+    stepExport.m_strId       = L"";
+    stepExport.m_strStepType = L"export";
+    stepExport.m_strName     = L"XLSX 저장";
+    stepExport.m_strConfigJson = L"{\"filePath\":\"\",\"format\":\"xlsx\"}";
+    tplCsvXlsx.m_arrSteps.push_back(stepExport);
+
+    arrTemplates.push_back(tplCsvXlsx);
+
+    WorkflowTemplate tplWebHtml;
+    tplWebHtml.m_strId          = L"tpl-web-to-html";
+    tplWebHtml.m_strName        = L"웹 추출 → HTML 보고서";
+    tplWebHtml.m_strDescription = L"웹 페이지에서 테이블을 추출해 HTML 보고서로 저장합니다.";
+    tplWebHtml.m_strCategory    = L"webextract";
+
+    WorkflowStep stepWeb;
+    stepWeb.m_strId       = L"";
+    stepWeb.m_strStepType = L"webExtract";
+    stepWeb.m_strName     = L"웹 추출";
+    stepWeb.m_strConfigJson = L"{\"url\":\"\",\"selector\":\"\"}";
+    tplWebHtml.m_arrSteps.push_back(stepWeb);
+
+    WorkflowStep stepHtml;
+    stepHtml.m_strId       = L"";
+    stepHtml.m_strStepType = L"export";
+    stepHtml.m_strName     = L"HTML 보고서 저장";
+    stepHtml.m_strConfigJson = L"{\"filePath\":\"\",\"format\":\"html\"}";
+    tplWebHtml.m_arrSteps.push_back(stepHtml);
+
+    arrTemplates.push_back(tplWebHtml);
+
+    return TRUE;
+}
+
+BOOL WorkflowService::CreateFromTemplate(const CString& strTemplateId, WorkflowDefinition& outWorkflow, CString& strError)
+{
+    std::vector<WorkflowTemplate> arrTemplates;
+    if (!GetTemplates(arrTemplates, strError))
+        return FALSE;
+
+    const WorkflowTemplate* pTemplate = nullptr;
+    for (const WorkflowTemplate& tpl : arrTemplates)
+    {
+        if (tpl.m_strId == strTemplateId)
+        {
+            pTemplate = &tpl;
+            break;
+        }
+    }
+
+    if (!pTemplate)
+    {
+        strError = L"템플릿을 찾을 수 없습니다: " + strTemplateId;
+        return FALSE;
+    }
+
+    outWorkflow.m_strId          = L"";
+    outWorkflow.m_strName        = pTemplate->m_strName;
+    outWorkflow.m_strDescription = pTemplate->m_strDescription;
+    outWorkflow.m_arrSteps       = pTemplate->m_arrSteps;
+
+    if (!m_store.SaveWorkflow(outWorkflow, strError))
+        return FALSE;
+
+    return TRUE;
+}
+
 BOOL WorkflowService::RunWorkflow(const CString& strId, HWND hNotifyWnd, CString& strError)
 {
     if (m_bRunning)

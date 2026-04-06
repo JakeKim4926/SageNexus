@@ -29,6 +29,12 @@ void WorkflowBridgeHandler::RegisterHandlers(BridgeDispatcher& dispatcher, HWND 
 
     dispatcher.RegisterHandler(L"workflow", L"cancelWorkflow",
         [this](const BridgeMessage& msg) -> CString { return HandleCancelWorkflow(msg); });
+
+    dispatcher.RegisterHandler(L"workflow.templates", L"getTemplates",
+        [this](const BridgeMessage& msg) -> CString { return HandleGetTemplates(msg); });
+
+    dispatcher.RegisterHandler(L"workflow.templates", L"createFromTemplate",
+        [this](const BridgeMessage& msg) -> CString { return HandleCreateFromTemplate(msg); });
 }
 
 CString WorkflowBridgeHandler::HandleGetWorkflows(const BridgeMessage& msg)
@@ -168,6 +174,51 @@ CString WorkflowBridgeHandler::HandleCancelWorkflow(const BridgeMessage& msg)
            L"\",\"success\":true,\"payload\":{\"status\":\"cancelling\"}}";
 }
 
+CString WorkflowBridgeHandler::HandleGetTemplates(const BridgeMessage& msg)
+{
+    std::vector<WorkflowTemplate> arrTemplates;
+    CString strError;
+    if (!m_service.GetTemplates(arrTemplates, strError))
+    {
+        return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+               L"\",\"success\":false,\"error\":{\"code\":\"LOAD_FAILED\",\"message\":\"" +
+               EscapeJson(strError) + L"\"}}";
+    }
+
+    CString strArray = L"[";
+    for (int i = 0; i < (int)arrTemplates.size(); ++i)
+    {
+        if (i > 0) strArray += L",";
+        strArray += SerializeTemplate(arrTemplates[i]);
+    }
+    strArray += L"]";
+
+    return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+           L"\",\"success\":true,\"payload\":" + strArray + L"}";
+}
+
+CString WorkflowBridgeHandler::HandleCreateFromTemplate(const BridgeMessage& msg)
+{
+    CString strTemplateId = ExtractPayloadString(msg.m_strPayloadJson, L"templateId");
+    if (strTemplateId.IsEmpty())
+    {
+        return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+               L"\",\"success\":false,\"error\":{\"code\":\"INVALID_PAYLOAD\",\"message\":\"templateId is required\"}}";
+    }
+
+    WorkflowDefinition wf;
+    CString strError;
+    if (!m_service.CreateFromTemplate(strTemplateId, wf, strError))
+    {
+        return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+               L"\",\"success\":false,\"error\":{\"code\":\"CREATE_FAILED\",\"message\":\"" +
+               EscapeJson(strError) + L"\"}}";
+    }
+
+    return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+           L"\",\"success\":true,\"payload\":" + SerializeWorkflow(wf) + L"}";
+}
+
 const CString& WorkflowBridgeHandler::GetCurrentStepName() const
 {
     return m_service.GetCurrentStepName();
@@ -198,6 +249,34 @@ CString WorkflowBridgeHandler::SerializeWorkflow(const WorkflowDefinition& wf) c
         (LPCWSTR)EscapeJson(wf.m_strDescription),
         (LPCWSTR)EscapeJson(wf.m_strCreatedAt),
         (LPCWSTR)EscapeJson(wf.m_strUpdatedAt),
+        (LPCWSTR)strSteps
+    );
+    return strJson;
+}
+
+CString WorkflowBridgeHandler::SerializeTemplate(const WorkflowTemplate& tpl) const
+{
+    CString strSteps = L"[";
+    for (int i = 0; i < (int)tpl.m_arrSteps.size(); ++i)
+    {
+        if (i > 0) strSteps += L",";
+        strSteps += SerializeStep(tpl.m_arrSteps[i]);
+    }
+    strSteps += L"]";
+
+    CString strJson;
+    strJson.Format(
+        L"{"
+        L"\"id\":\"%s\","
+        L"\"name\":\"%s\","
+        L"\"description\":\"%s\","
+        L"\"category\":\"%s\","
+        L"\"steps\":%s"
+        L"}",
+        (LPCWSTR)EscapeJson(tpl.m_strId),
+        (LPCWSTR)EscapeJson(tpl.m_strName),
+        (LPCWSTR)EscapeJson(tpl.m_strDescription),
+        (LPCWSTR)EscapeJson(tpl.m_strCategory),
         (LPCWSTR)strSteps
     );
     return strJson;

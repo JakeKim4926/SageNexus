@@ -24,6 +24,9 @@ void JobQueueBridgeHandler::RegisterHandlers(BridgeDispatcher& dispatcher, HWND 
 
     dispatcher.RegisterHandler(L"execution.queue", L"cancelAll",
         [this](const BridgeMessage& msg) -> CString { return HandleCancelAll(msg); });
+
+    dispatcher.RegisterHandler(L"execution.queue", L"retryJob",
+        [this](const BridgeMessage& msg) -> CString { return HandleRetryJob(msg); });
 }
 
 CString JobQueueBridgeHandler::HandleEnqueue(const BridgeMessage& msg)
@@ -99,6 +102,27 @@ CString JobQueueBridgeHandler::HandleCancelAll(const BridgeMessage& msg)
 
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
            L"\",\"success\":true,\"payload\":{\"cancelled\":true}}";
+}
+
+CString JobQueueBridgeHandler::HandleRetryJob(const BridgeMessage& msg)
+{
+    CString strJobId = ExtractPayloadString(msg.m_strPayloadJson, L"jobId");
+    if (strJobId.IsEmpty())
+    {
+        return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+               L"\",\"success\":false,\"error\":{\"code\":\"INVALID_PAYLOAD\",\"message\":\"jobId is required\"}}";
+    }
+
+    CString strError;
+    if (!m_service.RetryJob(strJobId, m_hMainWnd, strError))
+    {
+        return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+               L"\",\"success\":false,\"error\":{\"code\":\"RETRY_FAILED\",\"message\":\"" +
+               EscapeJson(strError) + L"\"}}";
+    }
+
+    return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+           L"\",\"success\":true,\"payload\":{\"jobId\":\"" + EscapeJson(strJobId) + L"\"}}";
 }
 
 CString JobQueueBridgeHandler::SerializeJob(const ExecutionJob& job) const

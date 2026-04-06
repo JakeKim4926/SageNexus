@@ -19,13 +19,13 @@ BOOL FileLogger::Initialize()
     GetLocalTime(&st);
 
     CString strFileName;
-    strFileName.Format(L"SageNexus_%04d%02d%02d.log",
-        st.wYear, st.wMonth, st.wDay);
+    strFileName.Format(L"SageNexus_%04d%02d%02d_%02d%02d%02d.log",
+        st.wYear, st.wMonth, st.wDay,
+        st.wHour, st.wMinute, st.wSecond);
 
     CString strPath = m_strLogDir + L"\\" + strFileName;
 
-    // UTF-8 BOM 포함 로그 파일 오픈 (append 모드)
-    m_fileStream.open(WideToUtf8(strPath), std::ios::app | std::ios::out);
+    m_fileStream.open(WideToUtf8(strPath), std::ios::out);
     if (!m_fileStream.is_open())
         return FALSE;
 

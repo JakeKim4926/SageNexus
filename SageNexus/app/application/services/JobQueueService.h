@@ -13,6 +13,7 @@ public:
     BOOL EnqueueJob(const CString& strWorkflowId, const CString& strWorkflowName, HWND hNotifyWnd, CString& strError);
     void GetQueue(std::vector<ExecutionJob>& arrJobs) const;
     void CancelJob(const CString& strJobId);
+    BOOL RetryJob(const CString& strJobId, HWND hNotifyWnd, CString& strError);
     const CString& GetRunningJobId() const;
     const CString& GetCurrentStepName() const;
 

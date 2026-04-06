@@ -16,6 +16,7 @@ private:
     CString HandleGetQueue(const BridgeMessage& msg);
     CString HandleCancelJob(const BridgeMessage& msg);
     CString HandleCancelAll(const BridgeMessage& msg);
+    CString HandleRetryJob(const BridgeMessage& msg);
 
     CString SerializeJob(const ExecutionJob& job) const;
     CString JobStatusToString(JobStatus eStatus) const;

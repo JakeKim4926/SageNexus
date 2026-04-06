@@ -8,7 +8,7 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 - **목적**: Phase 6 Step 4 — 기본 Workflow 템플릿 + 사용자 메시지(에러 코드 i18n) 정리
 - **변경 내용**: WorkflowTemplate 도메인 모델, WorkflowService::GetTemplates()/CreateFromTemplate() (내장 템플릿 2종: CSV→XLSX, 웹추출→HTML), workflow.templates::getTemplates/createFromTemplate 브릿지 핸들러, Workflow 페이지 "템플릿에서 시작" 버튼 + 템플릿 선택 모달, resolveErrorMessage() 에러 코드 i18n 매핑, ko.json/en.json 에러 코드 전체 번역 키 추가
 - **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/36
-- **결과**: pending
+- **결과**: merged ✅
 
 ---
 

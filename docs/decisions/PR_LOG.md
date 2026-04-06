@@ -4,6 +4,14 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 
 ---
 
+## [2026-04-07] feature/phase6-step5-deployment-paths
+- **목적**: Phase 6 Step 5 — 설치 폴더/사용자 데이터 폴더 분리 + 배포 정책 문서화
+- **변경 내용**: SageApp::InitializePaths() → SHGetFolderPathW(CSIDL_APPDATA) 기반으로 변경, GetUserDataDir() 추가(설치 폴더와 사용자 데이터 폴더 명시적 구분), settings.json/Logs/Data/WebViewData → %APPDATA%\SageNexus\ 기준으로 이동, profile.json은 설치 폴더 유지, ArtifactStore/ExecutionHistoryStore/WorkflowStore GetDataDir() 직접 사용으로 통일, ADR-001-deployment-paths.md 경로 분리 정책 확정, SolutionProfile-packaging.md 패키징 단위 문서화
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/37
+- **결과**: pending
+
+---
+
 ## [2026-04-06] feature/phase6-step4-workflow-template
 - **목적**: Phase 6 Step 4 — 기본 Workflow 템플릿 + 사용자 메시지(에러 코드 i18n) 정리
 - **변경 내용**: WorkflowTemplate 도메인 모델, WorkflowService::GetTemplates()/CreateFromTemplate() (내장 템플릿 2종: CSV→XLSX, 웹추출→HTML), workflow.templates::getTemplates/createFromTemplate 브릿지 핸들러, Workflow 페이지 "템플릿에서 시작" 버튼 + 템플릿 선택 모달, resolveErrorMessage() 에러 코드 i18n 매핑, ko.json/en.json 에러 코드 전체 번역 키 추가

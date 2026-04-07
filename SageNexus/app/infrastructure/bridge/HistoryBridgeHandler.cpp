@@ -13,6 +13,12 @@ void HistoryBridgeHandler::RegisterHandlers(BridgeDispatcher& dispatcher)
         {
             return HandleGetHistory(msg);
         });
+
+    dispatcher.RegisterHandler(L"execution.summary", L"getSummary",
+        [this](const BridgeMessage& msg) -> CString
+        {
+            return HandleGetSummary(msg);
+        });
 }
 
 CString HistoryBridgeHandler::HandleGetHistory(const BridgeMessage& msg)
@@ -32,6 +38,36 @@ CString HistoryBridgeHandler::HandleGetHistory(const BridgeMessage& msg)
     CString strRecordsJson = SerializeRecords(arrRecords);
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
            L"\",\"success\":true,\"payload\":{\"records\":" + strRecordsJson + L"}}";
+}
+
+CString HistoryBridgeHandler::HandleGetSummary(const BridgeMessage& msg)
+{
+    HistoryService service;
+    std::vector<ExecutionRecord> arrRecords;
+    CString strError;
+
+    if (!service.GetHistory(arrRecords, strError))
+    {
+        return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+               L"\",\"success\":false,\"error\":{\"code\":\"SNX_HI_002\",\"message\":\"" +
+               EscapeJsonString(strError) + L"\"}}";
+    }
+
+    int nTotal   = (int)arrRecords.size();
+    int nSuccess = 0;
+    int nFailed  = 0;
+
+    for (const ExecutionRecord& rec : arrRecords)
+    {
+        if (rec.m_bSuccess) ++nSuccess;
+        else                ++nFailed;
+    }
+
+    CString strPayload;
+    strPayload.Format(L"{\"total\":%d,\"success\":%d,\"failed\":%d}", nTotal, nSuccess, nFailed);
+
+    return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+           L"\",\"success\":true,\"payload\":" + strPayload + L"}";
 }
 
 CString HistoryBridgeHandler::SerializeRecords(const std::vector<ExecutionRecord>& arrRecords) const

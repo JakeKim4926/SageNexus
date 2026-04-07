@@ -106,6 +106,10 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         OnWorkflowComplete(static_cast<BOOL>(wParam));
         return 0;
 
+    case WM_JOB_QUEUE_CHANGED:
+        OnJobQueueChanged();
+        return 0;
+
     case WM_DESTROY:
         OnDestroy();
         return 0;
@@ -120,7 +124,7 @@ void MainWindow::OnCreate()
 
     m_pWebViewHost = new WebViewHost(m_hWnd);
 
-    CString strUserDataDir = sageMgr.GetAppDir() + L"\\" + WEBVIEW_USER_DATA_FOLDER;
+    CString strUserDataDir = sageMgr.GetUserDataDir() + L"\\" + WEBVIEW_USER_DATA_FOLDER;
     m_pWebViewHost->Initialize(strUserDataDir);
 }
 
@@ -169,6 +173,7 @@ void MainWindow::RegisterBridgeHandlers()
     m_webExtractBridgeHandler.RegisterHandlers(dispatcher, &m_currentTable);
     m_emailBridgeHandler.RegisterHandlers(dispatcher);
     m_apiCallBridgeHandler.RegisterHandlers(dispatcher);
+    m_jobQueueBridgeHandler.RegisterHandlers(dispatcher, m_hWnd);
 }
 
 void MainWindow::NavigateToShell()
@@ -183,8 +188,24 @@ void MainWindow::OnWorkflowProgress(int nStep, int nTotal)
     if (!m_pWebViewHost || !m_pWebViewHost->IsReady())
         return;
 
+    int nPercent = (nTotal > 0) ? (nStep * 100 / nTotal) : 0;
+
+    CString strStepName = m_workflowBridgeHandler.GetCurrentStepName();
+    if (strStepName.IsEmpty())
+        strStepName = m_jobQueueBridgeHandler.GetCurrentStepName();
+
+    CString strEscaped;
+    for (int i = 0; i < strStepName.GetLength(); ++i)
+    {
+        wchar_t ch = strStepName[i];
+        if (ch == L'"')       strEscaped += L"\\\"";
+        else if (ch == L'\\') strEscaped += L"\\\\";
+        else                  strEscaped += ch;
+    }
+
     CString strPayload;
-    strPayload.Format(L"{\"step\":%d,\"total\":%d}", nStep, nTotal);
+    strPayload.Format(L"{\"step\":%d,\"total\":%d,\"percent\":%d,\"stepName\":\"%s\"}",
+        nStep, nTotal, nPercent, (LPCWSTR)strEscaped);
     m_pWebViewHost->SendEvent(L"workflow:progress", strPayload);
 }
 
@@ -196,6 +217,14 @@ void MainWindow::OnWorkflowComplete(BOOL bSuccess)
     CString strPayload;
     strPayload.Format(L"{\"success\":%s}", bSuccess ? L"true" : L"false");
     m_pWebViewHost->SendEvent(L"workflow:complete", strPayload);
+}
+
+void MainWindow::OnJobQueueChanged()
+{
+    if (!m_pWebViewHost || !m_pWebViewHost->IsReady())
+        return;
+
+    m_pWebViewHost->SendEvent(L"queue:changed", L"{}");
 }
 
 void MainWindow::OnDestroy()

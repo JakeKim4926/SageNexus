@@ -43,12 +43,12 @@ BOOL ExecutionHistoryStore::LoadRecords(std::vector<ExecutionRecord>& arrRecords
 
 CString ExecutionHistoryStore::BuildFilePath() const
 {
-    return sageMgr.GetAppDir() + L"\\" + DATA_DIR_NAME + L"\\execution_history.json";
+    return sageMgr.GetDataDir() + L"\\execution_history.json";
 }
 
 BOOL ExecutionHistoryStore::EnsureDataDirectory(CString& strError) const
 {
-    CString strDataDir = sageMgr.GetAppDir() + L"\\" + DATA_DIR_NAME;
+    CString strDataDir = sageMgr.GetDataDir();
     if (!CreateDirectoryW(strDataDir, nullptr))
     {
         DWORD dwErr = GetLastError();

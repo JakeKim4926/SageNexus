@@ -7,6 +7,7 @@
 #define WM_BRIDGE_MESSAGE       (WM_USER + 2)
 #define WM_WORKFLOW_PROGRESS    (WM_USER + 3)
 #define WM_WORKFLOW_COMPLETE    (WM_USER + 4)
+#define WM_JOB_QUEUE_CHANGED    (WM_USER + 5)
 
 // ============================================================
 // Window
@@ -28,9 +29,17 @@ constexpr const wchar_t* WEB_ENTRY_FILE           = L"webui\\public\\index.html"
 // ============================================================
 // Config / Log
 // ============================================================
-constexpr const wchar_t* CONFIG_FILE_NAME = L"settings.json";
-constexpr const wchar_t* DATA_DIR_NAME    = L"Data";
-constexpr const wchar_t* LOG_DIR_NAME     = L"Logs";
+constexpr const wchar_t* CONFIG_FILE_NAME    = L"settings.json";
+constexpr const wchar_t* DATA_DIR_NAME       = L"Data";
+constexpr const wchar_t* LOG_DIR_NAME        = L"Logs";
+
+// ============================================================
+// User Data (AppData)
+// ============================================================
+// 설치 폴더(exe 위치)와 사용자 데이터 폴더(%APPDATA%\SageNexus\)를 분리한다.
+// 설치 폴더: exe, webui, templates, profile.json (회사 지급, 읽기 전용)
+// 사용자 데이터 폴더: settings.json, Logs, Data, WebViewData (쓰기 가능)
+constexpr const wchar_t* USER_DATA_APP_NAME  = L"SageNexus";
 
 // ============================================================
 // Bridge

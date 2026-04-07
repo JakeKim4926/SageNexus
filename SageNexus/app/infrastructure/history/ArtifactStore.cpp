@@ -40,12 +40,12 @@ BOOL ArtifactStore::LoadArtifacts(std::vector<Artifact>& arrArtifacts, CString& 
 
 CString ArtifactStore::BuildFilePath() const
 {
-    return sageMgr.GetAppDir() + L"\\" + DATA_DIR_NAME + L"\\artifacts.json";
+    return sageMgr.GetDataDir() + L"\\artifacts.json";
 }
 
 BOOL ArtifactStore::EnsureDataDirectory(CString& strError) const
 {
-    CString strDataDir = sageMgr.GetAppDir() + L"\\" + DATA_DIR_NAME;
+    CString strDataDir = sageMgr.GetDataDir();
     if (!CreateDirectoryW(strDataDir, nullptr))
     {
         DWORD dwErr = GetLastError();

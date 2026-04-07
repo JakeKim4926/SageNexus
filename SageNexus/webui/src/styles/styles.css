@@ -735,3 +735,26 @@ html, body {
 .plugin-toggle input:checked + .plugin-toggle-slider::before {
     transform: translateX(16px);
 }
+
+/* Summary Cards */
+.summary-card {
+    background: var(--bg2);
+    border: 1px solid var(--bd);
+    border-radius: 8px;
+    padding: 12px 20px;
+    min-width: 90px;
+    text-align: center;
+}
+
+.summary-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--t1);
+    line-height: 1.2;
+}
+
+.summary-label {
+    font-size: 12px;
+    color: var(--t2);
+    margin-top: 4px;
+}

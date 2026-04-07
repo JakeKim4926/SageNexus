@@ -4,6 +4,54 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 
 ---
 
+## [2026-04-08] feature/phase6-step6-i18n-qa
+- **목적**: Phase 6 Step 6 — UI/i18n QA 하드코딩 텍스트 수정 및 누락 키 동기화
+- **변경 내용**: Transform 페이지 meta / Artifact 목록 meta 하드코딩 '행/열' → t('unit.rows'/'unit.cols') 수정, breadcrumb·status-profile data-i18n 추가, LOCALES에 status.profile.default 키 추가, ko.json/en.json에 Phase 6 Step 1~4 누락 키 일괄 동기화 (hs.summary.*, hs.queue.*, wf.template.*, error.SNX_* 등)
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/38
+- **결과**: merged ✅
+
+---
+
+## [2026-04-07] feature/phase6-step5-deployment-paths
+- **목적**: Phase 6 Step 5 — 설치 폴더/사용자 데이터 폴더 분리 + 배포 정책 문서화
+- **변경 내용**: SageApp::InitializePaths() → SHGetFolderPathW(CSIDL_APPDATA) 기반으로 변경, GetUserDataDir() 추가(설치 폴더와 사용자 데이터 폴더 명시적 구분), settings.json/Logs/Data/WebViewData → %APPDATA%\SageNexus\ 기준으로 이동, profile.json은 설치 폴더 유지, ArtifactStore/ExecutionHistoryStore/WorkflowStore GetDataDir() 직접 사용으로 통일, ADR-001-deployment-paths.md 경로 분리 정책 확정, SolutionProfile-packaging.md 패키징 단위 문서화
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/37
+- **결과**: merged ✅
+
+---
+
+## [2026-04-06] feature/phase6-step4-workflow-template
+- **목적**: Phase 6 Step 4 — 기본 Workflow 템플릿 + 사용자 메시지(에러 코드 i18n) 정리
+- **변경 내용**: WorkflowTemplate 도메인 모델, WorkflowService::GetTemplates()/CreateFromTemplate() (내장 템플릿 2종: CSV→XLSX, 웹추출→HTML), workflow.templates::getTemplates/createFromTemplate 브릿지 핸들러, Workflow 페이지 "템플릿에서 시작" 버튼 + 템플릿 선택 모달, resolveErrorMessage() 에러 코드 i18n 매핑, ko.json/en.json 에러 코드 전체 번역 키 추가
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/36
+- **결과**: merged ✅
+
+---
+
+## [2026-04-06] feature/phase6-step3-exception-log-retry
+- **목적**: Phase 6 Step 3 — 예외/로그/복구 흐름 정리
+- **변경 내용**: FileLogger 세션별 로그 파일(YYYYMMDD_HHMMSS.log), JobQueueService::RetryJob() 추가, execution.queue::retryJob 브릿지 핸들러, History 큐 UI 재실행 버튼 + 에러 메시지 레이아웃 개선 + cancelJob 클로저 버그 수정
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/35
+- **결과**: merged ✅
+
+## [2026-04-05] hotfix — Phase 6 Step 1/2 빌드 오류 수정 (develop 직접)
+- **목적**: Phase 6 Step 1/2 작업 이후 발생한 빌드 오류 3건 수정
+- **변경 내용**: ApiCallService.h에 winhttp.h include 추가(HINTERNET 타입 미인식), WorkflowBridgeHandler::GetCurrentStepName public으로 이동, RunSync EmailAction 필드명 m_strTo → m_strRecipients 수정
+- **PR 링크**: develop 직접 커밋 (b53e3ec, cf1f474, e4f30f9)
+- **결과**: merged ✅
+
+## [2026-04-05] feature/phase6-step2-progress-summary
+- **목적**: Phase 6 Step 2 — 진행률/취소/성공-실패 집계 고도화
+- **변경 내용**: WorkflowService m_strCurrentStepName 추적 + GetCurrentStepName(), JobQueueService/BridgeHandler GetCurrentStepName() 노출, MainWindow OnWorkflowProgress에 percent+stepName 포함, execution.queue::cancelAll 추가, execution.summary::getSummary 추가(total/success/failed), Workflow cancel 버튼 cancelAll 통합, History 페이지 집계 카드 UI + summary-card CSS
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/34
+- **결과**: merged ✅
+
+## [2026-04-05] feature/phase6-step1-job-queue
+- **목적**: Phase 6 Step 1 — JobQueue (작업 큐 + 배치 실행)
+- **변경 내용**: ExecutionJob 도메인 모델, JobStatus enum, WM_JOB_QUEUE_CHANGED, JobQueueService(CRITICAL_SECTION 큐 + 워커 스레드 순차 실행 + cancel), WorkflowService::RunSync(동기 실행), JobQueueBridgeHandler(execution.queue::enqueue/getQueue/cancelJob), MainWindow WM_JOB_QUEUE_CHANGED → bridge:queue:changed 이벤트, History 페이지 큐 섹션 + i18n
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/33
+- **결과**: merged ✅
+
 ## [2026-04-04] feature/phase5-step5-i18n
 - **목적**: Phase 5 Step 5 — i18n 고도화 + Output Language QA + Phase 5 마무리
 - **변경 내용**: ko.json/en.json 전체 키 동기화 (workflow/webextract/상태 누락 키 추가), 인라인 LOCALES에 신규 키 100여 개 추가, 하드코딩 텍스트 data-i18n 속성 및 t() 호출로 전면 교체 (Dashboard/DataViewer/Transform/Export/History/Settings/Workflow/WebExtract), 플러그인명 i18n(plugin.name.* 키), WebExtract Output Language 적용(getColDisplayName 사용), bridgeClient.request → sendCommand 버그 수정, Word/PDF Output Language 적용 확인

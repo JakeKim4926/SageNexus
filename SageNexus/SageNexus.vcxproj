@@ -216,6 +216,8 @@
     <ClCompile Include="app\infrastructure\bridge\EmailBridgeHandler.cpp" />
     <ClCompile Include="app\application\services\ApiCallService.cpp" />
     <ClCompile Include="app\infrastructure\bridge\ApiCallBridgeHandler.cpp" />
+    <ClCompile Include="app\application\services\JobQueueService.cpp" />
+    <ClCompile Include="app\infrastructure\bridge\JobQueueBridgeHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -255,6 +257,7 @@
     <ClInclude Include="app\infrastructure\plugins\PluginManager.h" />
     <ClInclude Include="app\domain\model\WorkflowStep.h" />
     <ClInclude Include="app\domain\model\WorkflowDefinition.h" />
+    <ClInclude Include="app\domain\model\WorkflowTemplate.h" />
     <ClInclude Include="app\infrastructure\workflow\WorkflowStore.h" />
     <ClInclude Include="app\application\services\WorkflowService.h" />
     <ClInclude Include="app\infrastructure\bridge\WorkflowBridgeHandler.h" />
@@ -266,6 +269,9 @@
     <ClInclude Include="app\domain\model\ApiCallAction.h" />
     <ClInclude Include="app\application\services\ApiCallService.h" />
     <ClInclude Include="app\infrastructure\bridge\ApiCallBridgeHandler.h" />
+    <ClInclude Include="app\domain\model\ExecutionJob.h" />
+    <ClInclude Include="app\application\services\JobQueueService.h" />
+    <ClInclude Include="app\infrastructure\bridge\JobQueueBridgeHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

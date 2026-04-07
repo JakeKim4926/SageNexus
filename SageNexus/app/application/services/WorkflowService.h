@@ -1,6 +1,7 @@
 #pragma once
 #include "pch.h"
 #include "app/domain/model/WorkflowDefinition.h"
+#include "app/domain/model/WorkflowTemplate.h"
 #include "app/domain/model/TransformStep.h"
 #include "app/domain/model/DataTable.h"
 #include "app/infrastructure/workflow/WorkflowStore.h"
@@ -20,11 +21,16 @@ public:
     BOOL SaveWorkflow(WorkflowDefinition& workflow, CString& strError);
     BOOL DeleteWorkflow(const CString& strId, CString& strError);
 
+    BOOL GetTemplates(std::vector<WorkflowTemplate>& arrTemplates, CString& strError);
+    BOOL CreateFromTemplate(const CString& strTemplateId, WorkflowDefinition& outWorkflow, CString& strError);
+
     BOOL RunWorkflow(const CString& strId, HWND hNotifyWnd, CString& strError);
+    BOOL RunSync(const CString& strId, volatile BOOL& bCancelRef, HWND hNotifyWnd, CString& strError);
     void CancelWorkflow();
 
     BOOL           IsRunning() const;
     const CString& GetLastError() const;
+    const CString& GetCurrentStepName() const;
 
 private:
     struct RunContext
@@ -45,4 +51,5 @@ private:
     BOOL                   m_bRunning;
     volatile BOOL          m_bCancelRequested;
     CString                m_strLastError;
+    CString                m_strCurrentStepName;
 };

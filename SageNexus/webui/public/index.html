@@ -21,7 +21,7 @@
     <!-- Top Bar -->
     <div id="topbar">
         <span class="app-logo">SageNexus</span>
-        <span class="breadcrumb" id="breadcrumb">대시보드</span>
+        <span class="breadcrumb" id="breadcrumb" data-i18n="nav.dashboard">대시보드</span>
         <div class="topbar-actions">
             <!-- Phase 2+에서 액션 버튼 추가 -->
         </div>
@@ -302,7 +302,39 @@
                     <div class="error-title" data-i18n="hs.error.title">이력을 불러오지 못했습니다</div>
                     <div class="error-desc" id="hs-error-message"></div>
                 </div>
+                <!-- 집계 카드 -->
+                <div id="hs-summary-bar" style="display:flex;gap:12px;margin-bottom:16px;">
+                    <div class="summary-card" id="hs-summary-total">
+                        <div class="summary-value" id="hs-summary-total-val">—</div>
+                        <div class="summary-label" data-i18n="hs.summary.total">전체</div>
+                    </div>
+                    <div class="summary-card" id="hs-summary-success">
+                        <div class="summary-value" id="hs-summary-success-val" style="color:var(--ok);">—</div>
+                        <div class="summary-label" data-i18n="hs.summary.success">성공</div>
+                    </div>
+                    <div class="summary-card" id="hs-summary-failed">
+                        <div class="summary-value" id="hs-summary-failed-val" style="color:var(--error,#e74c3c);">—</div>
+                        <div class="summary-label" data-i18n="hs.summary.failed">실패</div>
+                    </div>
+                </div>
+
                 <div class="page-body">
+                    <!-- Job Queue Section -->
+                    <div class="section-card" id="hs-queue-section">
+                        <div class="section-header">
+                            <span class="section-title" data-i18n="hs.queue.title">작업 큐</span>
+                            <button class="btn btn-secondary btn-sm" id="hs-queue-refresh-btn" data-i18n="hs.queue.refresh">새로고침</button>
+                        </div>
+                        <div class="loading-state hidden" id="hs-queue-loading">
+                            <div class="loading-spinner"></div>
+                        </div>
+                        <div class="empty-state hidden" id="hs-queue-empty">
+                            <div class="empty-desc" data-i18n="hs.queue.empty">대기 중인 작업이 없습니다.</div>
+                        </div>
+                        <div id="hs-queue-list"></div>
+                    </div>
+
+                    <!-- Execution History Section -->
                     <div class="table-wrapper hidden" id="hs-state-data">
                         <table class="data-table">
                             <thead>
@@ -336,7 +368,10 @@
                     <div class="empty-icon">▶</div>
                     <div class="empty-title" data-i18n="page.workflow.empty.title">워크플로우가 없습니다</div>
                     <div class="empty-desc" data-i18n="page.workflow.empty.desc">새 워크플로우를 만들어 자동화 작업을 구성하세요.</div>
-                    <button class="btn-primary" id="wf-btn-new-empty" data-i18n="page.workflow.btn.new">새 워크플로우</button>
+                    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:4px;">
+                        <button class="btn-primary" id="wf-btn-new-empty" data-i18n="page.workflow.btn.new">새 워크플로우</button>
+                        <button class="btn-secondary" id="wf-btn-from-template-empty" data-i18n="page.workflow.btn.fromTemplate">템플릿에서 시작</button>
+                    </div>
                 </div>
                 <div class="error-state hidden" id="wf-state-error">
                     <div class="error-icon">⚠</div>
@@ -344,8 +379,9 @@
                     <div class="error-desc" id="wf-error-message"></div>
                 </div>
                 <div class="hidden" id="wf-state-data">
-                    <div class="page-actions" style="margin-bottom:16px;">
+                    <div class="page-actions" style="margin-bottom:16px;display:flex;gap:8px;">
                         <button class="btn-primary" id="wf-btn-new" data-i18n="page.workflow.btn.new">새 워크플로우</button>
+                        <button class="btn-secondary" id="wf-btn-from-template" data-i18n="page.workflow.btn.fromTemplate">템플릿에서 시작</button>
                     </div>
                     <div id="wf-list"></div>
                 </div>
@@ -495,6 +531,17 @@
         </main>
     </div>
 
+    <!-- Template Picker Modal -->
+    <div id="wf-template-modal" class="hidden" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;display:flex;align-items:center;justify-content:center;">
+        <div style="background:var(--bg-primary);border-radius:12px;padding:24px;min-width:360px;max-width:520px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                <div style="font-size:16px;font-weight:600;" data-i18n="wf.template.modal.title">템플릿 선택</div>
+                <button class="btn-secondary" id="wf-template-modal-close" style="padding:4px 10px;font-size:12px;" data-i18n="wf.template.modal.close">닫기</button>
+            </div>
+            <div id="wf-template-list" style="display:flex;flex-direction:column;gap:10px;"></div>
+        </div>
+    </div>
+
     <!-- Status Bar -->
     <div id="statusbar">
         <div class="status-item">
@@ -502,7 +549,7 @@
             <span id="status-text">초기화 중</span>
         </div>
         <div class="status-spacer"></div>
-        <div class="status-item" id="status-profile">프로필: 기본</div>
+        <div class="status-item" id="status-profile" data-i18n="status.profile.default">프로필: 기본</div>
     </div>
 
 </div>
@@ -557,6 +604,7 @@ var LOCALES = {
         'status.initializing': '초기화 중',
         'status.ready':        '준비됨',
         'status.profile.prefix': '프로필',
+        'status.profile.default': '프로필: 기본',
         'state.loading':                 '불러오는 중...',
         'dashboard.stat.totalRuns':      '총 실행 횟수',
         'dashboard.stat.todayRuns':      '오늘 실행',
@@ -612,6 +660,20 @@ var LOCALES = {
         'hs.empty.title':                '실행 이력이 없습니다',
         'hs.empty.desc':                 '데이터를 가져오거나 변환, 내보내기를 실행하면 이력이 쌓입니다.',
         'hs.error.title':                '이력을 불러오지 못했습니다',
+        'hs.summary.total':              '전체',
+        'hs.summary.success':            '성공',
+        'hs.summary.failed':             '실패',
+        'hs.queue.title':                '작업 큐',
+        'hs.queue.refresh':              '새로고침',
+        'hs.queue.empty':                '대기 중인 작업이 없습니다.',
+        'hs.queue.status.pending':       '대기',
+        'hs.queue.status.running':       '실행 중',
+        'hs.queue.status.completed':     '완료',
+        'hs.queue.status.failed':        '실패',
+        'hs.queue.status.cancelled':     '취소됨',
+        'hs.queue.btn.cancel':           '취소',
+        'hs.queue.btn.retry':            '재실행',
+        'hs.queue.retry.failed':         '재실행에 실패했습니다.',
         'hs.op.import':                  '가져오기',
         'hs.op.transform':               '변환',
         'hs.op.export':                  '내보내기',
@@ -662,7 +724,39 @@ var LOCALES = {
         'plugin.name.workflow':          '워크플로우',
         'plugin.name.webextract':        '웹 추출',
         'unit.rows':                     '행',
-        'unit.cols':                     '열'
+        'unit.cols':                     '열',
+        'page.workflow.btn.fromTemplate': '템플릿에서 시작',
+        'wf.template.modal.title':        '템플릿 선택',
+        'wf.template.modal.close':        '닫기',
+        'wf.template.btn.use':            '이 템플릿 사용',
+        'wf.template.steps.count':        '개 단계',
+        'error.SNX_FILE_001':            '파일 경로가 비어 있습니다.',
+        'error.SNX_FILE_002':            '파일을 불러오지 못했습니다.',
+        'error.SNX_TF_001':              '변환할 데이터가 없습니다.',
+        'error.SNX_TF_002':              '데이터를 불러오지 못했습니다.',
+        'error.SNX_TF_003':              '변환 단계가 없습니다.',
+        'error.SNX_TF_004':              '변환에 실패했습니다.',
+        'error.SNX_EX_001':              '내보낼 데이터가 없습니다.',
+        'error.SNX_EX_002':              '저장이 취소되었습니다.',
+        'error.SNX_EX_003':              '파일 저장에 실패했습니다.',
+        'error.SNX_EX_010':              '내보내기에 실패했습니다.',
+        'error.SNX_WEB_001':             'URL이 비어 있습니다.',
+        'error.SNX_WEB_002':             '웹 데이터 추출에 실패했습니다.',
+        'error.SNX_EM_001':              '수신자 주소가 비어 있습니다.',
+        'error.SNX_EM_002':              '이메일 발송에 실패했습니다.',
+        'error.SNX_API_001':             'URL이 비어 있습니다.',
+        'error.SNX_API_002':             'API 요청에 실패했습니다.',
+        'error.SNX_HI_001':              '이력을 불러오지 못했습니다.',
+        'error.SNX_HI_002':              '이력 항목을 찾을 수 없습니다.',
+        'error.LOAD_FAILED':             '데이터를 불러오지 못했습니다.',
+        'error.SAVE_FAILED':             '저장에 실패했습니다.',
+        'error.DELETE_FAILED':           '삭제에 실패했습니다.',
+        'error.RUN_FAILED':              '실행에 실패했습니다.',
+        'error.NOT_FOUND':               '항목을 찾을 수 없습니다.',
+        'error.INVALID_PAYLOAD':         '요청 데이터가 올바르지 않습니다.',
+        'error.ENQUEUE_FAILED':          '작업 큐에 추가하지 못했습니다.',
+        'error.RETRY_FAILED':            '재실행에 실패했습니다.',
+        'error.CREATE_FAILED':           '생성에 실패했습니다.'
     },
     en: {
         'nav.section.main':     'Main',
@@ -711,6 +805,7 @@ var LOCALES = {
         'status.initializing': 'Initializing',
         'status.ready':        'Ready',
         'status.profile.prefix': 'Profile',
+        'status.profile.default': 'Profile: Default',
         'state.loading':                 'Loading...',
         'dashboard.stat.totalRuns':      'Total Runs',
         'dashboard.stat.todayRuns':      'Today',
@@ -766,6 +861,20 @@ var LOCALES = {
         'hs.empty.title':                'No execution history',
         'hs.empty.desc':                 'Run an import, transform, or export to build history.',
         'hs.error.title':                'Failed to load history',
+        'hs.summary.total':              'Total',
+        'hs.summary.success':            'Success',
+        'hs.summary.failed':             'Failed',
+        'hs.queue.title':                'Job Queue',
+        'hs.queue.refresh':              'Refresh',
+        'hs.queue.empty':                'No jobs in queue.',
+        'hs.queue.status.pending':       'Pending',
+        'hs.queue.status.running':       'Running',
+        'hs.queue.status.completed':     'Completed',
+        'hs.queue.status.failed':        'Failed',
+        'hs.queue.status.cancelled':     'Cancelled',
+        'hs.queue.btn.cancel':           'Cancel',
+        'hs.queue.btn.retry':            'Retry',
+        'hs.queue.retry.failed':         'Failed to retry the job.',
         'hs.op.import':                  'Import',
         'hs.op.transform':               'Transform',
         'hs.op.export':                  'Export',
@@ -816,7 +925,39 @@ var LOCALES = {
         'plugin.name.workflow':          'Workflow',
         'plugin.name.webextract':        'Web Extract',
         'unit.rows':                     'rows',
-        'unit.cols':                     'cols'
+        'unit.cols':                     'cols',
+        'page.workflow.btn.fromTemplate': 'Start from Template',
+        'wf.template.modal.title':        'Select Template',
+        'wf.template.modal.close':        'Close',
+        'wf.template.btn.use':            'Use This Template',
+        'wf.template.steps.count':        ' steps',
+        'error.SNX_FILE_001':            'File path is empty.',
+        'error.SNX_FILE_002':            'Failed to load the file.',
+        'error.SNX_TF_001':              'No data to transform.',
+        'error.SNX_TF_002':              'Failed to load data.',
+        'error.SNX_TF_003':              'No transform steps defined.',
+        'error.SNX_TF_004':              'Transform failed.',
+        'error.SNX_EX_001':              'No data to export.',
+        'error.SNX_EX_002':              'Save was cancelled.',
+        'error.SNX_EX_003':              'Failed to save the file.',
+        'error.SNX_EX_010':              'Export failed.',
+        'error.SNX_WEB_001':             'URL is empty.',
+        'error.SNX_WEB_002':             'Failed to extract web data.',
+        'error.SNX_EM_001':              'Recipient address is empty.',
+        'error.SNX_EM_002':              'Failed to send email.',
+        'error.SNX_API_001':             'URL is empty.',
+        'error.SNX_API_002':             'API request failed.',
+        'error.SNX_HI_001':              'Failed to load history.',
+        'error.SNX_HI_002':              'History entry not found.',
+        'error.LOAD_FAILED':             'Failed to load data.',
+        'error.SAVE_FAILED':             'Save failed.',
+        'error.DELETE_FAILED':           'Delete failed.',
+        'error.RUN_FAILED':              'Execution failed.',
+        'error.NOT_FOUND':               'Item not found.',
+        'error.INVALID_PAYLOAD':         'Invalid request data.',
+        'error.ENQUEUE_FAILED':          'Failed to add job to queue.',
+        'error.RETRY_FAILED':            'Retry failed.',
+        'error.CREATE_FAILED':           'Creation failed.'
     }
 };
 
@@ -836,6 +977,15 @@ var PAGE_I18N_KEYS = {
 
 function t(key) {
     return (LOCALES[_interfaceLanguage] || LOCALES['ko'])[key] || key;
+}
+
+function resolveErrorMessage(err) {
+    if (!err) return t('wf.error.unknown');
+    if (err.code) {
+        var mapped = t('error.' + err.code);
+        if (mapped !== 'error.' + err.code) return mapped;
+    }
+    return err.message || t('wf.error.unknown');
 }
 
 function applyLocale() {
@@ -1034,7 +1184,7 @@ function getColDisplayName(col) {
             var nameEl = document.getElementById('tf-filename');
             if (nameEl) nameEl.textContent = td.sourceName || '';
             var metaEl = document.getElementById('tf-meta');
-            if (metaEl) metaEl.textContent = td.rowCount + '행  ·  ' + td.columnCount + '열';
+            if (metaEl) metaEl.textContent = td.rowCount + ' ' + t('unit.rows') + '  ·  ' + td.columnCount + ' ' + t('unit.cols');
             rebuildColumnSelect(td.columns);
         }
     }
@@ -1235,7 +1385,7 @@ function getColDisplayName(col) {
                     var badge = art.format ? art.format.toUpperCase() : '';
                     var name  = art.sourceName || '';
                     var path  = art.filePath   || '';
-                    var meta  = (art.rowCount || 0) + '행 · ' + (art.columnCount || 0) + '열';
+                    var meta  = (art.rowCount || 0) + ' ' + t('unit.rows') + ' · ' + (art.columnCount || 0) + ' ' + t('unit.cols');
                     if (art.createdAt) meta += ' · ' + art.createdAt;
 
                     var div = document.createElement('div');
@@ -1352,6 +1502,16 @@ function getColDisplayName(col) {
         });
     }
 
+    function loadSummary() {
+        bridgeClient.sendCommand('execution.summary', 'getSummary', {})
+            .then(function (result) {
+                document.getElementById('hs-summary-total-val').textContent   = result.total   != null ? result.total   : '—';
+                document.getElementById('hs-summary-success-val').textContent = result.success != null ? result.success : '—';
+                document.getElementById('hs-summary-failed-val').textContent  = result.failed  != null ? result.failed  : '—';
+            })
+            .catch(function () {});
+    }
+
     function loadHistory() {
         setHistoryState('loading');
         bridgeClient.sendCommand('history.query', 'getHistory', {})
@@ -1368,10 +1528,126 @@ function getColDisplayName(col) {
             });
     }
 
+    var STATUS_LABELS = {
+        'pending':   function () { return t('hs.queue.status.pending'); },
+        'running':   function () { return t('hs.queue.status.running'); },
+        'completed': function () { return t('hs.queue.status.completed'); },
+        'failed':    function () { return t('hs.queue.status.failed'); },
+        'cancelled': function () { return t('hs.queue.status.cancelled'); }
+    };
+
+    var STATUS_COLORS = {
+        'pending':   'var(--text-sub)',
+        'running':   'var(--accent)',
+        'completed': 'var(--ok)',
+        'failed':    'var(--error, #e74c3c)',
+        'cancelled': 'var(--text-sub)'
+    };
+
+    function renderQueue(jobs) {
+        var listEl = document.getElementById('hs-queue-list');
+        var emptyEl = document.getElementById('hs-queue-empty');
+        listEl.innerHTML = '';
+
+        if (!jobs || jobs.length === 0) {
+            emptyEl.classList.remove('hidden');
+            return;
+        }
+        emptyEl.classList.add('hidden');
+
+        jobs.forEach(function (job) {
+            var wrapper = document.createElement('div');
+            wrapper.style.cssText = 'border-bottom:1px solid var(--border);padding:8px 0;';
+
+            var row = document.createElement('div');
+            row.className = 'queue-item';
+            row.style.cssText = 'display:flex;align-items:center;gap:12px;';
+
+            var statusEl = document.createElement('span');
+            statusEl.textContent = (STATUS_LABELS[job.status] ? STATUS_LABELS[job.status]() : job.status);
+            statusEl.style.cssText = 'min-width:60px;font-size:12px;font-weight:600;color:' + (STATUS_COLORS[job.status] || 'inherit') + ';';
+            row.appendChild(statusEl);
+
+            var nameEl = document.createElement('span');
+            nameEl.textContent = job.workflowName || job.workflowId;
+            nameEl.style.cssText = 'flex:1;font-size:13px;';
+            row.appendChild(nameEl);
+
+            var timeEl = document.createElement('span');
+            timeEl.textContent = job.createdAt || '';
+            timeEl.style.cssText = 'font-size:12px;color:var(--text-sub);';
+            row.appendChild(timeEl);
+
+            if (job.status === 'pending' || job.status === 'running') {
+                var cancelBtn = document.createElement('button');
+                cancelBtn.textContent = t('hs.queue.btn.cancel');
+                cancelBtn.className = 'btn btn-secondary btn-sm';
+                cancelBtn.addEventListener('click', (function (jobId) {
+                    return function () {
+                        bridgeClient.sendCommand('execution.queue', 'cancelJob', { jobId: jobId });
+                    };
+                }(job.jobId)));
+                row.appendChild(cancelBtn);
+            }
+
+            if (job.status === 'failed' || job.status === 'cancelled') {
+                var retryBtn = document.createElement('button');
+                retryBtn.textContent = t('hs.queue.btn.retry');
+                retryBtn.className = 'btn btn-primary btn-sm';
+                retryBtn.addEventListener('click', (function (jobId) {
+                    return function () {
+                        bridgeClient.sendCommand('execution.queue', 'retryJob', { jobId: jobId })
+                            .catch(function (err) {
+                                alert(err.message || t('hs.queue.retry.failed'));
+                            });
+                    };
+                }(job.jobId)));
+                row.appendChild(retryBtn);
+            }
+
+            wrapper.appendChild(row);
+
+            if (job.errorMessage) {
+                var errEl = document.createElement('div');
+                errEl.textContent = job.errorMessage;
+                errEl.style.cssText = 'font-size:11px;color:var(--error, #e74c3c);margin-top:4px;padding-left:72px;';
+                wrapper.appendChild(errEl);
+            }
+
+            listEl.appendChild(wrapper);
+        });
+    }
+
+    function loadQueue() {
+        var loadingEl = document.getElementById('hs-queue-loading');
+        loadingEl.classList.remove('hidden');
+        bridgeClient.sendCommand('execution.queue', 'getQueue', {})
+            .then(function (result) {
+                loadingEl.classList.add('hidden');
+                renderQueue(result.jobs || []);
+            })
+            .catch(function () {
+                loadingEl.classList.add('hidden');
+            });
+    }
+
+    var refreshBtn = document.getElementById('hs-queue-refresh-btn');
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', function () { loadQueue(); });
+    }
+
+    window.addEventListener('bridge:queue:changed', function () {
+        if (document.getElementById('page-history').classList.contains('active')) {
+            loadQueue();
+        }
+    });
+
     document.querySelectorAll('.nav-item[data-page]').forEach(function (el) {
         el.addEventListener('click', function () {
             if (el.dataset.page === 'history') {
+                loadSummary();
                 loadHistory();
+                loadQueue();
             }
         });
     });
@@ -1627,7 +1903,7 @@ function getColDisplayName(col) {
                 }
             })
             .catch(function (err) {
-                document.getElementById('wf-error-message').textContent = err && err.message ? err.message : t('wf.error.unknown');
+                document.getElementById('wf-error-message').textContent = resolveErrorMessage(err);
                 setWfState('error');
             });
     }
@@ -1865,10 +2141,68 @@ function getColDisplayName(col) {
 
     window.loadWorkflows = loadWorkflows;
 
+    function openTemplateModal() {
+        var modal = document.getElementById('wf-template-modal');
+        var list  = document.getElementById('wf-template-list');
+        modal.classList.remove('hidden');
+        list.innerHTML = '<div style="color:var(--text-secondary);font-size:13px;">' + t('page.workflow.loading') + '</div>';
+
+        bridgeClient.sendCommand('workflow.templates', 'getTemplates', {})
+            .then(function (templates) {
+                list.innerHTML = '';
+                (templates || []).forEach(function (tpl) {
+                    var card = document.createElement('div');
+                    card.className = 'settings-card';
+                    card.style.cssText = 'padding:14px;display:flex;align-items:center;justify-content:space-between;';
+
+                    var info = document.createElement('div');
+                    var nameEl = document.createElement('div');
+                    nameEl.style.cssText = 'font-weight:600;font-size:14px;margin-bottom:4px;';
+                    nameEl.textContent = tpl.name;
+                    var descEl = document.createElement('div');
+                    descEl.style.cssText = 'font-size:12px;color:var(--text-secondary);margin-bottom:4px;';
+                    descEl.textContent = tpl.description;
+                    var countEl = document.createElement('div');
+                    countEl.style.cssText = 'font-size:11px;color:var(--text-secondary);';
+                    countEl.textContent = (tpl.steps ? tpl.steps.length : 0) + t('wf.template.steps.count');
+                    info.appendChild(nameEl);
+                    info.appendChild(descEl);
+                    info.appendChild(countEl);
+
+                    var useBtn = document.createElement('button');
+                    useBtn.className = 'btn-primary';
+                    useBtn.style.cssText = 'font-size:12px;padding:6px 12px;white-space:nowrap;margin-left:12px;';
+                    useBtn.textContent = t('wf.template.btn.use');
+                    useBtn.addEventListener('click', function () {
+                        modal.classList.add('hidden');
+                        bridgeClient.sendCommand('workflow.templates', 'createFromTemplate', { templateId: tpl.id })
+                            .then(function (wf) { openDetail(wf); })
+                            .catch(function (err) {
+                                alert(resolveErrorMessage(err));
+                            });
+                    });
+
+                    card.appendChild(info);
+                    card.appendChild(useBtn);
+                    list.appendChild(card);
+                });
+            })
+            .catch(function (err) {
+                list.innerHTML = '<div style="color:var(--error);font-size:13px;">' + resolveErrorMessage(err) + '</div>';
+            });
+    }
+
+    document.getElementById('wf-template-modal-close').addEventListener('click', function () {
+        document.getElementById('wf-template-modal').classList.add('hidden');
+    });
+    document.getElementById('wf-btn-from-template').addEventListener('click', openTemplateModal);
+    document.getElementById('wf-btn-from-template-empty').addEventListener('click', openTemplateModal);
+
     document.getElementById('wf-btn-new').addEventListener('click', createWorkflow);
     document.getElementById('wf-btn-new-empty').addEventListener('click', createWorkflow);
     document.getElementById('wf-btn-cancel').addEventListener('click', function () {
         bridgeClient.sendCommand('workflow', 'cancelWorkflow', {}).catch(function () {});
+        bridgeClient.sendCommand('execution.queue', 'cancelAll', {}).catch(function () {});
     });
     document.getElementById('wf-btn-back').addEventListener('click', function () { loadWorkflows(); });
     document.getElementById('wf-btn-back2').addEventListener('click', function () { loadWorkflows(); });
@@ -1880,12 +2214,15 @@ function getColDisplayName(col) {
     });
 
     window.addEventListener('bridge:workflow:progress', function (e) {
-        var payload = e.detail || {};
-        var step  = payload.step  || 0;
-        var total = payload.total || 1;
-        var pct   = Math.round((step / total) * 100);
+        var payload   = e.detail || {};
+        var step      = payload.step    || 0;
+        var total     = payload.total   || 1;
+        var pct       = payload.percent != null ? payload.percent : Math.round((step / total) * 100);
+        var stepName  = payload.stepName || '';
         document.getElementById('wf-progress-bar').style.width = pct + '%';
-        document.getElementById('wf-progress-label').textContent = step + ' / ' + total + t('wf.progress.suffix');
+        var label = step + ' / ' + total + t('wf.progress.suffix');
+        if (stepName) label += '  —  ' + stepName;
+        document.getElementById('wf-progress-label').textContent = label;
     });
 
     window.addEventListener('bridge:workflow:complete', function (e) {

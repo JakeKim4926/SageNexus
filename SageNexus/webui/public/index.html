@@ -21,7 +21,7 @@
     <!-- Top Bar -->
     <div id="topbar">
         <span class="app-logo">SageNexus</span>
-        <span class="breadcrumb" id="breadcrumb">대시보드</span>
+        <span class="breadcrumb" id="breadcrumb" data-i18n="nav.dashboard">대시보드</span>
         <div class="topbar-actions">
             <!-- Phase 2+에서 액션 버튼 추가 -->
         </div>
@@ -549,7 +549,7 @@
             <span id="status-text">초기화 중</span>
         </div>
         <div class="status-spacer"></div>
-        <div class="status-item" id="status-profile">프로필: 기본</div>
+        <div class="status-item" id="status-profile" data-i18n="status.profile.default">프로필: 기본</div>
     </div>
 
 </div>
@@ -604,6 +604,7 @@ var LOCALES = {
         'status.initializing': '초기화 중',
         'status.ready':        '준비됨',
         'status.profile.prefix': '프로필',
+        'status.profile.default': '프로필: 기본',
         'state.loading':                 '불러오는 중...',
         'dashboard.stat.totalRuns':      '총 실행 횟수',
         'dashboard.stat.todayRuns':      '오늘 실행',
@@ -804,6 +805,7 @@ var LOCALES = {
         'status.initializing': 'Initializing',
         'status.ready':        'Ready',
         'status.profile.prefix': 'Profile',
+        'status.profile.default': 'Profile: Default',
         'state.loading':                 'Loading...',
         'dashboard.stat.totalRuns':      'Total Runs',
         'dashboard.stat.todayRuns':      'Today',
@@ -1182,7 +1184,7 @@ function getColDisplayName(col) {
             var nameEl = document.getElementById('tf-filename');
             if (nameEl) nameEl.textContent = td.sourceName || '';
             var metaEl = document.getElementById('tf-meta');
-            if (metaEl) metaEl.textContent = td.rowCount + '행  ·  ' + td.columnCount + '열';
+            if (metaEl) metaEl.textContent = td.rowCount + ' ' + t('unit.rows') + '  ·  ' + td.columnCount + ' ' + t('unit.cols');
             rebuildColumnSelect(td.columns);
         }
     }
@@ -1383,7 +1385,7 @@ function getColDisplayName(col) {
                     var badge = art.format ? art.format.toUpperCase() : '';
                     var name  = art.sourceName || '';
                     var path  = art.filePath   || '';
-                    var meta  = (art.rowCount || 0) + '행 · ' + (art.columnCount || 0) + '열';
+                    var meta  = (art.rowCount || 0) + ' ' + t('unit.rows') + ' · ' + (art.columnCount || 0) + ' ' + t('unit.cols');
                     if (art.createdAt) meta += ' · ' + art.createdAt;
 
                     var div = document.createElement('div');

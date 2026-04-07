@@ -4,6 +4,14 @@ SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 
 ---
 
+## [2026-04-08] feature/phase6-step6-i18n-qa
+- **목적**: Phase 6 Step 6 — UI/i18n QA 하드코딩 텍스트 수정 및 누락 키 동기화
+- **변경 내용**: Transform 페이지 meta / Artifact 목록 meta 하드코딩 '행/열' → t('unit.rows'/'unit.cols') 수정, breadcrumb·status-profile data-i18n 추가, LOCALES에 status.profile.default 키 추가, ko.json/en.json에 Phase 6 Step 1~4 누락 키 일괄 동기화 (hs.summary.*, hs.queue.*, wf.template.*, error.SNX_* 등)
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/38
+- **결과**: merged ✅
+
+---
+
 ## [2026-04-07] feature/phase6-step5-deployment-paths
 - **목적**: Phase 6 Step 5 — 설치 폴더/사용자 데이터 폴더 분리 + 배포 정책 문서화
 - **변경 내용**: SageApp::InitializePaths() → SHGetFolderPathW(CSIDL_APPDATA) 기반으로 변경, GetUserDataDir() 추가(설치 폴더와 사용자 데이터 폴더 명시적 구분), settings.json/Logs/Data/WebViewData → %APPDATA%\SageNexus\ 기준으로 이동, profile.json은 설치 폴더 유지, ArtifactStore/ExecutionHistoryStore/WorkflowStore GetDataDir() 직접 사용으로 통일, ADR-001-deployment-paths.md 경로 분리 정책 확정, SolutionProfile-packaging.md 패키징 단위 문서화

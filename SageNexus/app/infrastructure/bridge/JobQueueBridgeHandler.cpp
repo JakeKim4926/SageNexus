@@ -84,6 +84,11 @@ CString JobQueueBridgeHandler::HandleCancelJob(const BridgeMessage& msg)
            L"\",\"success\":true,\"payload\":{\"jobId\":\"" + EscapeJson(strJobId) + L"\"}}";
 }
 
+BOOL JobQueueBridgeHandler::EnqueueWorkflow(const CString& strWorkflowId, const CString& strWorkflowName, HWND hMainWnd, CString& strError)
+{
+    return m_service.EnqueueJob(strWorkflowId, strWorkflowName, hMainWnd, strError);
+}
+
 const CString& JobQueueBridgeHandler::GetCurrentStepName() const
 {
     return m_service.GetCurrentStepName();

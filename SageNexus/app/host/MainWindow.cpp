@@ -1,7 +1,9 @@
 #include "pch.h"
 #include "app/host/MainWindow.h"
 #include "app/application/SageApp.h"
+#include "app/domain/model/ScheduledJob.h"
 #include "Define.h"
+#include <vector>
 
 MainWindow::MainWindow()
     : m_hWnd(nullptr)
@@ -110,6 +112,11 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         OnJobQueueChanged();
         return 0;
 
+    case WM_TIMER:
+        if (wParam == SCHEDULER_TIMER_ID)
+            OnSchedulerTick();
+        return 0;
+
     case WM_DESTROY:
         OnDestroy();
         return 0;
@@ -155,6 +162,7 @@ void MainWindow::OnWebViewReady(BOOL bSuccess)
 
     RegisterBridgeHandlers();
     NavigateToShell();
+    SetTimer(m_hWnd, SCHEDULER_TIMER_ID, SCHEDULER_TICK_MS, nullptr);
 
     RECT rcClient = {};
     GetClientRect(m_hWnd, &rcClient);
@@ -174,6 +182,7 @@ void MainWindow::RegisterBridgeHandlers()
     m_emailBridgeHandler.RegisterHandlers(dispatcher);
     m_apiCallBridgeHandler.RegisterHandlers(dispatcher);
     m_jobQueueBridgeHandler.RegisterHandlers(dispatcher, m_hWnd);
+    m_schedulerBridgeHandler.RegisterHandlers(dispatcher);
 }
 
 void MainWindow::NavigateToShell()
@@ -227,8 +236,31 @@ void MainWindow::OnJobQueueChanged()
     m_pWebViewHost->SendEvent(L"queue:changed", L"{}");
 }
 
+void MainWindow::OnSchedulerTick()
+{
+    std::vector<ScheduledJob> arrDue;
+    m_schedulerBridgeHandler.GetDueJobs(arrDue);
+
+    for (int i = 0; i < (int)arrDue.size(); ++i)
+    {
+        CString strError;
+        m_jobQueueBridgeHandler.EnqueueWorkflow(
+            arrDue[i].m_strWorkflowId,
+            arrDue[i].m_strWorkflowName,
+            m_hWnd,
+            strError);
+
+        if (!strError.IsEmpty())
+        {
+            sageMgr.GetLogger().Log(LogLevel::Warning,
+                L"[Scheduler] 자동 실행 실패: " + arrDue[i].m_strWorkflowId + L" / " + strError);
+        }
+    }
+}
+
 void MainWindow::OnDestroy()
 {
+    KillTimer(m_hWnd, SCHEDULER_TIMER_ID);
     sageMgr.GetLogger().LogInfo(L"MainWindow: Destroyed");
     PostQuitMessage(0);
 }

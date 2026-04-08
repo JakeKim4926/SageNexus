@@ -9,6 +9,7 @@ public:
     JobQueueBridgeHandler();
 
     void RegisterHandlers(BridgeDispatcher& dispatcher, HWND hMainWnd);
+    BOOL EnqueueWorkflow(const CString& strWorkflowId, const CString& strWorkflowName, HWND hMainWnd, CString& strError);
     const CString& GetCurrentStepName() const;
 
 private:

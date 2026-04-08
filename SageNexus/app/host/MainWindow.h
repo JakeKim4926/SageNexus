@@ -12,6 +12,7 @@
 #include "app/infrastructure/bridge/EmailBridgeHandler.h"
 #include "app/infrastructure/bridge/ApiCallBridgeHandler.h"
 #include "app/infrastructure/bridge/JobQueueBridgeHandler.h"
+#include "app/infrastructure/bridge/SchedulerBridgeHandler.h"
 
 class MainWindow
 {
@@ -32,6 +33,7 @@ private:
     void OnWorkflowProgress(int nStep, int nTotal);
     void OnWorkflowComplete(BOOL bSuccess);
     void OnJobQueueChanged();
+    void OnSchedulerTick();
     void OnDestroy();
 
     void NavigateToShell();
@@ -50,4 +52,5 @@ private:
     EmailBridgeHandler        m_emailBridgeHandler;
     ApiCallBridgeHandler      m_apiCallBridgeHandler;
     JobQueueBridgeHandler     m_jobQueueBridgeHandler;
+    SchedulerBridgeHandler    m_schedulerBridgeHandler;
 };

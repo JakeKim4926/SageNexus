@@ -10,6 +10,13 @@
 #define WM_JOB_QUEUE_CHANGED    (WM_USER + 5)
 
 // ============================================================
+// Scheduler
+// ============================================================
+constexpr UINT SCHEDULER_TIMER_ID  = 1001;
+constexpr UINT SCHEDULER_TICK_MS   = 60000;
+constexpr const wchar_t* SCHEDULER_FILE_NAME = L"scheduler.json";
+
+// ============================================================
 // Window
 // ============================================================
 constexpr int WINDOW_DEFAULT_WIDTH  = 1280;

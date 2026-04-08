@@ -218,6 +218,8 @@
     <ClCompile Include="app\infrastructure\bridge\ApiCallBridgeHandler.cpp" />
     <ClCompile Include="app\application\services\JobQueueService.cpp" />
     <ClCompile Include="app\infrastructure\bridge\JobQueueBridgeHandler.cpp" />
+    <ClCompile Include="app\application\services\SchedulerService.cpp" />
+    <ClCompile Include="app\infrastructure\bridge\SchedulerBridgeHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -272,6 +274,9 @@
     <ClInclude Include="app\domain\model\ExecutionJob.h" />
     <ClInclude Include="app\application\services\JobQueueService.h" />
     <ClInclude Include="app\infrastructure\bridge\JobQueueBridgeHandler.h" />
+    <ClInclude Include="app\domain\model\ScheduledJob.h" />
+    <ClInclude Include="app\application\services\SchedulerService.h" />
+    <ClInclude Include="app\infrastructure\bridge\SchedulerBridgeHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -1,5 +1,13 @@
 # PR 작업 로그
 
+---
+
+## [2026-04-09] feature/phase7-step1-scheduler
+- **목적**: Phase 7 Step 1 — Scheduler (예약 실행)
+- **변경 내용**: ScheduledJob 도메인 모델, SchedulerService (scheduler.json 저장·로드 / AddJob / RemoveJob / ToggleJob / GetDueJobs / CalcNextRunAt), SchedulerBridgeHandler (scheduler::getJobs/addJob/removeJob/toggleJob), JobQueueBridgeHandler에 EnqueueWorkflow() 추가, MainWindow WM_TIMER(60초) + OnSchedulerTick, Define.h SCHEDULER_* 상수, Settings 페이지 Scheduler 섹션 (워크플로우 드롭다운 + 시각 입력 + 추가/삭제/토글), ko.json/en.json settings.scheduler.* 키 추가
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/40
+- **결과**: pending
+
 SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 
 ---

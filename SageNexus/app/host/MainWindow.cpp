@@ -183,6 +183,7 @@ void MainWindow::RegisterBridgeHandlers()
     m_apiCallBridgeHandler.RegisterHandlers(dispatcher);
     m_jobQueueBridgeHandler.RegisterHandlers(dispatcher, m_hWnd);
     m_schedulerBridgeHandler.RegisterHandlers(dispatcher);
+    m_apiConnectorBridgeHandler.RegisterHandlers(dispatcher);
 }
 
 void MainWindow::NavigateToShell()

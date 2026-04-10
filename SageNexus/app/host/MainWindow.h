@@ -13,6 +13,7 @@
 #include "app/infrastructure/bridge/ApiCallBridgeHandler.h"
 #include "app/infrastructure/bridge/JobQueueBridgeHandler.h"
 #include "app/infrastructure/bridge/SchedulerBridgeHandler.h"
+#include "app/infrastructure/bridge/ApiConnectorBridgeHandler.h"
 
 class MainWindow
 {
@@ -52,5 +53,6 @@ private:
     EmailBridgeHandler        m_emailBridgeHandler;
     ApiCallBridgeHandler      m_apiCallBridgeHandler;
     JobQueueBridgeHandler     m_jobQueueBridgeHandler;
-    SchedulerBridgeHandler    m_schedulerBridgeHandler;
+    SchedulerBridgeHandler        m_schedulerBridgeHandler;
+    ApiConnectorBridgeHandler     m_apiConnectorBridgeHandler;
 };

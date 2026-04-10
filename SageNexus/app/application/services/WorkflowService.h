@@ -9,6 +9,7 @@
 #include "app/application/services/WebExtractService.h"
 #include "app/application/services/EmailService.h"
 #include "app/application/services/ApiCallService.h"
+#include "app/application/services/ApiConnectorService.h"
 #include <vector>
 
 class WorkflowService
@@ -48,6 +49,7 @@ private:
 
     WorkflowStore          m_store;
     ExecutionHistoryStore  m_historyStore;
+    ApiConnectorService    m_connectorService;
     BOOL                   m_bRunning;
     volatile BOOL          m_bCancelRequested;
     CString                m_strLastError;

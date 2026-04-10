@@ -11,6 +11,7 @@ WorkflowService::WorkflowService()
     : m_bRunning(FALSE)
     , m_bCancelRequested(FALSE)
 {
+    m_connectorService.LoadFromFile();
 }
 
 BOOL WorkflowService::GetWorkflows(std::vector<WorkflowDefinition>& arrWorkflows, CString& strError)
@@ -309,18 +310,37 @@ BOOL WorkflowService::RunSync(const CString& strId, volatile BOOL& bCancelRef, H
         else if (step.m_strStepType == L"callApi")
         {
             ApiCallAction action;
-            action.m_strUrl         = ExtractConfigString(step.m_strConfigJson, L"url");
-            action.m_strMethod      = ExtractConfigString(step.m_strConfigJson, L"method");
-            action.m_strHeadersJson = ExtractConfigString(step.m_strConfigJson, L"headers");
-            action.m_strBody        = ExtractConfigString(step.m_strConfigJson, L"body");
-            CString strTimeout      = ExtractConfigString(step.m_strConfigJson, L"timeout");
-            action.m_nTimeoutMs     = strTimeout.IsEmpty() ? 30000 : _wtoi(strTimeout);
-            if (action.m_strUrl.IsEmpty())
+            CString strConnectorId = ExtractConfigString(step.m_strConfigJson, L"connectorId");
+
+            if (!strConnectorId.IsEmpty())
             {
-                m_strLastError = L"Call API step: url이 비어 있습니다.";
-                bSuccess = FALSE;
-                break;
+                CString strUrlSuffix = ExtractConfigString(step.m_strConfigJson, L"url");
+                CString strMethod    = ExtractConfigString(step.m_strConfigJson, L"method");
+                CString strBody      = ExtractConfigString(step.m_strConfigJson, L"body");
+                CString strBuildErr;
+                if (!m_connectorService.BuildAction(strConnectorId, strUrlSuffix, strMethod, strBody, action, strBuildErr))
+                {
+                    m_strLastError = strBuildErr;
+                    bSuccess = FALSE;
+                    break;
+                }
             }
+            else
+            {
+                action.m_strUrl         = ExtractConfigString(step.m_strConfigJson, L"url");
+                action.m_strMethod      = ExtractConfigString(step.m_strConfigJson, L"method");
+                action.m_strHeadersJson = ExtractConfigString(step.m_strConfigJson, L"headers");
+                action.m_strBody        = ExtractConfigString(step.m_strConfigJson, L"body");
+                CString strTimeout      = ExtractConfigString(step.m_strConfigJson, L"timeout");
+                action.m_nTimeoutMs     = strTimeout.IsEmpty() ? 30000 : _wtoi(strTimeout);
+                if (action.m_strUrl.IsEmpty())
+                {
+                    m_strLastError = L"Call API step: url이 비어 있습니다.";
+                    bSuccess = FALSE;
+                    break;
+                }
+            }
+
             ApiCallService svc;
             if (!svc.CallApi(action, strStepError))
             {
@@ -509,19 +529,35 @@ void WorkflowService::ExecuteSteps(const WorkflowDefinition& workflow, HWND hNot
         else if (step.m_strStepType == L"callApi")
         {
             ApiCallAction action;
-            action.m_strUrl         = ExtractConfigString(step.m_strConfigJson, L"url");
-            action.m_strMethod      = ExtractConfigString(step.m_strConfigJson, L"method");
-            action.m_strHeadersJson = ExtractConfigString(step.m_strConfigJson, L"headers");
-            action.m_strBody        = ExtractConfigString(step.m_strConfigJson, L"body");
+            CString strConnectorId = ExtractConfigString(step.m_strConfigJson, L"connectorId");
 
-            CString strTimeout = ExtractConfigString(step.m_strConfigJson, L"timeout");
-            action.m_nTimeoutMs = strTimeout.IsEmpty() ? 30000 : _wtoi(strTimeout);
-
-            if (action.m_strUrl.IsEmpty())
+            if (!strConnectorId.IsEmpty())
             {
-                m_strLastError = L"Call API step: url이 비어 있습니다.";
-                bSuccess = FALSE;
-                break;
+                CString strUrlSuffix = ExtractConfigString(step.m_strConfigJson, L"url");
+                CString strMethod    = ExtractConfigString(step.m_strConfigJson, L"method");
+                CString strBody      = ExtractConfigString(step.m_strConfigJson, L"body");
+                CString strBuildErr;
+                if (!m_connectorService.BuildAction(strConnectorId, strUrlSuffix, strMethod, strBody, action, strBuildErr))
+                {
+                    m_strLastError = strBuildErr;
+                    bSuccess = FALSE;
+                    break;
+                }
+            }
+            else
+            {
+                action.m_strUrl         = ExtractConfigString(step.m_strConfigJson, L"url");
+                action.m_strMethod      = ExtractConfigString(step.m_strConfigJson, L"method");
+                action.m_strHeadersJson = ExtractConfigString(step.m_strConfigJson, L"headers");
+                action.m_strBody        = ExtractConfigString(step.m_strConfigJson, L"body");
+                CString strTimeout      = ExtractConfigString(step.m_strConfigJson, L"timeout");
+                action.m_nTimeoutMs     = strTimeout.IsEmpty() ? 30000 : _wtoi(strTimeout);
+                if (action.m_strUrl.IsEmpty())
+                {
+                    m_strLastError = L"Call API step: url이 비어 있습니다.";
+                    bSuccess = FALSE;
+                    break;
+                }
             }
 
             ApiCallService svc;

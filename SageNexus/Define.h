@@ -67,3 +67,8 @@ constexpr int CSV_MAX_PREVIEW_ROWS = 1000;
 // API Call
 // ============================================================
 constexpr int API_DEFAULT_TIMEOUT_MS = 30000;
+
+// ============================================================
+// API Connector
+// ============================================================
+constexpr const wchar_t* CONNECTORS_FILE_NAME = L"connectors.json";

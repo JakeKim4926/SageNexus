@@ -193,12 +193,18 @@ BOOL WorkflowService::RunSync(const CString& strId, volatile BOOL& bCancelRef, H
     m_bCancelRequested  = FALSE;
     m_bRunning          = TRUE;
 
-    int   nTotal   = (int)workflow.m_arrSteps.size();
-    BOOL  bSuccess = TRUE;
+    int   nTotal        = (int)workflow.m_arrSteps.size();
+    BOOL  bSuccess      = TRUE;
     DataTable currentTable;
 
-    for (int i = 0; i < nTotal; ++i)
+    constexpr int MAX_STEP_ITERATIONS = 1000;
+    int nIterations = 0;
+    int i           = 0;
+
+    while (i < nTotal && nIterations < MAX_STEP_ITERATIONS)
     {
+        ++nIterations;
+
         if (bCancelRef)
         {
             m_strLastError = L"사용자에 의해 취소되었습니다.";
@@ -207,6 +213,7 @@ BOOL WorkflowService::RunSync(const CString& strId, volatile BOOL& bCancelRef, H
         }
 
         const WorkflowStep& step = workflow.m_arrSteps[i];
+        int nNextIdx = i + 1;
 
         m_strCurrentStepName = step.m_strName.IsEmpty() ? step.m_strStepType : step.m_strName;
         PostMessage(hNotifyWnd, WM_WORKFLOW_PROGRESS, (WPARAM)(i + 1), (LPARAM)nTotal);
@@ -349,6 +356,33 @@ BOOL WorkflowService::RunSync(const CString& strId, volatile BOOL& bCancelRef, H
                 break;
             }
         }
+        else if (step.m_strStepType == L"condition")
+        {
+            ConditionStep cond   = ParseConditionStep(step.m_strConfigJson);
+            BOOL          bMet   = EvaluateCondition(cond, currentTable);
+            CString       strJumpId = bMet ? cond.m_strThenStepId : cond.m_strElseStepId;
+
+            if (!strJumpId.IsEmpty())
+            {
+                int nJump = FindStepIndex(workflow.m_arrSteps, strJumpId);
+                if (nJump < 0)
+                {
+                    m_strLastError = L"Condition step: 연결된 StepId를 찾을 수 없습니다: " + strJumpId;
+                    bSuccess = FALSE;
+                    break;
+                }
+                nNextIdx = nJump;
+            }
+        }
+
+        if (!bSuccess) break;
+        i = nNextIdx;
+    }
+
+    if (nIterations >= MAX_STEP_ITERATIONS)
+    {
+        m_strLastError = L"Workflow 실행 한도를 초과했습니다. 조건 분기 무한 루프를 확인하세요.";
+        bSuccess = FALSE;
     }
 
     ExecutionRecord record;
@@ -402,12 +436,18 @@ void WorkflowService::ExecuteSteps(const WorkflowDefinition& workflow, HWND hNot
 {
     m_bRunning = TRUE;
 
-    int    nTotal    = (int)workflow.m_arrSteps.size();
-    BOOL   bSuccess  = TRUE;
+    int       nTotal        = (int)workflow.m_arrSteps.size();
+    BOOL      bSuccess      = TRUE;
     DataTable currentTable;
 
-    for (int i = 0; i < nTotal; ++i)
+    constexpr int MAX_STEP_ITERATIONS = 1000;
+    int nIterations = 0;
+    int i           = 0;
+
+    while (i < nTotal && nIterations < MAX_STEP_ITERATIONS)
     {
+        ++nIterations;
+
         if (m_bCancelRequested)
         {
             m_strLastError = L"사용자에 의해 취소되었습니다.";
@@ -416,6 +456,7 @@ void WorkflowService::ExecuteSteps(const WorkflowDefinition& workflow, HWND hNot
         }
 
         const WorkflowStep& step = workflow.m_arrSteps[i];
+        int nNextIdx = i + 1;
 
         m_strCurrentStepName = step.m_strName.IsEmpty() ? step.m_strStepType : step.m_strName;
         PostMessage(hNotifyWnd, WM_WORKFLOW_PROGRESS, (WPARAM)(i + 1), (LPARAM)nTotal);
@@ -568,6 +609,33 @@ void WorkflowService::ExecuteSteps(const WorkflowDefinition& workflow, HWND hNot
                 break;
             }
         }
+        else if (step.m_strStepType == L"condition")
+        {
+            ConditionStep cond     = ParseConditionStep(step.m_strConfigJson);
+            BOOL          bMet     = EvaluateCondition(cond, currentTable);
+            CString       strJumpId = bMet ? cond.m_strThenStepId : cond.m_strElseStepId;
+
+            if (!strJumpId.IsEmpty())
+            {
+                int nJump = FindStepIndex(workflow.m_arrSteps, strJumpId);
+                if (nJump < 0)
+                {
+                    m_strLastError = L"Condition step: 연결된 StepId를 찾을 수 없습니다: " + strJumpId;
+                    bSuccess = FALSE;
+                    break;
+                }
+                nNextIdx = nJump;
+            }
+        }
+
+        if (!bSuccess) break;
+        i = nNextIdx;
+    }
+
+    if (nIterations >= MAX_STEP_ITERATIONS)
+    {
+        m_strLastError = L"Workflow 실행 한도를 초과했습니다. 조건 분기 무한 루프를 확인하세요.";
+        bSuccess = FALSE;
     }
 
     ExecutionRecord record;
@@ -694,4 +762,63 @@ std::vector<TransformStep> WorkflowService::ParseTransformSteps(const CString& s
     }
 
     return arrSteps;
+}
+
+ConditionStep WorkflowService::ParseConditionStep(const CString& strConfigJson) const
+{
+    ConditionStep cond;
+    cond.m_strField      = ExtractConfigString(strConfigJson, L"field");
+    cond.m_strOperator   = ExtractConfigString(strConfigJson, L"operator");
+    cond.m_strValue      = ExtractConfigString(strConfigJson, L"value");
+    cond.m_strThenStepId = ExtractConfigString(strConfigJson, L"thenStepId");
+    cond.m_strElseStepId = ExtractConfigString(strConfigJson, L"elseStepId");
+    return cond;
+}
+
+BOOL WorkflowService::EvaluateCondition(const ConditionStep& cond, const DataTable& table) const
+{
+    if (cond.m_strOperator == L"isEmpty")
+        return table.IsEmpty() ? TRUE : FALSE;
+
+    if (cond.m_strOperator == L"isNotEmpty")
+        return !table.IsEmpty() ? TRUE : FALSE;
+
+    if (table.GetRowCount() == 0)
+        return FALSE;
+
+    int nColIdx = table.FindColumnIndex(cond.m_strField);
+    if (nColIdx < 0)
+        return FALSE;
+
+    const DataRow& row = table.GetRow(0);
+    CString strCellValue;
+    if (nColIdx < (int)row.m_arrCells.size())
+        strCellValue = row.m_arrCells[nColIdx];
+
+    if (cond.m_strOperator == L"equals")
+        return strCellValue == cond.m_strValue ? TRUE : FALSE;
+
+    if (cond.m_strOperator == L"notEquals")
+        return strCellValue != cond.m_strValue ? TRUE : FALSE;
+
+    if (cond.m_strOperator == L"contains")
+        return strCellValue.Find(cond.m_strValue) >= 0 ? TRUE : FALSE;
+
+    if (cond.m_strOperator == L"greaterThan")
+        return _wtof(strCellValue) > _wtof(cond.m_strValue) ? TRUE : FALSE;
+
+    if (cond.m_strOperator == L"lessThan")
+        return _wtof(strCellValue) < _wtof(cond.m_strValue) ? TRUE : FALSE;
+
+    return FALSE;
+}
+
+int WorkflowService::FindStepIndex(const std::vector<WorkflowStep>& arrSteps, const CString& strId) const
+{
+    for (int i = 0; i < (int)arrSteps.size(); ++i)
+    {
+        if (arrSteps[i].m_strId == strId)
+            return i;
+    }
+    return -1;
 }

@@ -405,6 +405,7 @@
                             <option value="export" data-i18n="wf.step.type.export">Export (내보내기)</option>
                             <option value="sendEmail" data-i18n="wf.step.type.sendEmail">Send Email (이메일 발송)</option>
                             <option value="callApi" data-i18n="wf.step.type.callApi">Call API (API 전송)</option>
+                            <option value="condition" data-i18n="wf.step.type.condition">Condition (조건 분기)</option>
                         </select>
                         <button class="btn-secondary" id="wf-btn-add-step" data-i18n="wf.btn.addStep">+ Step 추가</button>
                     </div>
@@ -762,6 +763,7 @@ var LOCALES = {
         'wf.step.type.export':           'Export (내보내기)',
         'wf.step.type.sendEmail':        'Send Email (이메일 발송)',
         'wf.step.type.callApi':          'Call API (API 전송)',
+        'wf.step.type.condition':        'Condition (조건 분기)',
         'wf.btn.addStep':                '+ Step 추가',
         'wf.card.btn.edit':              '편집',
         'wf.card.btn.run':               '실행',
@@ -786,6 +788,19 @@ var LOCALES = {
         'wf.field.headers':              '헤더 (JSON)',
         'wf.field.bodyJson':             '본문 (JSON 문자열)',
         'wf.rules.btn.add':              '+ 규칙 추가',
+        'wf.field.condField':            '검사할 컬럼명',
+        'wf.field.condOperator':         '연산자',
+        'wf.field.condValue':            '비교값',
+        'wf.field.condThenStep':         '조건 참 → 이동할 Step',
+        'wf.field.condElseStep':         '조건 거짓 → 이동할 Step',
+        'wf.field.condStepNone':         '(다음 Step으로 계속)',
+        'wf.cond.op.equals':             '같음 (equals)',
+        'wf.cond.op.notEquals':          '다름 (notEquals)',
+        'wf.cond.op.contains':           '포함 (contains)',
+        'wf.cond.op.isEmpty':            '비어 있음 (isEmpty)',
+        'wf.cond.op.isNotEmpty':         '비어 있지 않음 (isNotEmpty)',
+        'wf.cond.op.greaterThan':        '초과 (greaterThan)',
+        'wf.cond.op.lessThan':           '미만 (lessThan)',
         'wx.error.emptyUrl':             'URL을 입력하세요.',
         'plugin.name.import':            '데이터 가져오기',
         'plugin.name.transform':         '데이터 변환',
@@ -991,6 +1006,7 @@ var LOCALES = {
         'wf.step.type.export':           'Export',
         'wf.step.type.sendEmail':        'Send Email',
         'wf.step.type.callApi':          'Call API',
+        'wf.step.type.condition':        'Condition (Branch)',
         'wf.btn.addStep':                '+ Add Step',
         'wf.card.btn.edit':              'Edit',
         'wf.card.btn.run':               'Run',
@@ -1015,6 +1031,19 @@ var LOCALES = {
         'wf.field.headers':              'Headers (JSON)',
         'wf.field.bodyJson':             'Body (JSON string)',
         'wf.rules.btn.add':              '+ Add Rule',
+        'wf.field.condField':            'Column to check',
+        'wf.field.condOperator':         'Operator',
+        'wf.field.condValue':            'Compare value',
+        'wf.field.condThenStep':         'If true → jump to Step',
+        'wf.field.condElseStep':         'If false → jump to Step',
+        'wf.field.condStepNone':         '(continue to next Step)',
+        'wf.cond.op.equals':             'Equals',
+        'wf.cond.op.notEquals':          'Not equals',
+        'wf.cond.op.contains':           'Contains',
+        'wf.cond.op.isEmpty':            'Is empty',
+        'wf.cond.op.isNotEmpty':         'Is not empty',
+        'wf.cond.op.greaterThan':        'Greater than',
+        'wf.cond.op.lessThan':           'Less than',
         'wx.error.emptyUrl':             'Please enter a URL.',
         'plugin.name.import':            'Data Import',
         'plugin.name.transform':         'Data Transform',
@@ -2409,6 +2438,32 @@ function getColDisplayName(col) {
             form.appendChild(makeField(t('wf.field.subject'), 'text', config.subject || '', function (v) { updateConfig(idx, 'subject', v); }));
             form.appendChild(makeField(t('wf.field.body'), 'text', config.body || '', function (v) { updateConfig(idx, 'body', v); }));
             form.appendChild(makeField(t('wf.field.attachFilePath'), 'text', config.attachFilePath || '', function (v) { updateConfig(idx, 'attachFilePath', v); }));
+        } else if (step.stepType === 'condition') {
+            var ops = ['equals', 'notEquals', 'contains', 'isEmpty', 'isNotEmpty', 'greaterThan', 'lessThan'];
+            form.appendChild(makeField(t('wf.field.condField'), 'text', config.field || '', function (v) { updateConfig(idx, 'field', v); }));
+
+            var opDiv = document.createElement('div');
+            opDiv.style.cssText = 'margin-bottom:8px;';
+            var opLabel = document.createElement('label');
+            opLabel.style.cssText = 'font-size:12px;color:var(--text-secondary);display:block;margin-bottom:4px;';
+            opLabel.textContent = t('wf.field.condOperator');
+            var opSel = document.createElement('select');
+            opSel.style.cssText = 'width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg-secondary);color:var(--text-primary);font-size:13px;';
+            ops.forEach(function (op) {
+                var opt = document.createElement('option');
+                opt.value = op;
+                opt.textContent = t('wf.cond.op.' + op);
+                if ((config.operator || 'equals') === op) opt.selected = true;
+                opSel.appendChild(opt);
+            });
+            opSel.addEventListener('change', function () { updateConfig(idx, 'operator', opSel.value); });
+            opDiv.appendChild(opLabel);
+            opDiv.appendChild(opSel);
+            form.appendChild(opDiv);
+
+            form.appendChild(makeField(t('wf.field.condValue'), 'text', config.value || '', function (v) { updateConfig(idx, 'value', v); }));
+            form.appendChild(makeStepSelector(t('wf.field.condThenStep'), config.thenStepId || '', idx, function (v) { updateConfig(idx, 'thenStepId', v); }));
+            form.appendChild(makeStepSelector(t('wf.field.condElseStep'), config.elseStepId || '', idx, function (v) { updateConfig(idx, 'elseStepId', v); }));
         } else if (step.stepType === 'callApi') {
             // 커넥터 선택
             var connDiv = document.createElement('div');
@@ -2472,6 +2527,32 @@ function getColDisplayName(col) {
         inp.style.cssText = 'width:90px;padding:5px 6px;border:1px solid var(--border);border-radius:4px;background:var(--bg-secondary);color:var(--text-primary);font-size:12px;';
         inp.addEventListener('input', function () { onChange(inp.value); });
         return inp;
+    }
+
+    function makeStepSelector(label, currentVal, currentIdx, onChange) {
+        var wrap = document.createElement('div');
+        wrap.style.cssText = 'margin-bottom:8px;';
+        var lbl = document.createElement('label');
+        lbl.style.cssText = 'font-size:12px;color:var(--text-secondary);display:block;margin-bottom:4px;';
+        lbl.textContent = label;
+        var sel = document.createElement('select');
+        sel.style.cssText = 'width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg-secondary);color:var(--text-primary);font-size:13px;';
+        var noneOpt = document.createElement('option');
+        noneOpt.value = '';
+        noneOpt.textContent = t('wf.field.condStepNone');
+        sel.appendChild(noneOpt);
+        (_editingWorkflow.steps || []).forEach(function (s, sIdx) {
+            if (sIdx === currentIdx) return;
+            var opt = document.createElement('option');
+            opt.value = s.id || '';
+            opt.textContent = (s.name || s.stepType || ('Step ' + (sIdx + 1))) + (s.id ? ' (' + s.id.substring(0, 8) + '...)' : '');
+            if (currentVal && currentVal === (s.id || '')) opt.selected = true;
+            sel.appendChild(opt);
+        });
+        sel.addEventListener('change', function () { onChange(sel.value); });
+        wrap.appendChild(lbl);
+        wrap.appendChild(sel);
+        return wrap;
     }
 
     function updateConfig(idx, key, value) {

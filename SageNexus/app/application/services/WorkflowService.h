@@ -3,6 +3,7 @@
 #include "app/domain/model/WorkflowDefinition.h"
 #include "app/domain/model/WorkflowTemplate.h"
 #include "app/domain/model/TransformStep.h"
+#include "app/domain/model/ConditionStep.h"
 #include "app/domain/model/DataTable.h"
 #include "app/infrastructure/workflow/WorkflowStore.h"
 #include "app/infrastructure/history/ExecutionHistoryStore.h"
@@ -46,6 +47,9 @@ private:
 
     CString                        ExtractConfigString(const CString& strConfigJson, const CString& strKey) const;
     std::vector<TransformStep>     ParseTransformSteps(const CString& strConfigJson) const;
+    ConditionStep                  ParseConditionStep(const CString& strConfigJson) const;
+    BOOL                           EvaluateCondition(const ConditionStep& cond, const DataTable& table) const;
+    int                            FindStepIndex(const std::vector<WorkflowStep>& arrSteps, const CString& strId) const;
 
     WorkflowStore          m_store;
     ExecutionHistoryStore  m_historyStore;

@@ -6,7 +6,7 @@
 - **목적**: Phase 7 Step 3 — Workflow 조건 분기 (Conditional Step)
 - **변경 내용**: ConditionStep 도메인 모델 (field/operator/value/thenStepId/elseStepId), WorkflowService 실행 루프 for→while 리팩토링, EvaluateCondition/ParseConditionStep/FindStepIndex 메서드 추가, MAX_STEP_ITERATIONS(1000) 무한루프 가드, ExecuteSteps/RunSync 양쪽 모두 condition step 처리 추가, WebUI Workflow 편집기 condition 전용 폼(field/operator select/value/thenStep/elseStep), makeStepSelector 헬퍼, ko/en i18n 키 14개 추가
 - **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/42
-- **결과**: pending
+- **결과**: merged ✅
 
 ## [2026-04-10] feature/api-connector
 - **목적**: Phase 7 Step 2 — API Connector 고도화

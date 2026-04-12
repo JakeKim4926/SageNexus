@@ -2,6 +2,22 @@
 
 ---
 
+## [2026-04-12] fix/code-review
+- **목적**: 전체 코드 리뷰 기반 구조 수정 — Blocker 2건 + Major 4건 + Minor 4건 해소
+- **변경 내용**:
+  - [Blocker] pch.h에 escape-aware JsonExtractString 공유 헬퍼 추가 → configJson round-trip 깨짐 수정
+  - [Blocker] WorkflowService::ExecuteWorkflowCore에서 sendEmail recipients 키 "to"→"recipients" 통일
+  - [Major] WorkflowService 이중 실행 경로(RunWorkflow/RunSync)를 ExecuteWorkflowCore로 통합
+  - [Major] JobQueueService 스레드 안전성: volatile LONG + InterlockedExchange/CompareExchange, CRITICAL_SECTION으로 m_strRunningJobId 보호
+  - [Major] WorkflowBridgeHandler가 JobQueueBridgeHandler::EnqueueWorkflow 경유하도록 수정 — 별도 WorkflowService 직접 실행 제거
+  - [Major] 워크플로 완료 후 m_currentTable 미갱신 수정: WorkflowService::GetLastOutputTable + MainWindow::UpdateCurrentTableFromWorkflow
+  - [Minor] SageApp::Shutdown 조기 종료 조건 오류 수정 (m_pConfigStore → m_pLogger)
+  - [Minor] STEP_TYPE_* 상수 Define.h 추가, 전체 문자열 리터럴 직접 비교 제거
+  - [Minor] ApiCallAction 기본 생성자 추가 (m_nTimeoutMs = 30000)
+  - [Minor] 12개 BridgeHandler 중복 구현(JsonEscapeString/JsonExtractString/JsonExtractBool) 전량 제거, pch.h 공유 헬퍼로 통일
+- **PR 링크**: (pending)
+- **결과**: pending
+
 ## [2026-04-11] feature/conditional-step
 - **목적**: Phase 7 Step 3 — Workflow 조건 분기 (Conditional Step)
 - **변경 내용**: ConditionStep 도메인 모델 (field/operator/value/thenStepId/elseStepId), WorkflowService 실행 루프 for→while 리팩토링, EvaluateCondition/ParseConditionStep/FindStepIndex 메서드 추가, MAX_STEP_ITERATIONS(1000) 무한루프 가드, ExecuteSteps/RunSync 양쪽 모두 condition step 처리 추가, WebUI Workflow 편집기 condition 전용 폼(field/operator select/value/thenStep/elseStep), makeStepSelector 헬퍼, ko/en i18n 키 14개 추가

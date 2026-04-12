@@ -15,8 +15,8 @@
   - [Minor] STEP_TYPE_* 상수 Define.h 추가, 전체 문자열 리터럴 직접 비교 제거
   - [Minor] ApiCallAction 기본 생성자 추가 (m_nTimeoutMs = 30000)
   - [Minor] 12개 BridgeHandler 중복 구현(JsonEscapeString/JsonExtractString/JsonExtractBool) 전량 제거, pch.h 공유 헬퍼로 통일
-- **PR 링크**: (pending)
-- **결과**: pending
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/43
+- **결과**: merged ✅
 
 ## [2026-04-11] feature/conditional-step
 - **목적**: Phase 7 Step 3 — Workflow 조건 분기 (Conditional Step)

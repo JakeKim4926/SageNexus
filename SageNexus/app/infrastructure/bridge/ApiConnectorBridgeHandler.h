@@ -18,8 +18,6 @@ private:
     CString HandleTestConnector(const BridgeMessage& msg);
 
     CString SerializeConnector(const ApiConnector& conn) const;
-    CString ExtractPayloadString(const CString& strJson, const CString& strKey) const;
-    CString EscapeJson(const CString& str) const;
 
     ApiConnectorService m_service;
 };

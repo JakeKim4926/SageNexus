@@ -177,11 +177,12 @@ void MainWindow::RegisterBridgeHandlers()
     m_exportBridgeHandler.RegisterHandlers(dispatcher, m_hWnd, &m_currentTable);
     m_historyBridgeHandler.RegisterHandlers(dispatcher);
     m_settingsBridgeHandler.RegisterHandlers(dispatcher);
-    m_workflowBridgeHandler.RegisterHandlers(dispatcher, m_hWnd);
+    // WorkflowBridgeHandler는 JobQueueBridgeHandler를 통해 실행 — WorkflowService 인스턴스 중복 방지
+    m_jobQueueBridgeHandler.RegisterHandlers(dispatcher, m_hWnd);
+    m_workflowBridgeHandler.RegisterHandlers(dispatcher, m_hWnd, &m_jobQueueBridgeHandler);
     m_webExtractBridgeHandler.RegisterHandlers(dispatcher, &m_currentTable);
     m_emailBridgeHandler.RegisterHandlers(dispatcher);
     m_apiCallBridgeHandler.RegisterHandlers(dispatcher);
-    m_jobQueueBridgeHandler.RegisterHandlers(dispatcher, m_hWnd);
     m_schedulerBridgeHandler.RegisterHandlers(dispatcher);
     m_apiConnectorBridgeHandler.RegisterHandlers(dispatcher);
 }
@@ -200,22 +201,12 @@ void MainWindow::OnWorkflowProgress(int nStep, int nTotal)
 
     int nPercent = (nTotal > 0) ? (nStep * 100 / nTotal) : 0;
 
-    CString strStepName = m_workflowBridgeHandler.GetCurrentStepName();
-    if (strStepName.IsEmpty())
-        strStepName = m_jobQueueBridgeHandler.GetCurrentStepName();
-
-    CString strEscaped;
-    for (int i = 0; i < strStepName.GetLength(); ++i)
-    {
-        wchar_t ch = strStepName[i];
-        if (ch == L'"')       strEscaped += L"\\\"";
-        else if (ch == L'\\') strEscaped += L"\\\\";
-        else                  strEscaped += ch;
-    }
+    // 모든 실행이 JobQueue 경유이므로 JobQueueBridgeHandler에서만 조회한다.
+    CString strStepName = m_jobQueueBridgeHandler.GetCurrentStepName();
 
     CString strPayload;
     strPayload.Format(L"{\"step\":%d,\"total\":%d,\"percent\":%d,\"stepName\":\"%s\"}",
-        nStep, nTotal, nPercent, (LPCWSTR)strEscaped);
+        nStep, nTotal, nPercent, (LPCWSTR)JsonEscapeString(strStepName));
     m_pWebViewHost->SendEvent(L"workflow:progress", strPayload);
 }
 
@@ -224,9 +215,20 @@ void MainWindow::OnWorkflowComplete(BOOL bSuccess)
     if (!m_pWebViewHost || !m_pWebViewHost->IsReady())
         return;
 
+    // Workflow 성공 시 결과 DataTable을 m_currentTable에 반영 — Data Viewer에서 즉시 확인 가능
+    if (bSuccess)
+        UpdateCurrentTableFromWorkflow();
+
     CString strPayload;
     strPayload.Format(L"{\"success\":%s}", bSuccess ? L"true" : L"false");
     m_pWebViewHost->SendEvent(L"workflow:complete", strPayload);
+}
+
+void MainWindow::UpdateCurrentTableFromWorkflow()
+{
+    const DataTable& lastTable = m_jobQueueBridgeHandler.GetLastOutputTable();
+    if (!lastTable.IsEmpty())
+        m_currentTable = lastTable;
 }
 
 void MainWindow::OnJobQueueChanged()

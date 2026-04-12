@@ -18,9 +18,6 @@ private:
     CString HandleToggleJob(const BridgeMessage& msg);
 
     CString SerializeJob(const ScheduledJob& job) const;
-    CString ExtractPayloadString(const CString& strJson, const CString& strKey) const;
-    BOOL    ExtractPayloadBool(const CString& strJson, const CString& strKey) const;
-    CString EscapeJson(const CString& str) const;
 
     SchedulerService m_service;
 };

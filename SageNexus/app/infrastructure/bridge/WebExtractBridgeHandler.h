@@ -13,8 +13,6 @@ public:
 
 private:
     CString HandleFetchAndExtract(const BridgeMessage& msg);
-    CString ExtractPayloadString(const CString& strJson, const CString& strKey) const;
-    CString EscapeJson(const CString& str) const;
 
     WebExtractService  m_service;
     DataTable*         m_pCurrentTable;

@@ -36,7 +36,7 @@ CString TransformBridgeHandler::HandleApplySteps(const BridgeMessage& msg)
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
                L"\",\"success\":false,\"payload\":null,"
                L"\"error\":{\"code\":\"SNX_TF_002\",\"message\":\"" +
-               EscapeJsonString(strParseError) + L"\"}}";
+               JsonEscapeString(strParseError) + L"\"}}";
     }
 
     if (arrSteps.empty())
@@ -64,7 +64,7 @@ CString TransformBridgeHandler::HandleApplySteps(const BridgeMessage& msg)
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
                L"\",\"success\":false,\"payload\":null,"
                L"\"error\":{\"code\":\"SNX_TF_004\",\"message\":\"" +
-               EscapeJsonString(strError) + L"\"}}";
+               JsonEscapeString(strError) + L"\"}}";
     }
 
     ExecutionHistoryStore historyStore;
@@ -205,70 +205,6 @@ std::vector<CString> TransformBridgeHandler::SplitJsonObjects(const CString& str
     return arrResult;
 }
 
-CString TransformBridgeHandler::ExtractField(const CString& strJson, const CString& strKey) const
-{
-    CString strSearch = L"\"" + strKey + L"\"";
-    int nPos = strJson.Find(strSearch);
-    if (nPos < 0)
-        return L"";
-
-    int nColon = strJson.Find(L':', nPos + strSearch.GetLength());
-    if (nColon < 0)
-        return L"";
-
-    int nValueStart = nColon + 1;
-    while (nValueStart < strJson.GetLength() && strJson[nValueStart] == L' ')
-        ++nValueStart;
-
-    if (nValueStart >= strJson.GetLength() || strJson[nValueStart] != L'"')
-        return L"";
-
-    int nEnd = nValueStart + 1;
-    while (nEnd < strJson.GetLength())
-    {
-        if (strJson[nEnd] == L'\\')
-        {
-            nEnd += 2;
-            continue;
-        }
-        if (strJson[nEnd] == L'"')
-            break;
-        ++nEnd;
-    }
-
-    if (nEnd >= strJson.GetLength())
-        return L"";
-
-    return strJson.Mid(nValueStart + 1, nEnd - nValueStart - 1);
-}
-
-CString TransformBridgeHandler::UnescapeJsonString(const CString& str) const
-{
-    CString strResult;
-    for (int i = 0; i < str.GetLength(); ++i)
-    {
-        if (str[i] == L'\\' && i + 1 < str.GetLength())
-        {
-            ++i;
-            switch (str[i])
-            {
-            case L'"':  strResult += L'"';  break;
-            case L'\\': strResult += L'\\'; break;
-            case L'/':  strResult += L'/';  break;
-            case L'n':  strResult += L'\n'; break;
-            case L'r':  strResult += L'\r'; break;
-            case L't':  strResult += L'\t'; break;
-            default:    strResult += str[i]; break;
-            }
-        }
-        else
-        {
-            strResult += str[i];
-        }
-    }
-    return strResult;
-}
-
 CString TransformBridgeHandler::SerializeTableToJson(const DataTable& table) const
 {
     std::wstring json;
@@ -276,7 +212,7 @@ CString TransformBridgeHandler::SerializeTableToJson(const DataTable& table) con
     json += L"{";
 
     json += L"\"sourceName\":\"";
-    json += (LPCWSTR)EscapeJsonString(table.GetSourceName());
+    json += (LPCWSTR)JsonEscapeString(table.GetSourceName());
     json += L"\",";
 
     wchar_t buf[32];
@@ -296,13 +232,13 @@ CString TransformBridgeHandler::SerializeTableToJson(const DataTable& table) con
         if (i > 0) json += L",";
         const DataColumn& col = table.GetColumn(i);
         json += L"{\"internalName\":\"";
-        json += (LPCWSTR)EscapeJsonString(col.m_strInternalName);
+        json += (LPCWSTR)JsonEscapeString(col.m_strInternalName);
         json += L"\",\"displayNameKo\":\"";
         CString strDisplayKo = col.m_strDisplayNameKo.IsEmpty() ? col.m_strInternalName : col.m_strDisplayNameKo;
-        json += (LPCWSTR)EscapeJsonString(strDisplayKo);
+        json += (LPCWSTR)JsonEscapeString(strDisplayKo);
         json += L"\",\"displayNameEn\":\"";
         CString strDisplayEn = col.m_strDisplayNameEn.IsEmpty() ? col.m_strInternalName : col.m_strDisplayNameEn;
-        json += (LPCWSTR)EscapeJsonString(strDisplayEn);
+        json += (LPCWSTR)JsonEscapeString(strDisplayEn);
         json += L"\"}";
     }
     json += L"],";
@@ -321,7 +257,7 @@ CString TransformBridgeHandler::SerializeTableToJson(const DataTable& table) con
         {
             if (j > 0) json += L",";
             json += L"\"";
-            json += (LPCWSTR)EscapeJsonString(row.m_arrCells[j]);
+            json += (LPCWSTR)JsonEscapeString(row.m_arrCells[j]);
             json += L"\"";
         }
         json += L"]";
@@ -330,23 +266,4 @@ CString TransformBridgeHandler::SerializeTableToJson(const DataTable& table) con
 
     json += L"}";
     return CString(json.c_str());
-}
-
-CString TransformBridgeHandler::EscapeJsonString(const CString& str) const
-{
-    CString strResult;
-    for (int i = 0; i < str.GetLength(); ++i)
-    {
-        wchar_t ch = str[i];
-        switch (ch)
-        {
-        case L'"':  strResult += L"\\\""; break;
-        case L'\\': strResult += L"\\\\"; break;
-        case L'\n': strResult += L"\\n";  break;
-        case L'\r': strResult += L"\\r";  break;
-        case L'\t': strResult += L"\\t";  break;
-        default:    strResult += ch;      break;
-        }
-    }
-    return strResult;
 }

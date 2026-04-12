@@ -112,7 +112,7 @@ CString ExportBridgeHandler::HandleExportCsv(const BridgeMessage& msg, HWND hPar
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
                L"\",\"success\":false,\"payload\":null,"
                L"\"error\":{\"code\":\"SNX_EX_003\",\"message\":\"" +
-               EscapeJsonString(strError) + L"\"}}";
+               JsonEscapeString(strError) + L"\"}}";
     }
 
     ExecutionHistoryStore historyStore;
@@ -138,7 +138,7 @@ CString ExportBridgeHandler::HandleExportCsv(const BridgeMessage& msg, HWND hPar
 
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
            L"\",\"success\":true,\"payload\":{\"filePath\":\"" +
-           EscapeJsonString(strFilePath) + L"\"}}";
+           JsonEscapeString(strFilePath) + L"\"}}";
 }
 
 CString ExportBridgeHandler::HandleExportXlsx(const BridgeMessage& msg, HWND hParentWnd)
@@ -199,7 +199,7 @@ CString ExportBridgeHandler::HandleExportXlsx(const BridgeMessage& msg, HWND hPa
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
                L"\",\"success\":false,\"payload\":null,"
                L"\"error\":{\"code\":\"SNX_EX_003\",\"message\":\"" +
-               EscapeJsonString(strError) + L"\"}}";
+               JsonEscapeString(strError) + L"\"}}";
     }
 
     ExecutionHistoryStore historyStore;
@@ -225,7 +225,7 @@ CString ExportBridgeHandler::HandleExportXlsx(const BridgeMessage& msg, HWND hPa
 
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
            L"\",\"success\":true,\"payload\":{\"filePath\":\"" +
-           EscapeJsonString(strFilePath) + L"\"}}";
+           JsonEscapeString(strFilePath) + L"\"}}";
 }
 
 CString ExportBridgeHandler::HandleExportHtml(const BridgeMessage& msg, HWND hParentWnd)
@@ -286,7 +286,7 @@ CString ExportBridgeHandler::HandleExportHtml(const BridgeMessage& msg, HWND hPa
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
                L"\",\"success\":false,\"payload\":null,"
                L"\"error\":{\"code\":\"SNX_EX_003\",\"message\":\"" +
-               EscapeJsonString(strError) + L"\"}}";
+               JsonEscapeString(strError) + L"\"}}";
     }
 
     ExecutionHistoryStore historyStore;
@@ -312,7 +312,7 @@ CString ExportBridgeHandler::HandleExportHtml(const BridgeMessage& msg, HWND hPa
 
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
            L"\",\"success\":true,\"payload\":{\"filePath\":\"" +
-           EscapeJsonString(strFilePath) + L"\"}}";
+           JsonEscapeString(strFilePath) + L"\"}}";
 }
 
 CString ExportBridgeHandler::HandleExportWord(const BridgeMessage& msg, HWND hParentWnd)
@@ -373,7 +373,7 @@ CString ExportBridgeHandler::HandleExportWord(const BridgeMessage& msg, HWND hPa
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
                L"\",\"success\":false,\"payload\":null,"
                L"\"error\":{\"code\":\"SNX_EX_003\",\"message\":\"" +
-               EscapeJsonString(strError) + L"\"}}";
+               JsonEscapeString(strError) + L"\"}}";
     }
 
     ExecutionHistoryStore historyStore;
@@ -399,7 +399,7 @@ CString ExportBridgeHandler::HandleExportWord(const BridgeMessage& msg, HWND hPa
 
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
            L"\",\"success\":true,\"payload\":{\"filePath\":\"" +
-           EscapeJsonString(strFilePath) + L"\"}}";
+           JsonEscapeString(strFilePath) + L"\"}}";
 }
 
 CString ExportBridgeHandler::HandleExportPdf(const BridgeMessage& msg, HWND hParentWnd)
@@ -460,7 +460,7 @@ CString ExportBridgeHandler::HandleExportPdf(const BridgeMessage& msg, HWND hPar
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
                L"\",\"success\":false,\"payload\":null,"
                L"\"error\":{\"code\":\"SNX_EX_003\",\"message\":\"" +
-               EscapeJsonString(strError) + L"\"}}";
+               JsonEscapeString(strError) + L"\"}}";
     }
 
     ExecutionHistoryStore historyStore;
@@ -486,7 +486,7 @@ CString ExportBridgeHandler::HandleExportPdf(const BridgeMessage& msg, HWND hPar
 
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
            L"\",\"success\":true,\"payload\":{\"filePath\":\"" +
-           EscapeJsonString(strFilePath) + L"\"}}";
+           JsonEscapeString(strFilePath) + L"\"}}";
 }
 
 CString ExportBridgeHandler::HandleGetArtifacts(const BridgeMessage& msg)
@@ -500,7 +500,7 @@ CString ExportBridgeHandler::HandleGetArtifacts(const BridgeMessage& msg)
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
                L"\",\"success\":false,\"payload\":null,"
                L"\"error\":{\"code\":\"SNX_EX_010\",\"message\":\"" +
-               EscapeJsonString(strError) + L"\"}}";
+               JsonEscapeString(strError) + L"\"}}";
     }
 
     CString strItems;
@@ -515,11 +515,11 @@ CString ExportBridgeHandler::HandleGetArtifacts(const BridgeMessage& msg)
         _itow_s(art.m_nColumnCount, szCols, 16, 10);
 
         CString strItem = L"{";
-        strItem += L"\"id\":\""         + EscapeJsonString(art.m_strId)         + L"\",";
-        strItem += L"\"sourceName\":\"" + EscapeJsonString(art.m_strSourceName) + L"\",";
-        strItem += L"\"filePath\":\""   + EscapeJsonString(art.m_strFilePath)   + L"\",";
-        strItem += L"\"format\":\""     + EscapeJsonString(art.m_strFormat)     + L"\",";
-        strItem += L"\"createdAt\":\""  + EscapeJsonString(art.m_strCreatedAt)  + L"\",";
+        strItem += L"\"id\":\""         + JsonEscapeString(art.m_strId)         + L"\",";
+        strItem += L"\"sourceName\":\"" + JsonEscapeString(art.m_strSourceName) + L"\",";
+        strItem += L"\"filePath\":\""   + JsonEscapeString(art.m_strFilePath)   + L"\",";
+        strItem += L"\"format\":\""     + JsonEscapeString(art.m_strFormat)     + L"\",";
+        strItem += L"\"createdAt\":\""  + JsonEscapeString(art.m_strCreatedAt)  + L"\",";
         strItem += L"\"rowCount\":";    strItem += szRows; strItem += L",";
         strItem += L"\"columnCount\":"; strItem += szCols;
         strItem += L"}";
@@ -528,23 +528,4 @@ CString ExportBridgeHandler::HandleGetArtifacts(const BridgeMessage& msg)
 
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
            L"\",\"success\":true,\"payload\":{\"artifacts\":[" + strItems + L"]}}";
-}
-
-CString ExportBridgeHandler::EscapeJsonString(const CString& str) const
-{
-    CString strResult;
-    for (int i = 0; i < str.GetLength(); ++i)
-    {
-        wchar_t ch = str[i];
-        switch (ch)
-        {
-        case L'"':  strResult += L"\\\""; break;
-        case L'\\': strResult += L"\\\\"; break;
-        case L'\n': strResult += L"\\n";  break;
-        case L'\r': strResult += L"\\r";  break;
-        case L'\t': strResult += L"\\t";  break;
-        default:    strResult += ch;      break;
-        }
-    }
-    return strResult;
 }

@@ -1,16 +1,22 @@
 #include "pch.h"
 #include "app/infrastructure/bridge/WorkflowBridgeHandler.h"
+#include "app/infrastructure/bridge/JobQueueBridgeHandler.h"
 #include "app/application/SageApp.h"
 #include <string>
 
 WorkflowBridgeHandler::WorkflowBridgeHandler()
     : m_hMainWnd(nullptr)
+    , m_pJobQueueHandler(nullptr)
 {
 }
 
-void WorkflowBridgeHandler::RegisterHandlers(BridgeDispatcher& dispatcher, HWND hMainWnd)
+void WorkflowBridgeHandler::RegisterHandlers(
+    BridgeDispatcher& dispatcher,
+    HWND hMainWnd,
+    JobQueueBridgeHandler* pJobQueueHandler)
 {
-    m_hMainWnd = hMainWnd;
+    m_hMainWnd         = hMainWnd;
+    m_pJobQueueHandler = pJobQueueHandler;
 
     dispatcher.RegisterHandler(L"workflow", L"getWorkflows",
         [this](const BridgeMessage& msg) -> CString { return HandleGetWorkflows(msg); });
@@ -45,7 +51,7 @@ CString WorkflowBridgeHandler::HandleGetWorkflows(const BridgeMessage& msg)
     {
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
                L"\",\"success\":false,\"error\":{\"code\":\"LOAD_FAILED\",\"message\":\"" +
-               EscapeJson(strError) + L"\"}}";
+               JsonEscapeString(strError) + L"\"}}";
     }
 
     CString strArray = L"[";
@@ -63,8 +69,8 @@ CString WorkflowBridgeHandler::HandleGetWorkflows(const BridgeMessage& msg)
 CString WorkflowBridgeHandler::HandleCreateWorkflow(const BridgeMessage& msg)
 {
     WorkflowDefinition wf;
-    wf.m_strName        = ExtractPayloadString(msg.m_strPayloadJson, L"name");
-    wf.m_strDescription = ExtractPayloadString(msg.m_strPayloadJson, L"description");
+    wf.m_strName        = JsonExtractString(msg.m_strPayloadJson, L"name");
+    wf.m_strDescription = JsonExtractString(msg.m_strPayloadJson, L"description");
 
     if (wf.m_strName.IsEmpty())
     {
@@ -77,7 +83,7 @@ CString WorkflowBridgeHandler::HandleCreateWorkflow(const BridgeMessage& msg)
     {
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
                L"\",\"success\":false,\"error\":{\"code\":\"SAVE_FAILED\",\"message\":\"" +
-               EscapeJson(strError) + L"\"}}";
+               JsonEscapeString(strError) + L"\"}}";
     }
 
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
@@ -86,7 +92,7 @@ CString WorkflowBridgeHandler::HandleCreateWorkflow(const BridgeMessage& msg)
 
 CString WorkflowBridgeHandler::HandleUpdateWorkflow(const BridgeMessage& msg)
 {
-    CString strId = ExtractPayloadString(msg.m_strPayloadJson, L"id");
+    CString strId = JsonExtractString(msg.m_strPayloadJson, L"id");
     if (strId.IsEmpty())
     {
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
@@ -99,14 +105,14 @@ CString WorkflowBridgeHandler::HandleUpdateWorkflow(const BridgeMessage& msg)
     {
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
                L"\",\"success\":false,\"error\":{\"code\":\"NOT_FOUND\",\"message\":\"" +
-               EscapeJson(strError) + L"\"}}";
+               JsonEscapeString(strError) + L"\"}}";
     }
 
-    CString strName = ExtractPayloadString(msg.m_strPayloadJson, L"name");
+    CString strName = JsonExtractString(msg.m_strPayloadJson, L"name");
     if (!strName.IsEmpty())
         wf.m_strName = strName;
 
-    CString strDesc = ExtractPayloadString(msg.m_strPayloadJson, L"description");
+    CString strDesc = JsonExtractString(msg.m_strPayloadJson, L"description");
     if (!strDesc.IsEmpty())
         wf.m_strDescription = strDesc;
 
@@ -118,7 +124,7 @@ CString WorkflowBridgeHandler::HandleUpdateWorkflow(const BridgeMessage& msg)
     {
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
                L"\",\"success\":false,\"error\":{\"code\":\"SAVE_FAILED\",\"message\":\"" +
-               EscapeJson(strError) + L"\"}}";
+               JsonEscapeString(strError) + L"\"}}";
     }
 
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
@@ -127,7 +133,7 @@ CString WorkflowBridgeHandler::HandleUpdateWorkflow(const BridgeMessage& msg)
 
 CString WorkflowBridgeHandler::HandleDeleteWorkflow(const BridgeMessage& msg)
 {
-    CString strId = ExtractPayloadString(msg.m_strPayloadJson, L"id");
+    CString strId = JsonExtractString(msg.m_strPayloadJson, L"id");
     if (strId.IsEmpty())
     {
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
@@ -139,37 +145,47 @@ CString WorkflowBridgeHandler::HandleDeleteWorkflow(const BridgeMessage& msg)
     {
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
                L"\",\"success\":false,\"error\":{\"code\":\"DELETE_FAILED\",\"message\":\"" +
-               EscapeJson(strError) + L"\"}}";
+               JsonEscapeString(strError) + L"\"}}";
     }
 
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
-           L"\",\"success\":true,\"payload\":{\"id\":\"" + EscapeJson(strId) + L"\"}}";
+           L"\",\"success\":true,\"payload\":{\"id\":\"" + JsonEscapeString(strId) + L"\"}}";
 }
 
 CString WorkflowBridgeHandler::HandleRunWorkflow(const BridgeMessage& msg)
 {
-    CString strId = ExtractPayloadString(msg.m_strPayloadJson, L"id");
+    CString strId = JsonExtractString(msg.m_strPayloadJson, L"id");
     if (strId.IsEmpty())
     {
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
                L"\",\"success\":false,\"error\":{\"code\":\"INVALID_PAYLOAD\",\"message\":\"id is required\"}}";
     }
 
+    // Workflow 이름 조회 (큐 표시용)
+    WorkflowDefinition wf;
     CString strError;
-    if (!m_service.RunWorkflow(strId, m_hMainWnd, strError))
+    if (!m_service.GetWorkflow(strId, wf, strError))
     {
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
-               L"\",\"success\":false,\"error\":{\"code\":\"RUN_FAILED\",\"message\":\"" +
-               EscapeJson(strError) + L"\"}}";
+               L"\",\"success\":false,\"error\":{\"code\":\"NOT_FOUND\",\"message\":\"" +
+               JsonEscapeString(strError) + L"\"}}";
+    }
+
+    // 직접 실행이 아닌 JobQueue를 통해 실행 — WorkflowService 인스턴스가 하나만 사용된다.
+    if (!m_pJobQueueHandler->EnqueueWorkflow(strId, wf.m_strName, m_hMainWnd, strError))
+    {
+        return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+               L"\",\"success\":false,\"error\":{\"code\":\"ENQUEUE_FAILED\",\"message\":\"" +
+               JsonEscapeString(strError) + L"\"}}";
     }
 
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
-           L"\",\"success\":true,\"payload\":{\"id\":\"" + EscapeJson(strId) + L"\",\"status\":\"running\"}}";
+           L"\",\"success\":true,\"payload\":{\"id\":\"" + JsonEscapeString(strId) + L"\",\"status\":\"queued\"}}";
 }
 
 CString WorkflowBridgeHandler::HandleCancelWorkflow(const BridgeMessage& msg)
 {
-    m_service.CancelWorkflow();
+    m_pJobQueueHandler->CancelCurrentJob();
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
            L"\",\"success\":true,\"payload\":{\"status\":\"cancelling\"}}";
 }
@@ -182,7 +198,7 @@ CString WorkflowBridgeHandler::HandleGetTemplates(const BridgeMessage& msg)
     {
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
                L"\",\"success\":false,\"error\":{\"code\":\"LOAD_FAILED\",\"message\":\"" +
-               EscapeJson(strError) + L"\"}}";
+               JsonEscapeString(strError) + L"\"}}";
     }
 
     CString strArray = L"[";
@@ -199,7 +215,7 @@ CString WorkflowBridgeHandler::HandleGetTemplates(const BridgeMessage& msg)
 
 CString WorkflowBridgeHandler::HandleCreateFromTemplate(const BridgeMessage& msg)
 {
-    CString strTemplateId = ExtractPayloadString(msg.m_strPayloadJson, L"templateId");
+    CString strTemplateId = JsonExtractString(msg.m_strPayloadJson, L"templateId");
     if (strTemplateId.IsEmpty())
     {
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
@@ -212,16 +228,11 @@ CString WorkflowBridgeHandler::HandleCreateFromTemplate(const BridgeMessage& msg
     {
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
                L"\",\"success\":false,\"error\":{\"code\":\"CREATE_FAILED\",\"message\":\"" +
-               EscapeJson(strError) + L"\"}}";
+               JsonEscapeString(strError) + L"\"}}";
     }
 
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
            L"\",\"success\":true,\"payload\":" + SerializeWorkflow(wf) + L"}";
-}
-
-const CString& WorkflowBridgeHandler::GetCurrentStepName() const
-{
-    return m_service.GetCurrentStepName();
 }
 
 CString WorkflowBridgeHandler::SerializeWorkflow(const WorkflowDefinition& wf) const
@@ -244,11 +255,11 @@ CString WorkflowBridgeHandler::SerializeWorkflow(const WorkflowDefinition& wf) c
         L"\"updatedAt\":\"%s\","
         L"\"steps\":%s"
         L"}",
-        (LPCWSTR)EscapeJson(wf.m_strId),
-        (LPCWSTR)EscapeJson(wf.m_strName),
-        (LPCWSTR)EscapeJson(wf.m_strDescription),
-        (LPCWSTR)EscapeJson(wf.m_strCreatedAt),
-        (LPCWSTR)EscapeJson(wf.m_strUpdatedAt),
+        (LPCWSTR)JsonEscapeString(wf.m_strId),
+        (LPCWSTR)JsonEscapeString(wf.m_strName),
+        (LPCWSTR)JsonEscapeString(wf.m_strDescription),
+        (LPCWSTR)JsonEscapeString(wf.m_strCreatedAt),
+        (LPCWSTR)JsonEscapeString(wf.m_strUpdatedAt),
         (LPCWSTR)strSteps
     );
     return strJson;
@@ -273,10 +284,10 @@ CString WorkflowBridgeHandler::SerializeTemplate(const WorkflowTemplate& tpl) co
         L"\"category\":\"%s\","
         L"\"steps\":%s"
         L"}",
-        (LPCWSTR)EscapeJson(tpl.m_strId),
-        (LPCWSTR)EscapeJson(tpl.m_strName),
-        (LPCWSTR)EscapeJson(tpl.m_strDescription),
-        (LPCWSTR)EscapeJson(tpl.m_strCategory),
+        (LPCWSTR)JsonEscapeString(tpl.m_strId),
+        (LPCWSTR)JsonEscapeString(tpl.m_strName),
+        (LPCWSTR)JsonEscapeString(tpl.m_strDescription),
+        (LPCWSTR)JsonEscapeString(tpl.m_strCategory),
         (LPCWSTR)strSteps
     );
     return strJson;
@@ -292,33 +303,12 @@ CString WorkflowBridgeHandler::SerializeStep(const WorkflowStep& step) const
         L"\"name\":\"%s\","
         L"\"configJson\":\"%s\""
         L"}",
-        (LPCWSTR)EscapeJson(step.m_strId),
-        (LPCWSTR)EscapeJson(step.m_strStepType),
-        (LPCWSTR)EscapeJson(step.m_strName),
-        (LPCWSTR)EscapeJson(step.m_strConfigJson)
+        (LPCWSTR)JsonEscapeString(step.m_strId),
+        (LPCWSTR)JsonEscapeString(step.m_strStepType),
+        (LPCWSTR)JsonEscapeString(step.m_strName),
+        (LPCWSTR)JsonEscapeString(step.m_strConfigJson)
     );
     return strJson;
-}
-
-CString WorkflowBridgeHandler::ExtractPayloadString(const CString& strJson, const CString& strKey) const
-{
-    std::string json  = WideToUtf8(strJson);
-    std::string key   = WideToUtf8(strKey);
-    std::string token = "\"" + key + "\"";
-
-    size_t nKeyPos = json.find(token);
-    if (nKeyPos == std::string::npos) return L"";
-
-    size_t nColon = json.find(':', nKeyPos + token.size());
-    if (nColon == std::string::npos) return L"";
-
-    size_t nQuoteOpen = json.find('"', nColon + 1);
-    if (nQuoteOpen == std::string::npos) return L"";
-
-    size_t nQuoteClose = json.find('"', nQuoteOpen + 1);
-    if (nQuoteClose == std::string::npos) return L"";
-
-    return Utf8ToWide(json.substr(nQuoteOpen + 1, nQuoteClose - nQuoteOpen - 1));
 }
 
 CString WorkflowBridgeHandler::ExtractPayloadArray(const CString& strJson, const CString& strKey) const
@@ -344,6 +334,17 @@ CString WorkflowBridgeHandler::ExtractPayloadArray(const CString& strJson, const
     size_t nEnd = nBracket;
     for (; nEnd < json.size(); ++nEnd)
     {
+        if (json[nEnd] == '"')
+        {
+            ++nEnd;
+            while (nEnd < json.size())
+            {
+                if (json[nEnd] == '\\') ++nEnd;
+                else if (json[nEnd] == '"') break;
+                ++nEnd;
+            }
+            continue;
+        }
         if (json[nEnd] == '[') ++nDepth;
         else if (json[nEnd] == ']')
         {
@@ -398,28 +399,9 @@ std::vector<WorkflowStep> WorkflowBridgeHandler::ParseStepsFromPayload(const CSt
 WorkflowStep WorkflowBridgeHandler::ParseStepFromPayload(const CString& strObj) const
 {
     WorkflowStep step;
-    step.m_strId         = ExtractPayloadString(strObj, L"id");
-    step.m_strStepType   = ExtractPayloadString(strObj, L"stepType");
-    step.m_strName       = ExtractPayloadString(strObj, L"name");
-    step.m_strConfigJson = ExtractPayloadString(strObj, L"configJson");
+    step.m_strId         = JsonExtractString(strObj, L"id");
+    step.m_strStepType   = JsonExtractString(strObj, L"stepType");
+    step.m_strName       = JsonExtractString(strObj, L"name");
+    step.m_strConfigJson = JsonExtractString(strObj, L"configJson");
     return step;
-}
-
-CString WorkflowBridgeHandler::EscapeJson(const CString& str) const
-{
-    CString strResult;
-    for (int i = 0; i < str.GetLength(); ++i)
-    {
-        wchar_t ch = str[i];
-        switch (ch)
-        {
-        case L'"':  strResult += L"\\\""; break;
-        case L'\\': strResult += L"\\\\"; break;
-        case L'\n': strResult += L"\\n";  break;
-        case L'\r': strResult += L"\\r";  break;
-        case L'\t': strResult += L"\\t";  break;
-        default:    strResult += ch;      break;
-        }
-    }
-    return strResult;
 }

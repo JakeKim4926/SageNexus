@@ -10,8 +10,6 @@ public:
 
 private:
     CString HandleSendEmail(const BridgeMessage& msg);
-    CString ExtractPayloadString(const CString& strJson, const CString& strKey) const;
-    CString EscapeJson(const CString& str) const;
 
     EmailService m_service;
 };

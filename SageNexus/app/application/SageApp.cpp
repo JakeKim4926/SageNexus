@@ -70,7 +70,7 @@ BOOL SageApp::Initialize(HINSTANCE hInstance)
 
 void SageApp::Shutdown()
 {
-    if (!m_bInitialized && m_pLogger == nullptr && m_pConfigStore == nullptr)
+    if (!m_bInitialized && m_pLogger == nullptr)
         return;
 
     if (m_pLogger)

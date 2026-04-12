@@ -46,11 +46,11 @@ CString ApiConnectorBridgeHandler::HandleGetConnectors(const BridgeMessage& msg)
 
 CString ApiConnectorBridgeHandler::HandleAddConnector(const BridgeMessage& msg)
 {
-    CString strName        = ExtractPayloadString(msg.m_strPayloadJson, L"name");
-    CString strBaseUrl     = ExtractPayloadString(msg.m_strPayloadJson, L"baseUrl");
-    CString strHeadersJson = ExtractPayloadString(msg.m_strPayloadJson, L"headersJson");
-    CString strAuthType    = ExtractPayloadString(msg.m_strPayloadJson, L"authType");
-    CString strAuthValue   = ExtractPayloadString(msg.m_strPayloadJson, L"authValue");
+    CString strName        = JsonExtractString(msg.m_strPayloadJson, L"name");
+    CString strBaseUrl     = JsonExtractString(msg.m_strPayloadJson, L"baseUrl");
+    CString strHeadersJson = JsonExtractString(msg.m_strPayloadJson, L"headersJson");
+    CString strAuthType    = JsonExtractString(msg.m_strPayloadJson, L"authType");
+    CString strAuthValue   = JsonExtractString(msg.m_strPayloadJson, L"authValue");
 
     if (strName.IsEmpty() || strBaseUrl.IsEmpty())
     {
@@ -62,12 +62,12 @@ CString ApiConnectorBridgeHandler::HandleAddConnector(const BridgeMessage& msg)
     m_service.AddConnector(strName, strBaseUrl, strHeadersJson, strAuthType, strAuthValue, strId);
 
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
-           L"\",\"success\":true,\"payload\":{\"connectorId\":\"" + EscapeJson(strId) + L"\"}}";
+           L"\",\"success\":true,\"payload\":{\"connectorId\":\"" + JsonEscapeString(strId) + L"\"}}";
 }
 
 CString ApiConnectorBridgeHandler::HandleRemoveConnector(const BridgeMessage& msg)
 {
-    CString strId = ExtractPayloadString(msg.m_strPayloadJson, L"connectorId");
+    CString strId = JsonExtractString(msg.m_strPayloadJson, L"connectorId");
 
     if (strId.IsEmpty())
     {
@@ -78,17 +78,17 @@ CString ApiConnectorBridgeHandler::HandleRemoveConnector(const BridgeMessage& ms
     m_service.RemoveConnector(strId);
 
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
-           L"\",\"success\":true,\"payload\":{\"connectorId\":\"" + EscapeJson(strId) + L"\"}}";
+           L"\",\"success\":true,\"payload\":{\"connectorId\":\"" + JsonEscapeString(strId) + L"\"}}";
 }
 
 CString ApiConnectorBridgeHandler::HandleUpdateConnector(const BridgeMessage& msg)
 {
-    CString strId          = ExtractPayloadString(msg.m_strPayloadJson, L"connectorId");
-    CString strName        = ExtractPayloadString(msg.m_strPayloadJson, L"name");
-    CString strBaseUrl     = ExtractPayloadString(msg.m_strPayloadJson, L"baseUrl");
-    CString strHeadersJson = ExtractPayloadString(msg.m_strPayloadJson, L"headersJson");
-    CString strAuthType    = ExtractPayloadString(msg.m_strPayloadJson, L"authType");
-    CString strAuthValue   = ExtractPayloadString(msg.m_strPayloadJson, L"authValue");
+    CString strId          = JsonExtractString(msg.m_strPayloadJson, L"connectorId");
+    CString strName        = JsonExtractString(msg.m_strPayloadJson, L"name");
+    CString strBaseUrl     = JsonExtractString(msg.m_strPayloadJson, L"baseUrl");
+    CString strHeadersJson = JsonExtractString(msg.m_strPayloadJson, L"headersJson");
+    CString strAuthType    = JsonExtractString(msg.m_strPayloadJson, L"authType");
+    CString strAuthValue   = JsonExtractString(msg.m_strPayloadJson, L"authValue");
 
     if (strId.IsEmpty() || strName.IsEmpty() || strBaseUrl.IsEmpty())
     {
@@ -99,12 +99,12 @@ CString ApiConnectorBridgeHandler::HandleUpdateConnector(const BridgeMessage& ms
     m_service.UpdateConnector(strId, strName, strBaseUrl, strHeadersJson, strAuthType, strAuthValue);
 
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
-           L"\",\"success\":true,\"payload\":{\"connectorId\":\"" + EscapeJson(strId) + L"\"}}";
+           L"\",\"success\":true,\"payload\":{\"connectorId\":\"" + JsonEscapeString(strId) + L"\"}}";
 }
 
 CString ApiConnectorBridgeHandler::HandleTestConnector(const BridgeMessage& msg)
 {
-    CString strId = ExtractPayloadString(msg.m_strPayloadJson, L"connectorId");
+    CString strId = JsonExtractString(msg.m_strPayloadJson, L"connectorId");
 
     if (strId.IsEmpty())
     {
@@ -118,7 +118,7 @@ CString ApiConnectorBridgeHandler::HandleTestConnector(const BridgeMessage& msg)
     if (!bOk)
     {
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
-               L"\",\"success\":false,\"error\":{\"code\":\"TEST_FAILED\",\"message\":\"" + EscapeJson(strError) + L"\"}}";
+               L"\",\"success\":false,\"error\":{\"code\":\"TEST_FAILED\",\"message\":\"" + JsonEscapeString(strError) + L"\"}}";
     }
 
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
@@ -138,53 +138,13 @@ CString ApiConnectorBridgeHandler::SerializeConnector(const ApiConnector& conn) 
         L"\"enabled\":%s,"
         L"\"createdAt\":\"%s\""
         L"}",
-        (LPCWSTR)EscapeJson(conn.m_strConnectorId),
-        (LPCWSTR)EscapeJson(conn.m_strName),
-        (LPCWSTR)EscapeJson(conn.m_strBaseUrl),
-        (LPCWSTR)EscapeJson(conn.m_strHeadersJson),
-        (LPCWSTR)EscapeJson(conn.m_strAuthType),
+        (LPCWSTR)JsonEscapeString(conn.m_strConnectorId),
+        (LPCWSTR)JsonEscapeString(conn.m_strName),
+        (LPCWSTR)JsonEscapeString(conn.m_strBaseUrl),
+        (LPCWSTR)JsonEscapeString(conn.m_strHeadersJson),
+        (LPCWSTR)JsonEscapeString(conn.m_strAuthType),
         conn.m_bEnabled ? L"true" : L"false",
-        (LPCWSTR)EscapeJson(conn.m_strCreatedAt)
+        (LPCWSTR)JsonEscapeString(conn.m_strCreatedAt)
     );
     return strJson;
-}
-
-CString ApiConnectorBridgeHandler::ExtractPayloadString(const CString& strJson, const CString& strKey) const
-{
-    std::string json  = WideToUtf8(strJson);
-    std::string key   = WideToUtf8(strKey);
-    std::string token = "\"" + key + "\"";
-
-    size_t nKeyPos = json.find(token);
-    if (nKeyPos == std::string::npos) return L"";
-
-    size_t nColon = json.find(':', nKeyPos + token.size());
-    if (nColon == std::string::npos) return L"";
-
-    size_t nQuoteOpen = json.find('"', nColon + 1);
-    if (nQuoteOpen == std::string::npos) return L"";
-
-    size_t nQuoteClose = json.find('"', nQuoteOpen + 1);
-    if (nQuoteClose == std::string::npos) return L"";
-
-    return Utf8ToWide(json.substr(nQuoteOpen + 1, nQuoteClose - nQuoteOpen - 1));
-}
-
-CString ApiConnectorBridgeHandler::EscapeJson(const CString& str) const
-{
-    CString strResult;
-    for (int i = 0; i < str.GetLength(); ++i)
-    {
-        wchar_t ch = str[i];
-        switch (ch)
-        {
-        case L'"':  strResult += L"\\\""; break;
-        case L'\\': strResult += L"\\\\"; break;
-        case L'\n': strResult += L"\\n";  break;
-        case L'\r': strResult += L"\\r";  break;
-        case L'\t': strResult += L"\\t";  break;
-        default:    strResult += ch;      break;
-        }
-    }
-    return strResult;
 }

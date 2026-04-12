@@ -17,7 +17,6 @@ private:
     CString HandleExportWord(const BridgeMessage& msg, HWND hParentWnd);
     CString HandleExportPdf(const BridgeMessage& msg, HWND hParentWnd);
     CString HandleGetArtifacts(const BridgeMessage& msg);
-    CString EscapeJsonString(const CString& str) const;
 
     HWND       m_hParentWnd;
     DataTable* m_pSharedTable;

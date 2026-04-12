@@ -16,5 +16,4 @@ private:
 
     CString SerializeRecords(const std::vector<ExecutionRecord>& arrRecords) const;
     CString SerializeRecord(const ExecutionRecord& record) const;
-    CString EscapeJsonString(const CString& str) const;
 };

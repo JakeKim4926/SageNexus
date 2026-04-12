@@ -26,36 +26,31 @@ public:
     BOOL GetTemplates(std::vector<WorkflowTemplate>& arrTemplates, CString& strError);
     BOOL CreateFromTemplate(const CString& strTemplateId, WorkflowDefinition& outWorkflow, CString& strError);
 
-    BOOL RunWorkflow(const CString& strId, HWND hNotifyWnd, CString& strError);
+    // JobQueueService에서 호출하는 동기 실행. bCancelRef는 호출자가 관리한다.
     BOOL RunSync(const CString& strId, volatile BOOL& bCancelRef, HWND hNotifyWnd, CString& strError);
-    void CancelWorkflow();
 
-    BOOL           IsRunning() const;
-    const CString& GetLastError() const;
-    const CString& GetCurrentStepName() const;
+    const CString&   GetLastError() const;
+    const CString&   GetCurrentStepName() const;
+    const DataTable& GetLastOutputTable() const;
 
 private:
-    struct RunContext
-    {
-        WorkflowService*   pService;
-        WorkflowDefinition workflow;
-        HWND               hNotifyWnd;
-    };
+    // 두 실행 경로가 공유하는 실제 Step 실행 로직
+    BOOL ExecuteWorkflowCore(
+        const WorkflowDefinition& workflow,
+        volatile BOOL& bCancelRef,
+        HWND hNotifyWnd,
+        CString& strError);
 
-    static DWORD WINAPI RunThread(LPVOID pParam);
-    void ExecuteSteps(const WorkflowDefinition& workflow, HWND hNotifyWnd);
-
-    CString                        ExtractConfigString(const CString& strConfigJson, const CString& strKey) const;
-    std::vector<TransformStep>     ParseTransformSteps(const CString& strConfigJson) const;
-    ConditionStep                  ParseConditionStep(const CString& strConfigJson) const;
-    BOOL                           EvaluateCondition(const ConditionStep& cond, const DataTable& table) const;
-    int                            FindStepIndex(const std::vector<WorkflowStep>& arrSteps, const CString& strId) const;
+    std::vector<TransformStep> ParseTransformSteps(const CString& strConfigJson) const;
+    ConditionStep              ParseConditionStep(const CString& strConfigJson) const;
+    BOOL                       EvaluateCondition(const ConditionStep& cond, const DataTable& table) const;
+    int                        FindStepIndex(const std::vector<WorkflowStep>& arrSteps, const CString& strId) const;
 
     WorkflowStore          m_store;
     ExecutionHistoryStore  m_historyStore;
     ApiConnectorService    m_connectorService;
     BOOL                   m_bRunning;
-    volatile BOOL          m_bCancelRequested;
     CString                m_strLastError;
     CString                m_strCurrentStepName;
+    DataTable              m_lastOutputTable;
 };

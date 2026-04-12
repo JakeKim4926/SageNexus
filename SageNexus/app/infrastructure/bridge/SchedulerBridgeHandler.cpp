@@ -48,9 +48,9 @@ CString SchedulerBridgeHandler::HandleGetJobs(const BridgeMessage& msg)
 
 CString SchedulerBridgeHandler::HandleAddJob(const BridgeMessage& msg)
 {
-    CString strWorkflowId   = ExtractPayloadString(msg.m_strPayloadJson, L"workflowId");
-    CString strWorkflowName = ExtractPayloadString(msg.m_strPayloadJson, L"workflowName");
-    CString strTime         = ExtractPayloadString(msg.m_strPayloadJson, L"time");
+    CString strWorkflowId   = JsonExtractString(msg.m_strPayloadJson, L"workflowId");
+    CString strWorkflowName = JsonExtractString(msg.m_strPayloadJson, L"workflowName");
+    CString strTime         = JsonExtractString(msg.m_strPayloadJson, L"time");
 
     if (strWorkflowId.IsEmpty() || strTime.IsEmpty())
     {
@@ -62,12 +62,12 @@ CString SchedulerBridgeHandler::HandleAddJob(const BridgeMessage& msg)
     m_service.AddJob(strWorkflowId, strWorkflowName, strTime, strJobId);
 
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
-           L"\",\"success\":true,\"payload\":{\"jobId\":\"" + EscapeJson(strJobId) + L"\"}}";
+           L"\",\"success\":true,\"payload\":{\"jobId\":\"" + JsonEscapeString(strJobId) + L"\"}}";
 }
 
 CString SchedulerBridgeHandler::HandleRemoveJob(const BridgeMessage& msg)
 {
-    CString strJobId = ExtractPayloadString(msg.m_strPayloadJson, L"jobId");
+    CString strJobId = JsonExtractString(msg.m_strPayloadJson, L"jobId");
 
     if (strJobId.IsEmpty())
     {
@@ -78,13 +78,13 @@ CString SchedulerBridgeHandler::HandleRemoveJob(const BridgeMessage& msg)
     m_service.RemoveJob(strJobId);
 
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
-           L"\",\"success\":true,\"payload\":{\"jobId\":\"" + EscapeJson(strJobId) + L"\"}}";
+           L"\",\"success\":true,\"payload\":{\"jobId\":\"" + JsonEscapeString(strJobId) + L"\"}}";
 }
 
 CString SchedulerBridgeHandler::HandleToggleJob(const BridgeMessage& msg)
 {
-    CString strJobId = ExtractPayloadString(msg.m_strPayloadJson, L"jobId");
-    BOOL    bEnabled = ExtractPayloadBool(msg.m_strPayloadJson, L"enabled");
+    CString strJobId = JsonExtractString(msg.m_strPayloadJson, L"jobId");
+    BOOL    bEnabled = JsonExtractBool(msg.m_strPayloadJson, L"enabled");
 
     if (strJobId.IsEmpty())
     {
@@ -96,7 +96,7 @@ CString SchedulerBridgeHandler::HandleToggleJob(const BridgeMessage& msg)
 
     CString strResult;
     strResult.Format(L"{\"jobId\":\"%s\",\"enabled\":%s}",
-        (LPCWSTR)EscapeJson(strJobId),
+        (LPCWSTR)JsonEscapeString(strJobId),
         bEnabled ? L"true" : L"false");
 
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
@@ -116,72 +116,13 @@ CString SchedulerBridgeHandler::SerializeJob(const ScheduledJob& job) const
         L"\"enabled\":%s,"
         L"\"createdAt\":\"%s\""
         L"}",
-        (LPCWSTR)EscapeJson(job.m_strJobId),
-        (LPCWSTR)EscapeJson(job.m_strWorkflowId),
-        (LPCWSTR)EscapeJson(job.m_strWorkflowName),
-        (LPCWSTR)EscapeJson(job.m_strTime),
-        (LPCWSTR)EscapeJson(job.m_strNextRunAt),
+        (LPCWSTR)JsonEscapeString(job.m_strJobId),
+        (LPCWSTR)JsonEscapeString(job.m_strWorkflowId),
+        (LPCWSTR)JsonEscapeString(job.m_strWorkflowName),
+        (LPCWSTR)JsonEscapeString(job.m_strTime),
+        (LPCWSTR)JsonEscapeString(job.m_strNextRunAt),
         job.m_bEnabled ? L"true" : L"false",
-        (LPCWSTR)EscapeJson(job.m_strCreatedAt)
+        (LPCWSTR)JsonEscapeString(job.m_strCreatedAt)
     );
     return strJson;
-}
-
-CString SchedulerBridgeHandler::ExtractPayloadString(const CString& strJson, const CString& strKey) const
-{
-    std::string json  = WideToUtf8(strJson);
-    std::string key   = WideToUtf8(strKey);
-    std::string token = "\"" + key + "\"";
-
-    size_t nKeyPos = json.find(token);
-    if (nKeyPos == std::string::npos) return L"";
-
-    size_t nColon = json.find(':', nKeyPos + token.size());
-    if (nColon == std::string::npos) return L"";
-
-    size_t nQuoteOpen = json.find('"', nColon + 1);
-    if (nQuoteOpen == std::string::npos) return L"";
-
-    size_t nQuoteClose = json.find('"', nQuoteOpen + 1);
-    if (nQuoteClose == std::string::npos) return L"";
-
-    return Utf8ToWide(json.substr(nQuoteOpen + 1, nQuoteClose - nQuoteOpen - 1));
-}
-
-BOOL SchedulerBridgeHandler::ExtractPayloadBool(const CString& strJson, const CString& strKey) const
-{
-    std::string json  = WideToUtf8(strJson);
-    std::string key   = WideToUtf8(strKey);
-    std::string token = "\"" + key + "\"";
-
-    size_t nKeyPos = json.find(token);
-    if (nKeyPos == std::string::npos) return FALSE;
-
-    size_t nColon = json.find(':', nKeyPos + token.size());
-    if (nColon == std::string::npos) return FALSE;
-
-    size_t nStart = nColon + 1;
-    while (nStart < json.size() && json[nStart] == ' ')
-        ++nStart;
-
-    return (json.substr(nStart, 4) == "true") ? TRUE : FALSE;
-}
-
-CString SchedulerBridgeHandler::EscapeJson(const CString& str) const
-{
-    CString strResult;
-    for (int i = 0; i < str.GetLength(); ++i)
-    {
-        wchar_t ch = str[i];
-        switch (ch)
-        {
-        case L'"':  strResult += L"\\\""; break;
-        case L'\\': strResult += L"\\\\"; break;
-        case L'\n': strResult += L"\\n";  break;
-        case L'\r': strResult += L"\\r";  break;
-        case L'\t': strResult += L"\\t";  break;
-        default:    strResult += ch;      break;
-        }
-    }
-    return strResult;
 }

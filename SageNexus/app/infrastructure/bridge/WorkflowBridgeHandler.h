@@ -4,13 +4,15 @@
 #include "app/application/services/WorkflowService.h"
 #include "app/domain/model/WorkflowTemplate.h"
 
+class JobQueueBridgeHandler;
+
 class WorkflowBridgeHandler
 {
 public:
     WorkflowBridgeHandler();
 
-    void RegisterHandlers(BridgeDispatcher& dispatcher, HWND hMainWnd);
-    const CString& GetCurrentStepName() const;
+    // pJobQueueHandler: runWorkflow / cancelWorkflow 을 큐를 통해 처리하기 위해 필요
+    void RegisterHandlers(BridgeDispatcher& dispatcher, HWND hMainWnd, JobQueueBridgeHandler* pJobQueueHandler);
 
 private:
     CString HandleGetWorkflows(const BridgeMessage& msg);
@@ -25,12 +27,11 @@ private:
     CString SerializeWorkflow(const WorkflowDefinition& wf) const;
     CString SerializeTemplate(const WorkflowTemplate& tpl) const;
     CString SerializeStep(const WorkflowStep& step) const;
-    CString ExtractPayloadString(const CString& strJson, const CString& strKey) const;
     CString ExtractPayloadArray(const CString& strJson, const CString& strKey) const;
     std::vector<WorkflowStep> ParseStepsFromPayload(const CString& strStepsJson) const;
     WorkflowStep ParseStepFromPayload(const CString& strObj) const;
-    CString EscapeJson(const CString& str) const;
 
-    WorkflowService m_service;
-    HWND            m_hMainWnd;
+    WorkflowService        m_service;
+    HWND                   m_hMainWnd;
+    JobQueueBridgeHandler* m_pJobQueueHandler;
 };

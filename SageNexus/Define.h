@@ -72,3 +72,15 @@ constexpr int API_DEFAULT_TIMEOUT_MS = 30000;
 // API Connector
 // ============================================================
 constexpr const wchar_t* CONNECTORS_FILE_NAME = L"connectors.json";
+
+// ============================================================
+// Workflow Step Types
+// WorkflowStep::m_strStepType에 사용하는 문자열 상수
+// ============================================================
+constexpr const wchar_t* STEP_TYPE_IMPORT      = L"import";
+constexpr const wchar_t* STEP_TYPE_TRANSFORM   = L"transform";
+constexpr const wchar_t* STEP_TYPE_EXPORT      = L"export";
+constexpr const wchar_t* STEP_TYPE_WEB_EXTRACT = L"webExtract";
+constexpr const wchar_t* STEP_TYPE_SEND_EMAIL  = L"sendEmail";
+constexpr const wchar_t* STEP_TYPE_CALL_API    = L"callApi";
+constexpr const wchar_t* STEP_TYPE_CONDITION   = L"condition";

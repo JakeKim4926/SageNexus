@@ -39,6 +39,7 @@ private:
 
     void NavigateToShell();
     void RegisterBridgeHandlers();
+    void UpdateCurrentTableFromWorkflow();
 
     HWND                    m_hWnd;
     WebViewHost*            m_pWebViewHost;

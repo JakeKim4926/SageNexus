@@ -21,8 +21,8 @@ void WebExtractBridgeHandler::RegisterHandlers(BridgeDispatcher& dispatcher, Dat
 
 CString WebExtractBridgeHandler::HandleFetchAndExtract(const BridgeMessage& msg)
 {
-    CString strUrl      = ExtractPayloadString(msg.m_strPayloadJson, L"url");
-    CString strSelector = ExtractPayloadString(msg.m_strPayloadJson, L"selector");
+    CString strUrl      = JsonExtractString(msg.m_strPayloadJson, L"url");
+    CString strSelector = JsonExtractString(msg.m_strPayloadJson, L"selector");
 
     if (strUrl.IsEmpty())
     {
@@ -48,7 +48,7 @@ CString WebExtractBridgeHandler::HandleFetchAndExtract(const BridgeMessage& msg)
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
                L"\",\"success\":false,\"payload\":null,"
                L"\"error\":{\"code\":\"SNX_WEB_002\",\"message\":\"" +
-               EscapeJson(strError) + L"\"}}";
+               JsonEscapeString(strError) + L"\"}}";
     }
 
     *m_pCurrentTable = table;
@@ -68,7 +68,7 @@ CString WebExtractBridgeHandler::HandleFetchAndExtract(const BridgeMessage& msg)
     json += L"{";
     json += L"\"tableId\":\"web-1\",";
     json += L"\"sourceName\":\"";
-    json += (LPCWSTR)EscapeJson(m_pCurrentTable->GetSourceName());
+    json += (LPCWSTR)JsonEscapeString(m_pCurrentTable->GetSourceName());
     json += L"\",";
 
     wchar_t buf[32];
@@ -88,11 +88,11 @@ CString WebExtractBridgeHandler::HandleFetchAndExtract(const BridgeMessage& msg)
         if (i > 0) json += L",";
         const DataColumn& col = m_pCurrentTable->GetColumn(i);
         json += L"{\"internalName\":\"";
-        json += (LPCWSTR)EscapeJson(col.m_strInternalName);
+        json += (LPCWSTR)JsonEscapeString(col.m_strInternalName);
         json += L"\",\"displayNameKo\":\"";
-        json += (LPCWSTR)EscapeJson(col.m_strDisplayNameKo);
+        json += (LPCWSTR)JsonEscapeString(col.m_strDisplayNameKo);
         json += L"\",\"displayNameEn\":\"";
-        json += (LPCWSTR)EscapeJson(col.m_strDisplayNameEn);
+        json += (LPCWSTR)JsonEscapeString(col.m_strDisplayNameEn);
         json += L"\"}";
     }
     json += L"],";
@@ -111,7 +111,7 @@ CString WebExtractBridgeHandler::HandleFetchAndExtract(const BridgeMessage& msg)
         {
             if (j > 0) json += L",";
             json += L"\"";
-            json += (LPCWSTR)EscapeJson(row.m_arrCells[j]);
+            json += (LPCWSTR)JsonEscapeString(row.m_arrCells[j]);
             json += L"\"";
         }
         json += L"]";
@@ -122,55 +122,4 @@ CString WebExtractBridgeHandler::HandleFetchAndExtract(const BridgeMessage& msg)
     CString strPayload(json.c_str());
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
            L"\",\"success\":true,\"payload\":" + strPayload + L"}";
-}
-
-CString WebExtractBridgeHandler::ExtractPayloadString(const CString& strJson, const CString& strKey) const
-{
-    CString strSearch = L"\"" + strKey + L"\"";
-    int nPos = strJson.Find(strSearch);
-    if (nPos < 0)
-        return L"";
-
-    int nColon = strJson.Find(L':', nPos + strSearch.GetLength());
-    if (nColon < 0)
-        return L"";
-
-    int nStart = nColon + 1;
-    while (nStart < strJson.GetLength() && strJson[nStart] == L' ')
-        ++nStart;
-
-    if (nStart >= strJson.GetLength() || strJson[nStart] != L'"')
-        return L"";
-
-    int nEnd = nStart + 1;
-    while (nEnd < strJson.GetLength())
-    {
-        if (strJson[nEnd] == L'\\') { nEnd += 2; continue; }
-        if (strJson[nEnd] == L'"')  break;
-        ++nEnd;
-    }
-
-    if (nEnd >= strJson.GetLength())
-        return L"";
-
-    return strJson.Mid(nStart + 1, nEnd - nStart - 1);
-}
-
-CString WebExtractBridgeHandler::EscapeJson(const CString& str) const
-{
-    CString strResult;
-    for (int i = 0; i < str.GetLength(); ++i)
-    {
-        wchar_t ch = str[i];
-        switch (ch)
-        {
-        case L'"':  strResult += L"\\\""; break;
-        case L'\\': strResult += L"\\\\"; break;
-        case L'\n': strResult += L"\\n";  break;
-        case L'\r': strResult += L"\\r";  break;
-        case L'\t': strResult += L"\\t";  break;
-        default:    strResult += ch;      break;
-        }
-    }
-    return strResult;
 }

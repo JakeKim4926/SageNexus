@@ -41,13 +41,14 @@ BOOL JobQueueService::EnqueueJob(const CString& strWorkflowId, const CString& st
 
     PostMessage(hNotifyWnd, WM_JOB_QUEUE_CHANGED, 0, 0);
 
-    if (!m_bQueueRunning)
+    // m_bQueueRunning은 Interlocked 읽기로 확인한다.
+    if (InterlockedCompareExchange(&m_bQueueRunning, 0, 0) == 0)
     {
-        m_bCancelRequested = FALSE;
+        InterlockedExchange(&m_bCancelRequested, FALSE);
 
-        QueueContext* pCtx  = new QueueContext();
-        pCtx->pService      = this;
-        pCtx->hNotifyWnd    = hNotifyWnd;
+        QueueContext* pCtx = new QueueContext();
+        pCtx->pService     = this;
+        pCtx->hNotifyWnd   = hNotifyWnd;
 
         HANDLE hThread = CreateThread(nullptr, 0, QueueThread, pCtx, 0, nullptr);
         if (!hThread)
@@ -79,11 +80,21 @@ void JobQueueService::CancelJob(const CString& strJobId)
             if (job.m_eStatus == JobStatus::Pending)
                 job.m_eStatus = JobStatus::Cancelled;
             else if (job.m_eStatus == JobStatus::Running)
-                m_bCancelRequested = TRUE;
+                InterlockedExchange(&m_bCancelRequested, TRUE);
             break;
         }
     }
     LeaveCriticalSection(&m_cs);
+}
+
+void JobQueueService::CancelRunningJob()
+{
+    EnterCriticalSection(&m_cs);
+    CString strRunningId = m_strRunningJobId;
+    LeaveCriticalSection(&m_cs);
+
+    if (!strRunningId.IsEmpty())
+        CancelJob(strRunningId);
 }
 
 BOOL JobQueueService::RetryJob(const CString& strJobId, HWND hNotifyWnd, CString& strError)
@@ -124,14 +135,22 @@ BOOL JobQueueService::RetryJob(const CString& strJobId, HWND hNotifyWnd, CString
     return EnqueueJob(strWorkflowId, strWorkflowName, hNotifyWnd, strError);
 }
 
-const CString& JobQueueService::GetRunningJobId() const
+CString JobQueueService::GetRunningJobId() const
 {
-    return m_strRunningJobId;
+    EnterCriticalSection(const_cast<CRITICAL_SECTION*>(&m_cs));
+    CString strId = m_strRunningJobId;
+    LeaveCriticalSection(const_cast<CRITICAL_SECTION*>(&m_cs));
+    return strId;
 }
 
 const CString& JobQueueService::GetCurrentStepName() const
 {
     return m_workflowService.GetCurrentStepName();
+}
+
+const DataTable& JobQueueService::GetLastOutputTable() const
+{
+    return m_workflowService.GetLastOutputTable();
 }
 
 DWORD WINAPI JobQueueService::QueueThread(LPVOID pParam)
@@ -144,7 +163,7 @@ DWORD WINAPI JobQueueService::QueueThread(LPVOID pParam)
 
 void JobQueueService::ProcessJobs(HWND hNotifyWnd)
 {
-    m_bQueueRunning = TRUE;
+    InterlockedExchange(&m_bQueueRunning, TRUE);
 
     while (TRUE)
     {
@@ -156,9 +175,9 @@ void JobQueueService::ProcessJobs(HWND hNotifyWnd)
         {
             if (job.m_eStatus == JobStatus::Pending)
             {
-                job.m_eStatus  = JobStatus::Running;
-                strNextJobId   = job.m_strJobId;
-                strWorkflowId  = job.m_strWorkflowId;
+                job.m_eStatus = JobStatus::Running;
+                strNextJobId  = job.m_strJobId;
+                strWorkflowId = job.m_strWorkflowId;
                 break;
             }
         }
@@ -167,8 +186,11 @@ void JobQueueService::ProcessJobs(HWND hNotifyWnd)
         if (strNextJobId.IsEmpty())
             break;
 
-        m_strRunningJobId  = strNextJobId;
-        m_bCancelRequested = FALSE;
+        EnterCriticalSection(&m_cs);
+        m_strRunningJobId = strNextJobId;
+        LeaveCriticalSection(&m_cs);
+
+        InterlockedExchange(&m_bCancelRequested, FALSE);
 
         PostMessage(hNotifyWnd, WM_JOB_QUEUE_CHANGED, 0, 0);
 
@@ -176,7 +198,11 @@ void JobQueueService::ProcessJobs(HWND hNotifyWnd)
             L"[JobQueue] Job 시작: " + strNextJobId + L" / workflow: " + strWorkflowId);
 
         CString strError;
-        BOOL bSuccess = m_workflowService.RunSync(strWorkflowId, m_bCancelRequested, hNotifyWnd, strError);
+        BOOL bSuccess = m_workflowService.RunSync(
+            strWorkflowId,
+            reinterpret_cast<volatile BOOL&>(m_bCancelRequested),
+            hNotifyWnd,
+            strError);
 
         JobStatus eResult = bSuccess ? JobStatus::Completed : JobStatus::Failed;
 
@@ -190,9 +216,8 @@ void JobQueueService::ProcessJobs(HWND hNotifyWnd)
                 break;
             }
         }
-        LeaveCriticalSection(&m_cs);
-
         m_strRunningJobId = L"";
+        LeaveCriticalSection(&m_cs);
 
         sageMgr.GetLogger().Log(LogLevel::Info,
             L"[JobQueue] Job 완료: " + strNextJobId +
@@ -201,7 +226,7 @@ void JobQueueService::ProcessJobs(HWND hNotifyWnd)
         PostMessage(hNotifyWnd, WM_JOB_QUEUE_CHANGED, 0, 0);
     }
 
-    m_bQueueRunning = FALSE;
+    InterlockedExchange(&m_bQueueRunning, FALSE);
 }
 
 CString JobQueueService::GenerateJobId() const

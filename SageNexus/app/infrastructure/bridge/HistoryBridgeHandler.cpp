@@ -32,7 +32,7 @@ CString HistoryBridgeHandler::HandleGetHistory(const BridgeMessage& msg)
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
                L"\",\"success\":false,\"payload\":null,"
                L"\"error\":{\"code\":\"SNX_HI_001\",\"message\":\"" +
-               EscapeJsonString(strError) + L"\"}}";
+               JsonEscapeString(strError) + L"\"}}";
     }
 
     CString strRecordsJson = SerializeRecords(arrRecords);
@@ -50,7 +50,7 @@ CString HistoryBridgeHandler::HandleGetSummary(const BridgeMessage& msg)
     {
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
                L"\",\"success\":false,\"error\":{\"code\":\"SNX_HI_002\",\"message\":\"" +
-               EscapeJsonString(strError) + L"\"}}";
+               JsonEscapeString(strError) + L"\"}}";
     }
 
     int nTotal   = (int)arrRecords.size();
@@ -86,36 +86,17 @@ CString HistoryBridgeHandler::SerializeRecord(const ExecutionRecord& record) con
 {
     wchar_t buf[32];
     CString strJson = L"{";
-    strJson += L"\"runId\":\"" + EscapeJsonString(record.m_strRunId) + L"\",";
-    strJson += L"\"timestamp\":\"" + EscapeJsonString(record.m_strTimestamp) + L"\",";
-    strJson += L"\"operationType\":\"" + EscapeJsonString(record.m_strOperationType) + L"\",";
-    strJson += L"\"sourceName\":\"" + EscapeJsonString(record.m_strSourceName) + L"\",";
+    strJson += L"\"runId\":\"" + JsonEscapeString(record.m_strRunId) + L"\",";
+    strJson += L"\"timestamp\":\"" + JsonEscapeString(record.m_strTimestamp) + L"\",";
+    strJson += L"\"operationType\":\"" + JsonEscapeString(record.m_strOperationType) + L"\",";
+    strJson += L"\"sourceName\":\"" + JsonEscapeString(record.m_strSourceName) + L"\",";
     swprintf_s(buf, 32, L"%d", record.m_nRowCount);
     strJson += L"\"rowCount\":"; strJson += buf; strJson += L",";
     swprintf_s(buf, 32, L"%d", record.m_nColumnCount);
     strJson += L"\"columnCount\":"; strJson += buf; strJson += L",";
-    strJson += L"\"outputPath\":\"" + EscapeJsonString(record.m_strOutputPath) + L"\",";
+    strJson += L"\"outputPath\":\"" + JsonEscapeString(record.m_strOutputPath) + L"\",";
     strJson += L"\"success\":";
     strJson += (record.m_bSuccess ? L"true" : L"false");
     strJson += L"}";
     return strJson;
-}
-
-CString HistoryBridgeHandler::EscapeJsonString(const CString& str) const
-{
-    CString strResult;
-    for (int i = 0; i < str.GetLength(); ++i)
-    {
-        wchar_t ch = str[i];
-        switch (ch)
-        {
-        case L'"':  strResult += L"\\\""; break;
-        case L'\\': strResult += L"\\\\"; break;
-        case L'\n': strResult += L"\\n";  break;
-        case L'\r': strResult += L"\\r";  break;
-        case L'\t': strResult += L"\\t";  break;
-        default:    strResult += ch;      break;
-        }
-    }
-    return strResult;
 }

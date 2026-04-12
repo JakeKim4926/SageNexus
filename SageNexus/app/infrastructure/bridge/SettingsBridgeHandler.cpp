@@ -113,8 +113,8 @@ CString SettingsBridgeHandler::HandleGetPlugins(const BridgeMessage& msg)
 
 CString SettingsBridgeHandler::HandleTogglePlugin(const BridgeMessage& msg)
 {
-    CString strPluginId = ExtractPayloadString(msg.m_strPayloadJson, L"pluginId");
-    BOOL bEnabled       = ExtractPayloadBool(msg.m_strPayloadJson, L"enabled");
+    CString strPluginId = JsonExtractString(msg.m_strPayloadJson, L"pluginId");
+    BOOL bEnabled       = JsonExtractBool(msg.m_strPayloadJson, L"enabled");
 
     if (strPluginId.IsEmpty())
     {
@@ -143,7 +143,7 @@ CString SettingsBridgeHandler::HandleGetOutputLanguage(const BridgeMessage& msg)
 
 CString SettingsBridgeHandler::HandleSetOutputLanguage(const BridgeMessage& msg)
 {
-    CString strLang = ExtractPayloadString(msg.m_strPayloadJson, L"outputLanguage");
+    CString strLang = JsonExtractString(msg.m_strPayloadJson, L"outputLanguage");
     if (strLang != L"ko" && strLang != L"en")
     {
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
@@ -167,7 +167,7 @@ CString SettingsBridgeHandler::HandleGetInterfaceLanguage(const BridgeMessage& m
 
 CString SettingsBridgeHandler::HandleSetInterfaceLanguage(const BridgeMessage& msg)
 {
-    CString strLang = ExtractPayloadString(msg.m_strPayloadJson, L"interfaceLanguage");
+    CString strLang = JsonExtractString(msg.m_strPayloadJson, L"interfaceLanguage");
     if (strLang != L"ko" && strLang != L"en")
     {
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
@@ -180,54 +180,4 @@ CString SettingsBridgeHandler::HandleSetInterfaceLanguage(const BridgeMessage& m
 
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
            L"\",\"success\":true,\"payload\":{\"interfaceLanguage\":\"" + strLang + L"\"}}";
-}
-
-CString SettingsBridgeHandler::ExtractPayloadString(const CString& strJson, const CString& strKey) const
-{
-    std::string json  = WideToUtf8(strJson);
-    std::string key   = WideToUtf8(strKey);
-    std::string token = "\"" + key + "\"";
-
-    size_t nKeyPos = json.find(token);
-    if (nKeyPos == std::string::npos)
-        return L"";
-
-    size_t nColon = json.find(':', nKeyPos + token.size());
-    if (nColon == std::string::npos)
-        return L"";
-
-    size_t nQuoteOpen = json.find('"', nColon + 1);
-    if (nQuoteOpen == std::string::npos)
-        return L"";
-
-    size_t nQuoteClose = json.find('"', nQuoteOpen + 1);
-    if (nQuoteClose == std::string::npos)
-        return L"";
-
-    std::string strVal = json.substr(nQuoteOpen + 1, nQuoteClose - nQuoteOpen - 1);
-    return Utf8ToWide(strVal);
-}
-
-BOOL SettingsBridgeHandler::ExtractPayloadBool(const CString& strJson, const CString& strKey) const
-{
-    std::string json  = WideToUtf8(strJson);
-    std::string key   = WideToUtf8(strKey);
-    std::string token = "\"" + key + "\"";
-
-    size_t nKeyPos = json.find(token);
-    if (nKeyPos == std::string::npos)
-        return FALSE;
-
-    size_t nColon = json.find(':', nKeyPos + token.size());
-    if (nColon == std::string::npos)
-        return FALSE;
-
-    size_t nStart = nColon + 1;
-    while (nStart < json.size() && json[nStart] == ' ')
-        ++nStart;
-
-    if (json.substr(nStart, 4) == "true")
-        return TRUE;
-
-    return FALSE;
 }

@@ -98,10 +98,10 @@ BOOL TransformBridgeHandler::ParseSteps(const CString& strPayloadJson, std::vect
             continue;
 
         TransformStep step;
-        step.m_strType    = UnescapeJsonString(ExtractField(strObj, L"type"));
-        step.m_strColumn  = UnescapeJsonString(ExtractField(strObj, L"column"));
-        step.m_strParam1  = UnescapeJsonString(ExtractField(strObj, L"param1"));
-        step.m_strParam2  = UnescapeJsonString(ExtractField(strObj, L"param2"));
+        step.m_strType    = UnescapeJsonString(ExtractStringField(strObj, L"type"));
+        step.m_strColumn  = UnescapeJsonString(ExtractStringField(strObj, L"column"));
+        step.m_strParam1  = UnescapeJsonString(ExtractStringField(strObj, L"param1"));
+        step.m_strParam2  = UnescapeJsonString(ExtractStringField(strObj, L"param2"));
 
         if (step.m_strType.IsEmpty())
         {
@@ -160,6 +160,38 @@ CString TransformBridgeHandler::ExtractArrayContent(const CString& strJson, cons
     }
 
     return strJson.Mid(nStart + 1, nEnd - nStart - 1);
+}
+
+CString TransformBridgeHandler::ExtractStringField(const CString& strJson, const CString& strKey) const
+{
+    CString strSearch = L"\"" + strKey + L"\"";
+    int nPos = strJson.Find(strSearch);
+    if (nPos < 0) return L"";
+
+    int nColon = strJson.Find(L':', nPos + strSearch.GetLength());
+    if (nColon < 0) return L"";
+
+    int nValueStart = nColon + 1;
+    while (nValueStart < strJson.GetLength() && strJson[nValueStart] == L' ')
+        ++nValueStart;
+
+    if (nValueStart >= strJson.GetLength() || strJson[nValueStart] != L'"')
+        return L"";
+
+    int nEnd = nValueStart + 1;
+    while (nEnd < strJson.GetLength())
+    {
+        if (strJson[nEnd] == L'\\')
+        {
+            nEnd += 2;
+            continue;
+        }
+        if (strJson[nEnd] == L'"')
+            break;
+        ++nEnd;
+    }
+
+    return strJson.Mid(nValueStart + 1, nEnd - nValueStart - 1);
 }
 
 std::vector<CString> TransformBridgeHandler::SplitJsonObjects(const CString& strArrayContent) const

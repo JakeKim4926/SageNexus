@@ -127,6 +127,34 @@ inline BOOL JsonExtractBool(const CString& strJson, const CString& strKey)
     return (json.compare(nStart, 4, "true") == 0) ? TRUE : FALSE;
 }
 
+// JSON 이스케이프 시퀀스를 원래 문자로 복원한다.
+inline CString UnescapeJsonString(const CString& str)
+{
+    CString strResult;
+    for (int i = 0; i < str.GetLength(); ++i)
+    {
+        if (str[i] == L'\\' && i + 1 < str.GetLength())
+        {
+            ++i;
+            switch (str[i])
+            {
+            case L'"':  strResult += L'"';  break;
+            case L'\\': strResult += L'\\'; break;
+            case L'/':  strResult += L'/';  break;
+            case L'n':  strResult += L'\n'; break;
+            case L'r':  strResult += L'\r'; break;
+            case L't':  strResult += L'\t'; break;
+            default:    strResult += str[i]; break;
+            }
+        }
+        else
+        {
+            strResult += str[i];
+        }
+    }
+    return strResult;
+}
+
 // JSON 특수문자를 이스케이프하여 문자열 값으로 안전하게 삽입할 수 있는 형태로 반환한다.
 inline CString JsonEscapeString(const CString& str)
 {

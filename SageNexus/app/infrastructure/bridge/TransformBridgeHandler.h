@@ -16,6 +16,7 @@ private:
 
     BOOL ParseSteps(const CString& strPayloadJson, std::vector<TransformStep>& arrSteps, CString& strError);
     CString ExtractArrayContent(const CString& strJson, const CString& strKey) const;
+    CString ExtractStringField(const CString& strJson, const CString& strKey) const;
     std::vector<CString> SplitJsonObjects(const CString& strArrayContent) const;
 
     CString SerializeTableToJson(const DataTable& table) const;

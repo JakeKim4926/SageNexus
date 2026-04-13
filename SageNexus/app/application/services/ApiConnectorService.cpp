@@ -114,7 +114,7 @@ void ApiConnectorService::AddConnector(const CString& strName, const CString& st
     conn.m_strName        = strName;
     conn.m_strBaseUrl     = strBaseUrl;
     conn.m_strHeadersJson = strHeadersJson;
-    conn.m_strAuthType    = strAuthType.IsEmpty() ? L"none" : strAuthType;
+    conn.m_strAuthType    = strAuthType.IsEmpty() ? CString(L"none") : strAuthType;
     conn.m_strAuthValue   = strAuthValue;
     conn.m_bEnabled       = TRUE;
 
@@ -152,7 +152,7 @@ void ApiConnectorService::UpdateConnector(const CString& strId, const CString& s
             conn.m_strName        = strName;
             conn.m_strBaseUrl     = strBaseUrl;
             conn.m_strHeadersJson = strHeadersJson;
-            conn.m_strAuthType    = strAuthType.IsEmpty() ? L"none" : strAuthType;
+            conn.m_strAuthType    = strAuthType.IsEmpty() ? CString(L"none") : strAuthType;
             conn.m_strAuthValue   = strAuthValue;
             break;
         }
@@ -236,7 +236,7 @@ BOOL ApiConnectorService::BuildAction(const CString& strId, const CString& strUr
     }
 
     outAction.m_strUrl         = strUrl;
-    outAction.m_strMethod      = strMethod.IsEmpty() ? L"POST" : strMethod;
+    outAction.m_strMethod      = strMethod.IsEmpty() ? CString(L"POST") : strMethod;
     outAction.m_strHeadersJson = BuildMergedHeaders(conn);
     outAction.m_strBody        = strBody;
     outAction.m_nTimeoutMs     = API_DEFAULT_TIMEOUT_MS;
@@ -274,7 +274,7 @@ CString ApiConnectorService::BuildMergedHeaders(const ApiConnector& conn) const
         return InjectJsonPair(strBase, strPair);
     }
 
-    return strBase.IsEmpty() ? L"{}" : strBase;
+    return strBase.IsEmpty() ? CString(L"{}") : strBase;
 }
 
 CString ApiConnectorService::InjectJsonPair(const CString& strJson, const CString& strPair) const

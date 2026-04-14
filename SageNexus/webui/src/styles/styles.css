@@ -357,10 +357,25 @@ html, body {
 .page-toolbar {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: var(--sp3);
     padding-bottom: var(--sp4);
     border-bottom: 0.5px solid var(--bd);
     margin-bottom: var(--sp4);
+    flex-shrink: 0;
+}
+
+.toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: var(--sp3);
+    min-width: 0;
+}
+
+.toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: var(--sp2);
     flex-shrink: 0;
 }
 
@@ -487,12 +502,54 @@ html, body {
 }
 
 .data-table td:last-child { border-right: none; }
-.data-table td.col-num { text-align: right; font-family: var(--font-mono); }
-.data-table th.col-num { text-align: right; }
 
 .data-table tbody tr:hover td { background: var(--bgH); }
 .data-table tbody tr:hover td.col-rownum { background: var(--bgH); }
 .data-table tbody tr:last-child td { border-bottom: none; }
+
+/* 툴바 정렬 버튼 그룹 */
+.align-btn-group {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 3px 4px;
+    background: var(--bg3);
+    border: 0.5px solid var(--bd);
+    border-radius: var(--radius-sm);
+}
+.align-btn-group.hidden { display: none; }
+
+.align-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border: 0.5px solid transparent;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--t3);
+    cursor: pointer;
+    transition: background 0.12s, color 0.12s, border-color 0.12s;
+}
+.align-btn:hover {
+    background: var(--bg2);
+    color: var(--t1);
+    border-color: var(--bd);
+}
+.align-btn.active {
+    background: var(--bg2);
+    color: var(--acT);
+    border-color: var(--ac);
+}
+
+/* 정렬 적용 */
+.data-table td.col-align-left,
+.data-table th.col-align-left   { text-align: left; }
+.data-table td.col-align-center,
+.data-table th.col-align-center { text-align: center; }
+.data-table td.col-align-right,
+.data-table th.col-align-right  { text-align: right; }
 
 #page-data-viewer { overflow: hidden; }
 #page-transform   { overflow: auto; }

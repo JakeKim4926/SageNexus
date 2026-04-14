@@ -119,9 +119,39 @@
                     <div class="page-subtitle" data-i18n="page.dataViewer.subtitle">파일을 불러와 데이터를 확인합니다.</div>
                 </div>
                 <div class="page-toolbar">
-                    <button class="btn btn-primary" id="btn-open-file" data-i18n="dv.btn.openFile">파일 열기</button>
-                    <span class="file-info-name" id="dv-filename"></span>
-                    <span class="file-info-meta" id="dv-meta"></span>
+                    <div class="toolbar-left">
+                        <button class="btn btn-primary" id="btn-open-file" data-i18n="dv.btn.openFile">파일 열기</button>
+                        <span class="file-info-name" id="dv-filename"></span>
+                        <span class="file-info-meta" id="dv-meta"></span>
+                    </div>
+                    <div class="toolbar-right">
+                        <div class="align-btn-group hidden" id="dv-align-group">
+                            <button class="align-btn active" data-align="left" title="Left align">
+                                <svg width="13" height="11" viewBox="0 0 13 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="0" y="0"    width="13" height="1.5" rx="0.75" fill="currentColor"/>
+                                    <rect x="0" y="3.25" width="9"  height="1.5" rx="0.75" fill="currentColor"/>
+                                    <rect x="0" y="6.5"  width="11" height="1.5" rx="0.75" fill="currentColor"/>
+                                    <rect x="0" y="9.75" width="7"  height="1.5" rx="0.75" fill="currentColor"/>
+                                </svg>
+                            </button>
+                            <button class="align-btn" data-align="center" title="Center align">
+                                <svg width="13" height="11" viewBox="0 0 13 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="0"   y="0"    width="13" height="1.5" rx="0.75" fill="currentColor"/>
+                                    <rect x="2"   y="3.25" width="9"  height="1.5" rx="0.75" fill="currentColor"/>
+                                    <rect x="1"   y="6.5"  width="11" height="1.5" rx="0.75" fill="currentColor"/>
+                                    <rect x="3"   y="9.75" width="7"  height="1.5" rx="0.75" fill="currentColor"/>
+                                </svg>
+                            </button>
+                            <button class="align-btn" data-align="right" title="Right align">
+                                <svg width="13" height="11" viewBox="0 0 13 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="0"   y="0"    width="13" height="1.5" rx="0.75" fill="currentColor"/>
+                                    <rect x="4"   y="3.25" width="9"  height="1.5" rx="0.75" fill="currentColor"/>
+                                    <rect x="2"   y="6.5"  width="11" height="1.5" rx="0.75" fill="currentColor"/>
+                                    <rect x="6"   y="9.75" width="7"  height="1.5" rx="0.75" fill="currentColor"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 <div class="page-body">
                     <div class="empty-state" id="dv-state-empty">
@@ -1237,6 +1267,7 @@ function getColDisplayName(col) {
         document.getElementById('dv-state-loading').classList.toggle('hidden', state !== 'loading');
         document.getElementById('dv-state-error').classList.toggle('hidden', state !== 'error');
         document.getElementById('dv-state-data').classList.toggle('hidden', state !== 'data');
+        document.getElementById('dv-align-group').classList.toggle('hidden', state !== 'data');
 
         if (state === 'error') {
             var msgEl = document.getElementById('dv-error-message');
@@ -1244,27 +1275,38 @@ function getColDisplayName(col) {
         }
     }
 
-    function isNumericColumn(rows, colIndex) {
-        var filled = 0;
-        var numeric = 0;
-        for (var i = 0; i < rows.length; i++) {
-            var val = rows[i][colIndex];
-            if (val === null || val === undefined || val === '') continue;
-            filled++;
-            if (!isNaN(parseFloat(val)) && isFinite(val)) numeric++;
-        }
-        return filled > 0 && numeric / filled >= 0.9;
+    /* 전역 정렬 상태 */
+    var _tableAlign = 'left';
+
+    function applyTableAlign(align) {
+        _tableAlign = align;
+        var table = document.querySelector('#dv-state-data .data-table');
+        if (!table) return;
+        table.querySelectorAll('td:not(.col-rownum), th:not(.col-rownum)').forEach(function (cell) {
+            cell.classList.remove('col-align-left', 'col-align-center', 'col-align-right');
+            cell.classList.add('col-align-' + align);
+        });
+        document.querySelectorAll('#dv-align-group .align-btn').forEach(function (btn) {
+            btn.classList.toggle('active', btn.dataset.align === align);
+        });
     }
 
+    document.querySelectorAll('#dv-align-group .align-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            applyTableAlign(btn.dataset.align);
+        });
+    });
+
     function renderTable(tableData) {
+        _tableAlign = 'left';
+        document.querySelectorAll('#dv-align-group .align-btn').forEach(function (btn) {
+            btn.classList.toggle('active', btn.dataset.align === 'left');
+        });
+
         var thead = document.getElementById('dv-table-head');
         var tbody = document.getElementById('dv-table-body');
         thead.innerHTML = '';
         tbody.innerHTML = '';
-
-        var numericFlags = tableData.columns.map(function (_, i) {
-            return isNumericColumn(tableData.rows, i);
-        });
 
         var tr = document.createElement('tr');
         var thRowNum = document.createElement('th');
@@ -1272,10 +1314,10 @@ function getColDisplayName(col) {
         thRowNum.textContent = '#';
         tr.appendChild(thRowNum);
 
-        tableData.columns.forEach(function (col, i) {
+        tableData.columns.forEach(function (col) {
             var th = document.createElement('th');
             th.textContent = getColDisplayName(col);
-            if (numericFlags[i]) th.className = 'col-num';
+            th.classList.add('col-align-left');
             tr.appendChild(th);
         });
         thead.appendChild(tr);
@@ -1288,10 +1330,10 @@ function getColDisplayName(col) {
             tdRowNum.textContent = rowIndex + 1;
             tr.appendChild(tdRowNum);
 
-            row.forEach(function (cell, colIndex) {
+            row.forEach(function (cell) {
                 var td = document.createElement('td');
                 td.textContent = cell;
-                if (numericFlags[colIndex]) td.className = 'col-num';
+                td.classList.add('col-align-left');
                 tr.appendChild(td);
             });
             tbody.appendChild(tr);

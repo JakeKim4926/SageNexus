@@ -488,6 +488,7 @@ html, body {
 
 .data-table td:last-child { border-right: none; }
 .data-table td.col-num { text-align: right; font-family: var(--font-mono); }
+.data-table th.col-num { text-align: right; }
 
 .data-table tbody tr:hover td { background: var(--bgH); }
 .data-table tbody tr:hover td.col-rownum { background: var(--bgH); }

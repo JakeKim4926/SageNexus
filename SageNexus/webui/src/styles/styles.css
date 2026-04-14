@@ -425,7 +425,8 @@ html, body {
 }
 
 .data-table {
-    width: 100%;
+    width: max-content;
+    min-width: 100%;
     border-collapse: collapse;
     font-size: var(--fs-sm);
 }
@@ -438,24 +439,58 @@ html, body {
     font-weight: 600;
     text-align: left;
     padding: var(--sp2) var(--sp3);
-    border-bottom: 0.5px solid var(--bd);
+    border-bottom: 1px solid var(--bd);
+    border-right: 0.5px solid var(--bd);
     white-space: nowrap;
     z-index: 1;
     font-size: var(--fs-xs);
     letter-spacing: 0.03em;
+    min-width: 80px;
+    max-width: 260px;
+}
+
+.data-table th:last-child { border-right: none; }
+
+/* 행 번호 컬럼 */
+.data-table th.col-rownum,
+.data-table td.col-rownum {
+    min-width: 44px;
+    max-width: 44px;
+    width: 44px;
+    text-align: right;
+    color: var(--t3);
+    font-size: var(--fs-xs);
+    background: var(--bg3);
+    padding: var(--sp2) var(--sp2);
+    user-select: none;
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    border-right: 1px solid var(--bd);
+}
+
+.data-table th.col-rownum {
+    z-index: 3;
+    font-weight: 500;
 }
 
 .data-table td {
     padding: var(--sp2) var(--sp3);
     border-bottom: 0.5px solid var(--bdL);
+    border-right: 0.5px solid var(--bdL);
     color: var(--t1);
     white-space: nowrap;
-    max-width: 280px;
+    min-width: 80px;
+    max-width: 260px;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.data-table tbody tr:hover { background: var(--bgH); }
+.data-table td:last-child { border-right: none; }
+.data-table td.col-num { text-align: right; font-family: var(--font-mono); }
+
+.data-table tbody tr:hover td { background: var(--bgH); }
+.data-table tbody tr:hover td.col-rownum { background: var(--bgH); }
 .data-table tbody tr:last-child td { border-bottom: none; }
 
 #page-data-viewer { overflow: hidden; }

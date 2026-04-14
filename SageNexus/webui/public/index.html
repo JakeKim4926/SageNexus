@@ -1244,13 +1244,34 @@ function getColDisplayName(col) {
         }
     }
 
+    function isNumericColumn(rows, colIndex) {
+        var filled = 0;
+        var numeric = 0;
+        for (var i = 0; i < rows.length; i++) {
+            var val = rows[i][colIndex];
+            if (val === null || val === undefined || val === '') continue;
+            filled++;
+            if (!isNaN(parseFloat(val)) && isFinite(val)) numeric++;
+        }
+        return filled > 0 && numeric / filled >= 0.9;
+    }
+
     function renderTable(tableData) {
         var thead = document.getElementById('dv-table-head');
         var tbody = document.getElementById('dv-table-body');
         thead.innerHTML = '';
         tbody.innerHTML = '';
 
+        var numericFlags = tableData.columns.map(function (_, i) {
+            return isNumericColumn(tableData.rows, i);
+        });
+
         var tr = document.createElement('tr');
+        var thRowNum = document.createElement('th');
+        thRowNum.className = 'col-rownum';
+        thRowNum.textContent = '#';
+        tr.appendChild(thRowNum);
+
         tableData.columns.forEach(function (col) {
             var th = document.createElement('th');
             th.textContent = getColDisplayName(col);
@@ -1258,11 +1279,18 @@ function getColDisplayName(col) {
         });
         thead.appendChild(tr);
 
-        tableData.rows.forEach(function (row) {
+        tableData.rows.forEach(function (row, rowIndex) {
             var tr = document.createElement('tr');
-            row.forEach(function (cell) {
+
+            var tdRowNum = document.createElement('td');
+            tdRowNum.className = 'col-rownum';
+            tdRowNum.textContent = rowIndex + 1;
+            tr.appendChild(tdRowNum);
+
+            row.forEach(function (cell, colIndex) {
                 var td = document.createElement('td');
                 td.textContent = cell;
+                if (numericFlags[colIndex]) td.className = 'col-num';
                 tr.appendChild(td);
             });
             tbody.appendChild(tr);

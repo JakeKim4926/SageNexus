@@ -1,5 +1,52 @@
 # PR 작업 로그
 
+---
+
+## [2026-04-14] feature/data-viewer-table-ui
+- **목적**: Data Viewer 테이블 UI를 엑셀 스타일로 개선 + 탭 구분자 CSV 파싱 버그 수정
+- **변경 내용**:
+  - 테이블 격자선(세로 border-right), 행 번호 컬럼(`#`) sticky 고정, 폰트 확대(13px), 셀 패딩 확대
+  - 숫자 컬럼 자동 감지(90% 기준) → 헤더·데이터 모두 오른쪽 정렬
+  - CsvReader에 `DetectDelimiter()` 추가 → 탭/쉼표 자동 감지 지원
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/44
+- **결과**: merged
+
+---
+
+## [2026-04-12] fix/code-review
+- **목적**: 전체 코드 리뷰 기반 구조 수정 — Blocker 2건 + Major 4건 + Minor 4건 해소
+- **변경 내용**:
+  - [Blocker] pch.h에 escape-aware JsonExtractString 공유 헬퍼 추가 → configJson round-trip 깨짐 수정
+  - [Blocker] WorkflowService::ExecuteWorkflowCore에서 sendEmail recipients 키 "to"→"recipients" 통일
+  - [Major] WorkflowService 이중 실행 경로(RunWorkflow/RunSync)를 ExecuteWorkflowCore로 통합
+  - [Major] JobQueueService 스레드 안전성: volatile LONG + InterlockedExchange/CompareExchange, CRITICAL_SECTION으로 m_strRunningJobId 보호
+  - [Major] WorkflowBridgeHandler가 JobQueueBridgeHandler::EnqueueWorkflow 경유하도록 수정 — 별도 WorkflowService 직접 실행 제거
+  - [Major] 워크플로 완료 후 m_currentTable 미갱신 수정: WorkflowService::GetLastOutputTable + MainWindow::UpdateCurrentTableFromWorkflow
+  - [Minor] SageApp::Shutdown 조기 종료 조건 오류 수정 (m_pConfigStore → m_pLogger)
+  - [Minor] STEP_TYPE_* 상수 Define.h 추가, 전체 문자열 리터럴 직접 비교 제거
+  - [Minor] ApiCallAction 기본 생성자 추가 (m_nTimeoutMs = 30000)
+  - [Minor] 12개 BridgeHandler 중복 구현(JsonEscapeString/JsonExtractString/JsonExtractBool) 전량 제거, pch.h 공유 헬퍼로 통일
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/43
+- **결과**: merged ✅
+
+## [2026-04-11] feature/conditional-step
+- **목적**: Phase 7 Step 3 — Workflow 조건 분기 (Conditional Step)
+- **변경 내용**: ConditionStep 도메인 모델 (field/operator/value/thenStepId/elseStepId), WorkflowService 실행 루프 for→while 리팩토링, EvaluateCondition/ParseConditionStep/FindStepIndex 메서드 추가, MAX_STEP_ITERATIONS(1000) 무한루프 가드, ExecuteSteps/RunSync 양쪽 모두 condition step 처리 추가, WebUI Workflow 편집기 condition 전용 폼(field/operator select/value/thenStep/elseStep), makeStepSelector 헬퍼, ko/en i18n 키 14개 추가
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/42
+- **결과**: merged ✅
+
+## [2026-04-10] feature/api-connector
+- **목적**: Phase 7 Step 2 — API Connector 고도화
+- **변경 내용**: ApiConnector 도메인 모델 (connectorId/name/baseUrl/headersJson/authType/authValue), ApiConnectorService (connectors.json 저장·로드/Add/Remove/Update/Test/BuildAction), ApiConnectorBridgeHandler (connector::getConnectors/addConnector/removeConnector/updateConnector/testConnector), WorkflowService callApi step에 connectorId 기반 BuildAction 연동 (하위 호환 유지), Settings 페이지 API Connectors 섹션, Workflow callApi step 커넥터 선택 드롭다운, ko.json/en.json/인라인 LOCALES connector i18n 키 추가
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/41
+- **결과**: merged ✅
+
+## [2026-04-09] feature/phase7-step1-scheduler
+- **목적**: Phase 7 Step 1 — Scheduler (예약 실행)
+- **변경 내용**: ScheduledJob 도메인 모델, SchedulerService (scheduler.json 저장·로드 / AddJob / RemoveJob / ToggleJob / GetDueJobs / CalcNextRunAt), SchedulerBridgeHandler (scheduler::getJobs/addJob/removeJob/toggleJob), JobQueueBridgeHandler에 EnqueueWorkflow() 추가, MainWindow WM_TIMER(60초) + OnSchedulerTick, Define.h SCHEDULER_* 상수, Settings 페이지 Scheduler 섹션 (워크플로우 드롭다운 + 시각 입력 + 추가/삭제/토글), ko.json/en.json settings.scheduler.* 키 추가
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/40
+- **결과**: merged ✅
+
 SageNexus 프로젝트의 PR 생성 및 머지 이력을 기록한다.
 
 ---

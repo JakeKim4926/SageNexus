@@ -45,7 +45,7 @@ CString ImportBridgeHandler::HandleOpenFileDialog(const BridgeMessage& msg, HWND
     if (GetOpenFileNameW(&ofn))
         strFilePath = szFile;
 
-    CString strPayload = L"{\"filePath\":\"" + EscapeJsonString(strFilePath) + L"\"}";
+    CString strPayload = L"{\"filePath\":\"" + JsonEscapeString(strFilePath) + L"\"}";
 
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
            L"\",\"success\":true,\"payload\":" + strPayload + L"}";
@@ -53,7 +53,7 @@ CString ImportBridgeHandler::HandleOpenFileDialog(const BridgeMessage& msg, HWND
 
 CString ImportBridgeHandler::HandleLoadFile(const BridgeMessage& msg)
 {
-    CString strFilePath = UnescapeJsonString(ExtractPayloadField(msg.m_strPayloadJson, L"filePath"));
+    CString strFilePath = JsonExtractString(msg.m_strPayloadJson, L"filePath");
 
     if (strFilePath.IsEmpty())
     {
@@ -87,7 +87,7 @@ CString ImportBridgeHandler::HandleLoadFile(const BridgeMessage& msg)
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
                L"\",\"success\":false,\"payload\":null,"
                L"\"error\":{\"code\":\"SNX_FILE_002\",\"message\":\"" +
-               EscapeJsonString(strError) + L"\"}}";
+               JsonEscapeString(strError) + L"\"}}";
     }
 
     *m_pSharedTable = table;
@@ -118,7 +118,7 @@ CString ImportBridgeHandler::SerializeTableToJson(const DataTable& table, const 
     json += L"\",";
 
     json += L"\"sourceName\":\"";
-    json += (LPCWSTR)EscapeJsonString(table.GetSourceName());
+    json += (LPCWSTR)JsonEscapeString(table.GetSourceName());
     json += L"\",";
 
     wchar_t buf[32];
@@ -138,11 +138,11 @@ CString ImportBridgeHandler::SerializeTableToJson(const DataTable& table, const 
         if (i > 0) json += L",";
         const DataColumn& col = table.GetColumn(i);
         json += L"{\"internalName\":\"";
-        json += (LPCWSTR)EscapeJsonString(col.m_strInternalName);
+        json += (LPCWSTR)JsonEscapeString(col.m_strInternalName);
         json += L"\",\"displayNameKo\":\"";
-        json += (LPCWSTR)EscapeJsonString(col.m_strDisplayNameKo);
+        json += (LPCWSTR)JsonEscapeString(col.m_strDisplayNameKo);
         json += L"\",\"displayNameEn\":\"";
-        json += (LPCWSTR)EscapeJsonString(col.m_strDisplayNameEn);
+        json += (LPCWSTR)JsonEscapeString(col.m_strDisplayNameEn);
         json += L"\"}";
     }
     json += L"],";
@@ -161,7 +161,7 @@ CString ImportBridgeHandler::SerializeTableToJson(const DataTable& table, const 
         {
             if (j > 0) json += L",";
             json += L"\"";
-            json += (LPCWSTR)EscapeJsonString(row.m_arrCells[j]);
+            json += (LPCWSTR)JsonEscapeString(row.m_arrCells[j]);
             json += L"\"";
         }
         json += L"]";
@@ -170,87 +170,4 @@ CString ImportBridgeHandler::SerializeTableToJson(const DataTable& table, const 
 
     json += L"}";
     return CString(json.c_str());
-}
-
-CString ImportBridgeHandler::EscapeJsonString(const CString& str) const
-{
-    CString strResult;
-    for (int i = 0; i < str.GetLength(); ++i)
-    {
-        wchar_t ch = str[i];
-        switch (ch)
-        {
-        case L'"':  strResult += L"\\\""; break;
-        case L'\\': strResult += L"\\\\"; break;
-        case L'\n': strResult += L"\\n";  break;
-        case L'\r': strResult += L"\\r";  break;
-        case L'\t': strResult += L"\\t";  break;
-        default:    strResult += ch;      break;
-        }
-    }
-    return strResult;
-}
-
-CString ImportBridgeHandler::UnescapeJsonString(const CString& str) const
-{
-    CString strResult;
-    for (int i = 0; i < str.GetLength(); ++i)
-    {
-        if (str[i] == L'\\' && i + 1 < str.GetLength())
-        {
-            ++i;
-            switch (str[i])
-            {
-            case L'"':  strResult += L'"';  break;
-            case L'\\': strResult += L'\\'; break;
-            case L'/':  strResult += L'/';  break;
-            case L'n':  strResult += L'\n'; break;
-            case L'r':  strResult += L'\r'; break;
-            case L't':  strResult += L'\t'; break;
-            default:    strResult += str[i]; break;
-            }
-        }
-        else
-        {
-            strResult += str[i];
-        }
-    }
-    return strResult;
-}
-
-CString ImportBridgeHandler::ExtractPayloadField(const CString& strPayloadJson, const CString& strKey) const
-{
-    CString strSearch = L"\"" + strKey + L"\"";
-    int nPos = strPayloadJson.Find(strSearch);
-    if (nPos < 0)
-        return L"";
-
-    int nColon = strPayloadJson.Find(L':', nPos + strSearch.GetLength());
-    if (nColon < 0)
-        return L"";
-
-    int nValueStart = nColon + 1;
-    while (nValueStart < strPayloadJson.GetLength() && strPayloadJson[nValueStart] == L' ')
-        ++nValueStart;
-
-    if (nValueStart >= strPayloadJson.GetLength() || strPayloadJson[nValueStart] != L'"')
-        return L"";
-
-    int nEnd = nValueStart + 1;
-    while (nEnd < strPayloadJson.GetLength())
-    {
-        if (strPayloadJson[nEnd] == L'\\')
-        {
-            nEnd += 2;
-            continue;
-        }
-        if (strPayloadJson[nEnd] == L'"')
-            break;
-        ++nEnd;
-    }
-
-    if (nEnd >= strPayloadJson.GetLength())
-        return L"";
-
-    return strPayloadJson.Mid(nValueStart + 1, nEnd - nValueStart - 1);
 }

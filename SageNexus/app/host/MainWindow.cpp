@@ -1,7 +1,9 @@
 #include "pch.h"
 #include "app/host/MainWindow.h"
 #include "app/application/SageApp.h"
+#include "app/domain/model/ScheduledJob.h"
 #include "Define.h"
+#include <vector>
 
 MainWindow::MainWindow()
     : m_hWnd(nullptr)
@@ -110,6 +112,11 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         OnJobQueueChanged();
         return 0;
 
+    case WM_TIMER:
+        if (wParam == SCHEDULER_TIMER_ID)
+            OnSchedulerTick();
+        return 0;
+
     case WM_DESTROY:
         OnDestroy();
         return 0;
@@ -155,6 +162,7 @@ void MainWindow::OnWebViewReady(BOOL bSuccess)
 
     RegisterBridgeHandlers();
     NavigateToShell();
+    SetTimer(m_hWnd, SCHEDULER_TIMER_ID, SCHEDULER_TICK_MS, nullptr);
 
     RECT rcClient = {};
     GetClientRect(m_hWnd, &rcClient);
@@ -169,11 +177,14 @@ void MainWindow::RegisterBridgeHandlers()
     m_exportBridgeHandler.RegisterHandlers(dispatcher, m_hWnd, &m_currentTable);
     m_historyBridgeHandler.RegisterHandlers(dispatcher);
     m_settingsBridgeHandler.RegisterHandlers(dispatcher);
-    m_workflowBridgeHandler.RegisterHandlers(dispatcher, m_hWnd);
+    // WorkflowBridgeHandler는 JobQueueBridgeHandler를 통해 실행 — WorkflowService 인스턴스 중복 방지
+    m_jobQueueBridgeHandler.RegisterHandlers(dispatcher, m_hWnd);
+    m_workflowBridgeHandler.RegisterHandlers(dispatcher, m_hWnd, &m_jobQueueBridgeHandler);
     m_webExtractBridgeHandler.RegisterHandlers(dispatcher, &m_currentTable);
     m_emailBridgeHandler.RegisterHandlers(dispatcher);
     m_apiCallBridgeHandler.RegisterHandlers(dispatcher);
-    m_jobQueueBridgeHandler.RegisterHandlers(dispatcher, m_hWnd);
+    m_schedulerBridgeHandler.RegisterHandlers(dispatcher);
+    m_apiConnectorBridgeHandler.RegisterHandlers(dispatcher);
 }
 
 void MainWindow::NavigateToShell()
@@ -190,22 +201,12 @@ void MainWindow::OnWorkflowProgress(int nStep, int nTotal)
 
     int nPercent = (nTotal > 0) ? (nStep * 100 / nTotal) : 0;
 
-    CString strStepName = m_workflowBridgeHandler.GetCurrentStepName();
-    if (strStepName.IsEmpty())
-        strStepName = m_jobQueueBridgeHandler.GetCurrentStepName();
-
-    CString strEscaped;
-    for (int i = 0; i < strStepName.GetLength(); ++i)
-    {
-        wchar_t ch = strStepName[i];
-        if (ch == L'"')       strEscaped += L"\\\"";
-        else if (ch == L'\\') strEscaped += L"\\\\";
-        else                  strEscaped += ch;
-    }
+    // 모든 실행이 JobQueue 경유이므로 JobQueueBridgeHandler에서만 조회한다.
+    CString strStepName = m_jobQueueBridgeHandler.GetCurrentStepName();
 
     CString strPayload;
     strPayload.Format(L"{\"step\":%d,\"total\":%d,\"percent\":%d,\"stepName\":\"%s\"}",
-        nStep, nTotal, nPercent, (LPCWSTR)strEscaped);
+        nStep, nTotal, nPercent, (LPCWSTR)JsonEscapeString(strStepName));
     m_pWebViewHost->SendEvent(L"workflow:progress", strPayload);
 }
 
@@ -214,9 +215,20 @@ void MainWindow::OnWorkflowComplete(BOOL bSuccess)
     if (!m_pWebViewHost || !m_pWebViewHost->IsReady())
         return;
 
+    // Workflow 성공 시 결과 DataTable을 m_currentTable에 반영 — Data Viewer에서 즉시 확인 가능
+    if (bSuccess)
+        UpdateCurrentTableFromWorkflow();
+
     CString strPayload;
     strPayload.Format(L"{\"success\":%s}", bSuccess ? L"true" : L"false");
     m_pWebViewHost->SendEvent(L"workflow:complete", strPayload);
+}
+
+void MainWindow::UpdateCurrentTableFromWorkflow()
+{
+    const DataTable& lastTable = m_jobQueueBridgeHandler.GetLastOutputTable();
+    if (!lastTable.IsEmpty())
+        m_currentTable = lastTable;
 }
 
 void MainWindow::OnJobQueueChanged()
@@ -227,8 +239,31 @@ void MainWindow::OnJobQueueChanged()
     m_pWebViewHost->SendEvent(L"queue:changed", L"{}");
 }
 
+void MainWindow::OnSchedulerTick()
+{
+    std::vector<ScheduledJob> arrDue;
+    m_schedulerBridgeHandler.GetDueJobs(arrDue);
+
+    for (int i = 0; i < (int)arrDue.size(); ++i)
+    {
+        CString strError;
+        m_jobQueueBridgeHandler.EnqueueWorkflow(
+            arrDue[i].m_strWorkflowId,
+            arrDue[i].m_strWorkflowName,
+            m_hWnd,
+            strError);
+
+        if (!strError.IsEmpty())
+        {
+            sageMgr.GetLogger().Log(LogLevel::Warning,
+                L"[Scheduler] 자동 실행 실패: " + arrDue[i].m_strWorkflowId + L" / " + strError);
+        }
+    }
+}
+
 void MainWindow::OnDestroy()
 {
+    KillTimer(m_hWnd, SCHEDULER_TIMER_ID);
     sageMgr.GetLogger().LogInfo(L"MainWindow: Destroyed");
     PostQuitMessage(0);
 }

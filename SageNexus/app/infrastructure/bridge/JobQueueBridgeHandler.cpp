@@ -31,8 +31,8 @@ void JobQueueBridgeHandler::RegisterHandlers(BridgeDispatcher& dispatcher, HWND 
 
 CString JobQueueBridgeHandler::HandleEnqueue(const BridgeMessage& msg)
 {
-    CString strWorkflowId   = ExtractPayloadString(msg.m_strPayloadJson, L"workflowId");
-    CString strWorkflowName = ExtractPayloadString(msg.m_strPayloadJson, L"workflowName");
+    CString strWorkflowId   = JsonExtractString(msg.m_strPayloadJson, L"workflowId");
+    CString strWorkflowName = JsonExtractString(msg.m_strPayloadJson, L"workflowName");
 
     if (strWorkflowId.IsEmpty())
     {
@@ -45,7 +45,7 @@ CString JobQueueBridgeHandler::HandleEnqueue(const BridgeMessage& msg)
     {
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
                L"\",\"success\":false,\"error\":{\"code\":\"ENQUEUE_FAILED\",\"message\":\"" +
-               EscapeJson(strError) + L"\"}}";
+               JsonEscapeString(strError) + L"\"}}";
     }
 
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
@@ -71,7 +71,7 @@ CString JobQueueBridgeHandler::HandleGetQueue(const BridgeMessage& msg)
 
 CString JobQueueBridgeHandler::HandleCancelJob(const BridgeMessage& msg)
 {
-    CString strJobId = ExtractPayloadString(msg.m_strPayloadJson, L"jobId");
+    CString strJobId = JsonExtractString(msg.m_strPayloadJson, L"jobId");
     if (strJobId.IsEmpty())
     {
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
@@ -81,12 +81,27 @@ CString JobQueueBridgeHandler::HandleCancelJob(const BridgeMessage& msg)
     m_service.CancelJob(strJobId);
 
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
-           L"\",\"success\":true,\"payload\":{\"jobId\":\"" + EscapeJson(strJobId) + L"\"}}";
+           L"\",\"success\":true,\"payload\":{\"jobId\":\"" + JsonEscapeString(strJobId) + L"\"}}";
+}
+
+BOOL JobQueueBridgeHandler::EnqueueWorkflow(const CString& strWorkflowId, const CString& strWorkflowName, HWND hMainWnd, CString& strError)
+{
+    return m_service.EnqueueJob(strWorkflowId, strWorkflowName, hMainWnd, strError);
+}
+
+void JobQueueBridgeHandler::CancelCurrentJob()
+{
+    m_service.CancelRunningJob();
 }
 
 const CString& JobQueueBridgeHandler::GetCurrentStepName() const
 {
     return m_service.GetCurrentStepName();
+}
+
+const DataTable& JobQueueBridgeHandler::GetLastOutputTable() const
+{
+    return m_service.GetLastOutputTable();
 }
 
 CString JobQueueBridgeHandler::HandleCancelAll(const BridgeMessage& msg)
@@ -106,7 +121,7 @@ CString JobQueueBridgeHandler::HandleCancelAll(const BridgeMessage& msg)
 
 CString JobQueueBridgeHandler::HandleRetryJob(const BridgeMessage& msg)
 {
-    CString strJobId = ExtractPayloadString(msg.m_strPayloadJson, L"jobId");
+    CString strJobId = JsonExtractString(msg.m_strPayloadJson, L"jobId");
     if (strJobId.IsEmpty())
     {
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
@@ -118,11 +133,11 @@ CString JobQueueBridgeHandler::HandleRetryJob(const BridgeMessage& msg)
     {
         return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
                L"\",\"success\":false,\"error\":{\"code\":\"RETRY_FAILED\",\"message\":\"" +
-               EscapeJson(strError) + L"\"}}";
+               JsonEscapeString(strError) + L"\"}}";
     }
 
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
-           L"\",\"success\":true,\"payload\":{\"jobId\":\"" + EscapeJson(strJobId) + L"\"}}";
+           L"\",\"success\":true,\"payload\":{\"jobId\":\"" + JsonEscapeString(strJobId) + L"\"}}";
 }
 
 CString JobQueueBridgeHandler::SerializeJob(const ExecutionJob& job) const
@@ -137,12 +152,12 @@ CString JobQueueBridgeHandler::SerializeJob(const ExecutionJob& job) const
         L"\"createdAt\":\"%s\","
         L"\"errorMessage\":\"%s\""
         L"}",
-        (LPCWSTR)EscapeJson(job.m_strJobId),
-        (LPCWSTR)EscapeJson(job.m_strWorkflowId),
-        (LPCWSTR)EscapeJson(job.m_strWorkflowName),
+        (LPCWSTR)JsonEscapeString(job.m_strJobId),
+        (LPCWSTR)JsonEscapeString(job.m_strWorkflowId),
+        (LPCWSTR)JsonEscapeString(job.m_strWorkflowName),
         (LPCWSTR)JobStatusToString(job.m_eStatus),
-        (LPCWSTR)EscapeJson(job.m_strCreatedAt),
-        (LPCWSTR)EscapeJson(job.m_strErrorMessage)
+        (LPCWSTR)JsonEscapeString(job.m_strCreatedAt),
+        (LPCWSTR)JsonEscapeString(job.m_strErrorMessage)
     );
     return strJson;
 }
@@ -160,42 +175,3 @@ CString JobQueueBridgeHandler::JobStatusToString(JobStatus eStatus) const
     }
 }
 
-CString JobQueueBridgeHandler::ExtractPayloadString(const CString& strJson, const CString& strKey) const
-{
-    std::string json  = WideToUtf8(strJson);
-    std::string key   = WideToUtf8(strKey);
-    std::string token = "\"" + key + "\"";
-
-    size_t nKeyPos = json.find(token);
-    if (nKeyPos == std::string::npos) return L"";
-
-    size_t nColon = json.find(':', nKeyPos + token.size());
-    if (nColon == std::string::npos) return L"";
-
-    size_t nQuoteOpen = json.find('"', nColon + 1);
-    if (nQuoteOpen == std::string::npos) return L"";
-
-    size_t nQuoteClose = json.find('"', nQuoteOpen + 1);
-    if (nQuoteClose == std::string::npos) return L"";
-
-    return Utf8ToWide(json.substr(nQuoteOpen + 1, nQuoteClose - nQuoteOpen - 1));
-}
-
-CString JobQueueBridgeHandler::EscapeJson(const CString& str) const
-{
-    CString strResult;
-    for (int i = 0; i < str.GetLength(); ++i)
-    {
-        wchar_t ch = str[i];
-        switch (ch)
-        {
-        case L'"':  strResult += L"\\\""; break;
-        case L'\\': strResult += L"\\\\"; break;
-        case L'\n': strResult += L"\\n";  break;
-        case L'\r': strResult += L"\\r";  break;
-        case L'\t': strResult += L"\\t";  break;
-        default:    strResult += ch;      break;
-        }
-    }
-    return strResult;
-}

@@ -18,6 +18,4 @@ private:
     CString HandleGetInterfaceLanguage(const BridgeMessage& msg);
     CString HandleSetInterfaceLanguage(const BridgeMessage& msg);
 
-    CString ExtractPayloadString(const CString& strJson, const CString& strKey) const;
-    BOOL    ExtractPayloadBool(const CString& strJson, const CString& strKey) const;
 };

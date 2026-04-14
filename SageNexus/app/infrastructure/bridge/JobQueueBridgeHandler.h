@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "app/host/BridgeDispatcher.h"
 #include "app/application/services/JobQueueService.h"
+#include "app/domain/model/DataTable.h"
 
 class JobQueueBridgeHandler
 {
@@ -9,7 +10,10 @@ public:
     JobQueueBridgeHandler();
 
     void RegisterHandlers(BridgeDispatcher& dispatcher, HWND hMainWnd);
-    const CString& GetCurrentStepName() const;
+    BOOL EnqueueWorkflow(const CString& strWorkflowId, const CString& strWorkflowName, HWND hMainWnd, CString& strError);
+    void CancelCurrentJob();
+    const CString&   GetCurrentStepName() const;
+    const DataTable& GetLastOutputTable() const;
 
 private:
     CString HandleEnqueue(const BridgeMessage& msg);
@@ -20,8 +24,6 @@ private:
 
     CString SerializeJob(const ExecutionJob& job) const;
     CString JobStatusToString(JobStatus eStatus) const;
-    CString ExtractPayloadString(const CString& strJson, const CString& strKey) const;
-    CString EscapeJson(const CString& str) const;
 
     JobQueueService m_service;
     HWND            m_hMainWnd;

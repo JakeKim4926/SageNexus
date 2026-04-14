@@ -237,6 +237,12 @@
     <ClCompile Include="app\infrastructure\bridge\EmailBridgeHandler.cpp">
       <Filter>소스 파일\app\infrastructure\bridge</Filter>
     </ClCompile>
+    <ClCompile Include="app\application\services\ApiConnectorService.cpp">
+      <Filter>소스 파일\app\application\services</Filter>
+    </ClCompile>
+    <ClCompile Include="app\infrastructure\bridge\ApiConnectorBridgeHandler.cpp">
+      <Filter>소스 파일\app\infrastructure\bridge</Filter>
+    </ClCompile>
     <ClCompile Include="app\application\services\ApiCallService.cpp">
       <Filter>소스 파일\app\application\services</Filter>
     </ClCompile>
@@ -247,6 +253,12 @@
       <Filter>소스 파일\app\application\services</Filter>
     </ClCompile>
     <ClCompile Include="app\infrastructure\bridge\JobQueueBridgeHandler.cpp">
+      <Filter>소스 파일\app\infrastructure\bridge</Filter>
+    </ClCompile>
+    <ClCompile Include="app\application\services\SchedulerService.cpp">
+      <Filter>소스 파일\app\application\services</Filter>
+    </ClCompile>
+    <ClCompile Include="app\infrastructure\bridge\SchedulerBridgeHandler.cpp">
       <Filter>소스 파일\app\infrastructure\bridge</Filter>
     </ClCompile>
   </ItemGroup>
@@ -359,6 +371,9 @@
     <ClInclude Include="app\domain\model\WorkflowStep.h">
       <Filter>헤더 파일\app\domain\model</Filter>
     </ClInclude>
+    <ClInclude Include="app\domain\model\ConditionStep.h">
+      <Filter>헤더 파일\app\domain\model</Filter>
+    </ClInclude>
     <ClInclude Include="app\domain\model\WorkflowDefinition.h">
       <Filter>헤더 파일\app\domain\model</Filter>
     </ClInclude>
@@ -389,6 +404,15 @@
     <ClInclude Include="app\infrastructure\bridge\EmailBridgeHandler.h">
       <Filter>헤더 파일\app\infrastructure\bridge</Filter>
     </ClInclude>
+    <ClInclude Include="app\domain\model\ApiConnector.h">
+      <Filter>헤더 파일\app\domain\model</Filter>
+    </ClInclude>
+    <ClInclude Include="app\application\services\ApiConnectorService.h">
+      <Filter>헤더 파일\app\application\services</Filter>
+    </ClInclude>
+    <ClInclude Include="app\infrastructure\bridge\ApiConnectorBridgeHandler.h">
+      <Filter>헤더 파일\app\infrastructure\bridge</Filter>
+    </ClInclude>
     <ClInclude Include="app\domain\model\ApiCallAction.h">
       <Filter>헤더 파일\app\domain\model</Filter>
     </ClInclude>
@@ -405,6 +429,15 @@
       <Filter>헤더 파일\app\application\services</Filter>
     </ClInclude>
     <ClInclude Include="app\infrastructure\bridge\JobQueueBridgeHandler.h">
+      <Filter>헤더 파일\app\infrastructure\bridge</Filter>
+    </ClInclude>
+    <ClInclude Include="app\domain\model\ScheduledJob.h">
+      <Filter>헤더 파일\app\domain\model</Filter>
+    </ClInclude>
+    <ClInclude Include="app\application\services\SchedulerService.h">
+      <Filter>헤더 파일\app\application\services</Filter>
+    </ClInclude>
+    <ClInclude Include="app\infrastructure\bridge\SchedulerBridgeHandler.h">
       <Filter>헤더 파일\app\infrastructure\bridge</Filter>
     </ClInclude>
   </ItemGroup>

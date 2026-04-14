@@ -10,6 +10,13 @@
 #define WM_JOB_QUEUE_CHANGED    (WM_USER + 5)
 
 // ============================================================
+// Scheduler
+// ============================================================
+constexpr UINT SCHEDULER_TIMER_ID  = 1001;
+constexpr UINT SCHEDULER_TICK_MS   = 60000;
+constexpr const wchar_t* SCHEDULER_FILE_NAME = L"scheduler.json";
+
+// ============================================================
 // Window
 // ============================================================
 constexpr int WINDOW_DEFAULT_WIDTH  = 1280;
@@ -60,3 +67,20 @@ constexpr int CSV_MAX_PREVIEW_ROWS = 1000;
 // API Call
 // ============================================================
 constexpr int API_DEFAULT_TIMEOUT_MS = 30000;
+
+// ============================================================
+// API Connector
+// ============================================================
+constexpr const wchar_t* CONNECTORS_FILE_NAME = L"connectors.json";
+
+// ============================================================
+// Workflow Step Types
+// WorkflowStep::m_strStepType에 사용하는 문자열 상수
+// ============================================================
+constexpr const wchar_t* STEP_TYPE_IMPORT      = L"import";
+constexpr const wchar_t* STEP_TYPE_TRANSFORM   = L"transform";
+constexpr const wchar_t* STEP_TYPE_EXPORT      = L"export";
+constexpr const wchar_t* STEP_TYPE_WEB_EXTRACT = L"webExtract";
+constexpr const wchar_t* STEP_TYPE_SEND_EMAIL  = L"sendEmail";
+constexpr const wchar_t* STEP_TYPE_CALL_API    = L"callApi";
+constexpr const wchar_t* STEP_TYPE_CONDITION   = L"condition";

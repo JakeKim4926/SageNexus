@@ -9,7 +9,7 @@
   - 숫자 컬럼 자동 감지(90% 기준) → 헤더·데이터 모두 오른쪽 정렬
   - CsvReader에 `DetectDelimiter()` 추가 → 탭/쉼표 자동 감지 지원
 - **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/44
-- **결과**: pending
+- **결과**: merged
 
 ---
 

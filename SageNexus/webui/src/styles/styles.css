@@ -494,6 +494,75 @@ html, body {
 .data-table tbody tr:hover td.col-rownum { background: var(--bgH); }
 .data-table tbody tr:last-child td { border-bottom: none; }
 
+/* 컬럼 헤더 — 정렬 클릭 가능 */
+.data-table th.col-clickable {
+    cursor: pointer;
+}
+.data-table th.col-clickable:hover {
+    background: var(--bgH);
+    color: var(--t1);
+}
+.data-table th.col-clickable.col-align-active::after {
+    content: '';
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    background: var(--ac);
+    border-radius: 50%;
+    margin-left: 6px;
+    vertical-align: middle;
+    opacity: 0.8;
+}
+
+/* 정렬 팝오버 */
+.col-align-popup {
+    position: absolute;
+    display: flex;
+    gap: 2px;
+    padding: 4px 5px;
+    background: var(--bg2);
+    border: 0.5px solid var(--bd);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.10);
+    z-index: 100;
+}
+.col-align-popup.hidden { display: none; }
+
+.align-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border: 0.5px solid transparent;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--t2);
+    cursor: pointer;
+    transition: background 0.12s, color 0.12s, border-color 0.12s;
+}
+.align-btn:hover {
+    background: var(--bg3);
+    color: var(--t1);
+    border-color: var(--bd);
+}
+.align-btn.active {
+    background: var(--acBg);
+    color: var(--acT);
+    border-color: var(--ac);
+}
+
+/* 정렬 적용 td */
+.data-table td.col-align-left   { text-align: left; }
+.data-table td.col-align-center { text-align: center; }
+.data-table td.col-align-right  { text-align: right; font-family: var(--font-mono); }
+.data-table th.col-align-left   { text-align: left; }
+.data-table th.col-align-center { text-align: center; }
+.data-table th.col-align-right  { text-align: right; }
+
+/* table-wrapper 기준점 */
+.table-wrapper { position: relative; }
+
 #page-data-viewer { overflow: hidden; }
 #page-transform   { overflow: auto; }
 #page-export      { overflow: auto; }

@@ -139,6 +139,32 @@
                         <div class="error-desc" id="dv-error-message"></div>
                     </div>
                     <div class="table-wrapper hidden" id="dv-state-data">
+                        <div class="col-align-popup hidden" id="dv-align-popup">
+                            <button class="align-btn" data-align="left" title="Left align">
+                                <svg width="13" height="11" viewBox="0 0 13 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="0" y="0" width="13" height="1.5" rx="0.75" fill="currentColor"/>
+                                    <rect x="0" y="3.25" width="9" height="1.5" rx="0.75" fill="currentColor"/>
+                                    <rect x="0" y="6.5" width="11" height="1.5" rx="0.75" fill="currentColor"/>
+                                    <rect x="0" y="9.75" width="7" height="1.5" rx="0.75" fill="currentColor"/>
+                                </svg>
+                            </button>
+                            <button class="align-btn" data-align="center" title="Center align">
+                                <svg width="13" height="11" viewBox="0 0 13 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="0" y="0" width="13" height="1.5" rx="0.75" fill="currentColor"/>
+                                    <rect x="2" y="3.25" width="9" height="1.5" rx="0.75" fill="currentColor"/>
+                                    <rect x="1" y="6.5" width="11" height="1.5" rx="0.75" fill="currentColor"/>
+                                    <rect x="3" y="9.75" width="7" height="1.5" rx="0.75" fill="currentColor"/>
+                                </svg>
+                            </button>
+                            <button class="align-btn" data-align="right" title="Right align">
+                                <svg width="13" height="11" viewBox="0 0 13 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="0" y="0" width="13" height="1.5" rx="0.75" fill="currentColor"/>
+                                    <rect x="4" y="3.25" width="9" height="1.5" rx="0.75" fill="currentColor"/>
+                                    <rect x="2" y="6.5" width="11" height="1.5" rx="0.75" fill="currentColor"/>
+                                    <rect x="6" y="9.75" width="7" height="1.5" rx="0.75" fill="currentColor"/>
+                                </svg>
+                            </button>
+                        </div>
                         <table class="data-table">
                             <thead id="dv-table-head"></thead>
                             <tbody id="dv-table-body"></tbody>
@@ -1256,7 +1282,97 @@ function getColDisplayName(col) {
         return filled > 0 && numeric / filled >= 0.9;
     }
 
+    /* 컬럼별 정렬 상태: null = 자동(숫자→right, 문자→left), 'left'|'center'|'right' = 사용자 지정 */
+    var colAlignments = [];
+
+    function getEffectiveAlign(colIndex, numericFlag) {
+        var manual = colAlignments[colIndex];
+        if (manual) return manual;
+        return numericFlag ? 'right' : 'left';
+    }
+
+    function applyColAlign(colIndex, align, numericFlags) {
+        colAlignments[colIndex] = align;
+        var thead = document.getElementById('dv-table-head');
+        var tbody = document.getElementById('dv-table-body');
+
+        /* th: 헤더 정렬 + active dot */
+        var ths = thead.querySelectorAll('th');
+        var th = ths[colIndex + 1]; /* +1: rownum 컬럼 건너뜀 */
+        if (th) {
+            th.classList.remove('col-align-left', 'col-align-center', 'col-align-right', 'col-num', 'col-align-active');
+            th.classList.add('col-align-' + align, 'col-clickable');
+            if (align !== (numericFlags[colIndex] ? 'right' : 'left')) {
+                th.classList.add('col-align-active');
+            }
+        }
+
+        /* td: 해당 컬럼 셀 전체 정렬 갱신 */
+        var rows = tbody.querySelectorAll('tr');
+        rows.forEach(function (row) {
+            var tds = row.querySelectorAll('td');
+            var td = tds[colIndex + 1]; /* +1: rownum 건너뜀 */
+            if (td) {
+                td.classList.remove('col-align-left', 'col-align-center', 'col-align-right', 'col-num');
+                td.classList.add('col-align-' + align);
+            }
+        });
+    }
+
+    /* ---- 팝오버 ---- */
+    var alignPopup = document.getElementById('dv-align-popup');
+    var _activeColIndex = -1;
+    var _activeNumericFlags = [];
+
+    function showAlignPopup(th, colIndex, numericFlags) {
+        _activeColIndex = colIndex;
+        _activeNumericFlags = numericFlags;
+
+        var effective = getEffectiveAlign(colIndex, numericFlags[colIndex]);
+        alignPopup.querySelectorAll('.align-btn').forEach(function (btn) {
+            btn.classList.toggle('active', btn.dataset.align === effective);
+        });
+
+        /* th 기준으로 팝오버 위치 계산 */
+        var wrapper = document.getElementById('dv-state-data');
+        var thRect  = th.getBoundingClientRect();
+        var wrapRect = wrapper.getBoundingClientRect();
+
+        var top  = thRect.bottom - wrapRect.top + wrapper.scrollTop;
+        var left = thRect.left   - wrapRect.left + wrapper.scrollLeft;
+
+        alignPopup.style.top  = top  + 'px';
+        alignPopup.style.left = left + 'px';
+        alignPopup.classList.remove('hidden');
+    }
+
+    function hideAlignPopup() {
+        alignPopup.classList.add('hidden');
+        _activeColIndex = -1;
+    }
+
+    alignPopup.querySelectorAll('.align-btn').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            if (_activeColIndex < 0) return;
+            applyColAlign(_activeColIndex, btn.dataset.align, _activeNumericFlags);
+            /* active 버튼 갱신 */
+            alignPopup.querySelectorAll('.align-btn').forEach(function (b) {
+                b.classList.toggle('active', b.dataset.align === btn.dataset.align);
+            });
+        });
+    });
+
+    document.addEventListener('click', function (e) {
+        if (!alignPopup.classList.contains('hidden') && !alignPopup.contains(e.target)) {
+            hideAlignPopup();
+        }
+    });
+
     function renderTable(tableData) {
+        colAlignments = [];
+        hideAlignPopup();
+
         var thead = document.getElementById('dv-table-head');
         var tbody = document.getElementById('dv-table-body');
         thead.innerHTML = '';
@@ -1275,7 +1391,19 @@ function getColDisplayName(col) {
         tableData.columns.forEach(function (col, i) {
             var th = document.createElement('th');
             th.textContent = getColDisplayName(col);
-            if (numericFlags[i]) th.className = 'col-num';
+            var defaultAlign = numericFlags[i] ? 'right' : 'left';
+            th.classList.add('col-align-' + defaultAlign, 'col-clickable');
+            if (numericFlags[i]) th.classList.add('col-num');
+            (function (colIdx) {
+                th.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    if (_activeColIndex === colIdx && !alignPopup.classList.contains('hidden')) {
+                        hideAlignPopup();
+                    } else {
+                        showAlignPopup(th, colIdx, numericFlags);
+                    }
+                });
+            })(i);
             tr.appendChild(th);
         });
         thead.appendChild(tr);
@@ -1291,7 +1419,9 @@ function getColDisplayName(col) {
             row.forEach(function (cell, colIndex) {
                 var td = document.createElement('td');
                 td.textContent = cell;
-                if (numericFlags[colIndex]) td.className = 'col-num';
+                var align = getEffectiveAlign(colIndex, numericFlags[colIndex]);
+                td.classList.add('col-align-' + align);
+                if (numericFlags[colIndex]) td.classList.add('col-num');
                 tr.appendChild(td);
             });
             tbody.appendChild(tr);

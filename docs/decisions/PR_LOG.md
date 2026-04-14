@@ -2,6 +2,17 @@
 
 ---
 
+## [2026-04-14] feature/data-viewer-table-ui
+- **목적**: Data Viewer 테이블 UI를 엑셀 스타일로 개선 + 탭 구분자 CSV 파싱 버그 수정
+- **변경 내용**:
+  - 테이블 격자선(세로 border-right), 행 번호 컬럼(`#`) sticky 고정, 폰트 확대(13px), 셀 패딩 확대
+  - 숫자 컬럼 자동 감지(90% 기준) → 헤더·데이터 모두 오른쪽 정렬
+  - CsvReader에 `DetectDelimiter()` 추가 → 탭/쉼표 자동 감지 지원
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/44
+- **결과**: pending
+
+---
+
 ## [2026-04-12] fix/code-review
 - **목적**: 전체 코드 리뷰 기반 구조 수정 — Blocker 2건 + Major 4건 + Minor 4건 해소
 - **변경 내용**:

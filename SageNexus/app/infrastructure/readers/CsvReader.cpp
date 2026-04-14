@@ -49,7 +49,9 @@ BOOL CsvReader::Read(const CString& strFilePath, DataTable& outTable, CString& s
         return FALSE;
     }
 
-    std::vector<CString> arrHeaders = ParseRow(arrLines[0]);
+    wchar_t chDelim = DetectDelimiter(arrLines[0]);
+
+    std::vector<CString> arrHeaders = ParseRow(arrLines[0], chDelim);
     if (arrHeaders.empty())
     {
         strError = L"CSV 헤더 행을 읽을 수 없습니다.";
@@ -73,7 +75,7 @@ BOOL CsvReader::Read(const CString& strFilePath, DataTable& outTable, CString& s
         if (arrLines[i].empty())
             continue;
 
-        std::vector<CString> arrCells = ParseRow(arrLines[i]);
+        std::vector<CString> arrCells = ParseRow(arrLines[i], chDelim);
 
         DataRow row;
         for (int j = 0; j < nColCount; ++j)
@@ -119,7 +121,14 @@ std::vector<std::wstring> CsvReader::SplitLines(const std::wstring& strContent)
     return arrLines;
 }
 
-std::vector<CString> CsvReader::ParseRow(const std::wstring& strLine)
+wchar_t CsvReader::DetectDelimiter(const std::wstring& strFirstLine)
+{
+    int nTabs   = (int)std::count(strFirstLine.begin(), strFirstLine.end(), L'\t');
+    int nCommas = (int)std::count(strFirstLine.begin(), strFirstLine.end(), L',');
+    return (nTabs > nCommas) ? L'\t' : L',';
+}
+
+std::vector<CString> CsvReader::ParseRow(const std::wstring& strLine, wchar_t chDelim)
 {
     std::vector<CString> arrFields;
     std::wstring strField;
@@ -154,7 +163,7 @@ std::vector<CString> CsvReader::ParseRow(const std::wstring& strLine)
             {
                 bInQuotes = TRUE;
             }
-            else if (ch == L',')
+            else if (ch == chDelim)
             {
                 arrFields.push_back(CString(strField.c_str()));
                 strField.clear();

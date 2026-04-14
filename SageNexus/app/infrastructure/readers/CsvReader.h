@@ -13,5 +13,6 @@ public:
 private:
     std::wstring              ConvertToWide(const std::string& strBytes, UINT nCodePage);
     std::vector<std::wstring> SplitLines(const std::wstring& strContent);
-    std::vector<CString>      ParseRow(const std::wstring& strLine);
+    wchar_t                   DetectDelimiter(const std::wstring& strFirstLine);
+    std::vector<CString>      ParseRow(const std::wstring& strLine, wchar_t chDelim);
 };

@@ -2,6 +2,14 @@
 
 ---
 
+## [2026-04-15] feature/dv-column-alignment
+- **목적**: Data Viewer 툴바 우측에 전역 정렬 버튼(좌/가운데/우) 추가
+- **변경 내용**: 툴바를 toolbar-left/right 구조로 분리, 워드 스타일 SVG 아이콘 정렬 버튼 그룹 추가, 데이터 로드 시 버튼 표시, applyTableAlign()으로 전체 셀 정렬 일괄 변경, 새 파일 로드 시 초기화
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/46
+- **결과**: merged ✅
+
+---
+
 ## [2026-04-14] feature/data-viewer-table-ui
 - **목적**: Data Viewer 테이블 UI를 엑셀 스타일로 개선 + 탭 구분자 CSV 파싱 버그 수정
 - **변경 내용**:

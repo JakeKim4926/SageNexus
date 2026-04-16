@@ -2,6 +2,14 @@
 
 ---
 
+## [2026-04-16] feature/dv-resizable-table
+- **목적**: Data Viewer 테이블 출력 영역 높이를 사용자가 드래그로 자유롭게 조절할 수 있도록 개선
+- **변경 내용**: 테이블 하단 드래그 핸들 추가, 높이 localStorage 저장/복원, 창 리사이즈 시 자동 재조정
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/47
+- **결과**: pending
+
+---
+
 ## [2026-04-15] feature/dv-column-alignment
 - **목적**: Data Viewer 툴바 우측에 전역 정렬 버튼(좌/가운데/우) 추가
 - **변경 내용**: 툴바를 toolbar-left/right 구조로 분리, 워드 스타일 SVG 아이콘 정렬 버튼 그룹 추가, 데이터 로드 시 버튼 표시, applyTableAlign()으로 전체 셀 정렬 일괄 변경, 새 파일 로드 시 초기화

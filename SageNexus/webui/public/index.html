@@ -174,6 +174,7 @@
                             <tbody id="dv-table-body"></tbody>
                         </table>
                     </div>
+                    <div class="dv-resize-handle hidden" id="dv-resize-handle" title="드래그하여 높이 조절"></div>
                 </div>
             </div>
 
@@ -1262,12 +1263,76 @@ function getColDisplayName(col) {
 })();
 
 (function () {
+    /* ── Resizable table height ──────────────────────────────── */
+    var DV_HEIGHT_KEY = 'sn-dv-table-height';
+    var DV_MIN_H = 120;
+    var _dvResizing = false;
+    var _dvDragStartY = 0;
+    var _dvDragStartH = 0;
+
+    var _dvWrapper = document.getElementById('dv-state-data');
+    var _dvHandle  = document.getElementById('dv-resize-handle');
+
+    function dvGetMaxHeight() {
+        var pageBody = _dvWrapper.parentElement;
+        return pageBody ? Math.max(DV_MIN_H, pageBody.clientHeight - 20) : window.innerHeight - 200;
+    }
+
+    function dvApplyHeight(h) {
+        h = Math.max(DV_MIN_H, Math.min(h, dvGetMaxHeight()));
+        _dvWrapper.style.height = h + 'px';
+    }
+
+    function dvInitHeight() {
+        var saved = parseInt(localStorage.getItem(DV_HEIGHT_KEY), 10);
+        if (!isNaN(saved) && saved >= DV_MIN_H) {
+            dvApplyHeight(saved);
+        } else {
+            dvApplyHeight(dvGetMaxHeight());
+        }
+    }
+
+    _dvHandle.addEventListener('mousedown', function (e) {
+        e.preventDefault();
+        _dvResizing = true;
+        _dvDragStartY = e.clientY;
+        _dvDragStartH = _dvWrapper.getBoundingClientRect().height;
+        _dvHandle.classList.add('dragging');
+        document.body.style.cursor    = 'ns-resize';
+        document.body.style.userSelect = 'none';
+    });
+
+    document.addEventListener('mousemove', function (e) {
+        if (!_dvResizing) return;
+        dvApplyHeight(_dvDragStartH + (e.clientY - _dvDragStartY));
+    });
+
+    document.addEventListener('mouseup', function () {
+        if (!_dvResizing) return;
+        _dvResizing = false;
+        _dvHandle.classList.remove('dragging');
+        document.body.style.cursor    = '';
+        document.body.style.userSelect = '';
+        var h = parseInt(_dvWrapper.style.height, 10);
+        if (!isNaN(h)) localStorage.setItem(DV_HEIGHT_KEY, h);
+    });
+
+    window.addEventListener('resize', function () {
+        if (!_dvWrapper.classList.contains('hidden')) {
+            var current = parseInt(_dvWrapper.style.height, 10);
+            if (!isNaN(current)) dvApplyHeight(current);
+        }
+    });
+    /* ───────────────────────────────────────────────────────── */
+
     function setDvState(state, info) {
         document.getElementById('dv-state-empty').classList.toggle('hidden', state !== 'empty');
         document.getElementById('dv-state-loading').classList.toggle('hidden', state !== 'loading');
         document.getElementById('dv-state-error').classList.toggle('hidden', state !== 'error');
         document.getElementById('dv-state-data').classList.toggle('hidden', state !== 'data');
         document.getElementById('dv-align-group').classList.toggle('hidden', state !== 'data');
+        document.getElementById('dv-resize-handle').classList.toggle('hidden', state !== 'data');
+        if (state === 'data') { dvInitHeight(); }
 
         if (state === 'error') {
             var msgEl = document.getElementById('dv-error-message');

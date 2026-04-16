@@ -555,6 +555,43 @@ html, body {
 #page-transform   { overflow: auto; }
 #page-export      { overflow: auto; }
 
+/* Data Viewer: 사용자 조절 가능한 테이블 높이 */
+#dv-state-data {
+    flex: none;
+    min-height: 120px;
+}
+
+.dv-resize-handle {
+    height: 10px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: ns-resize;
+    border-radius: 4px;
+    margin: 3px 0 0;
+    user-select: none;
+    transition: background 0.12s;
+}
+
+.dv-resize-handle:hover  { background: var(--bgH); }
+.dv-resize-handle.dragging { background: var(--acBg); }
+
+.dv-resize-handle::before {
+    content: '';
+    width: 36px;
+    height: 3px;
+    background: var(--bd);
+    border-radius: 2px;
+    transition: background 0.15s, width 0.15s;
+}
+
+.dv-resize-handle:hover::before,
+.dv-resize-handle.dragging::before {
+    background: var(--ac);
+    width: 56px;
+}
+
 /* ============================================================
    Transform Builder
    ============================================================ */

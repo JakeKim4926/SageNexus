@@ -25,6 +25,11 @@
         <div class="topbar-actions">
             <!-- Phase 2+에서 액션 버튼 추가 -->
         </div>
+        <div class="wc-btns">
+            <button class="wc-btn wc-min"   id="btn-wc-min"   title="최소화">&#x2013;</button>
+            <button class="wc-btn wc-max"   id="btn-wc-max"   title="최대화">&#x25A1;</button>
+            <button class="wc-btn wc-close" id="btn-wc-close" title="닫기">&#x2715;</button>
+        </div>
     </div>
 
     <!-- Body -->
@@ -1220,6 +1225,39 @@ function getColDisplayName(col) {
     });
 
     setStatus('loading', t('status.initializing'));
+})();
+
+// =========================================================
+// 창 컨트롤 버튼 (타이틀바 대체)
+// =========================================================
+(function () {
+    var btnMin   = document.getElementById('btn-wc-min');
+    var btnMax   = document.getElementById('btn-wc-max');
+    var btnClose = document.getElementById('btn-wc-close');
+
+    if (btnMin) {
+        btnMin.addEventListener('click', function () {
+            bridgeClient.sendCommand('window', 'minimize', {}).catch(function () {});
+        });
+    }
+    if (btnMax) {
+        btnMax.addEventListener('click', function () {
+            bridgeClient.sendCommand('window', 'maximize', {}).catch(function () {});
+        });
+    }
+    if (btnClose) {
+        btnClose.addEventListener('click', function () {
+            bridgeClient.sendCommand('window', 'close', {}).catch(function () {});
+        });
+    }
+
+    // 최대화 ↔ 일반 상태에 따라 최대화 버튼 아이콘 전환
+    window.addEventListener('bridge:window:stateChanged', function (e) {
+        if (!btnMax) return;
+        var maximized = e.detail && e.detail.maximized;
+        btnMax.innerHTML = maximized ? '&#x2750;' : '&#x25A1;';
+        btnMax.title     = maximized ? '이전 크기로' : '최대화';
+    });
 })();
 
 (function () {

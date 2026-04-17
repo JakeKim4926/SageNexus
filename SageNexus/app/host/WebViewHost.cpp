@@ -115,6 +115,22 @@ void WebViewHost::OnControllerCreated(HRESULT hrResult, ICoreWebView2Controller*
         return;
     }
 
+    // CSS -webkit-app-region: drag 지원 활성화 (타이틀바 대체 드래그 영역)
+    // 반드시 첫 Navigate() 전에 설정해야 적용된다
+    ICoreWebView2Settings* pSettings = nullptr;
+    if (SUCCEEDED(m_pWebView->get_Settings(&pSettings)) && pSettings)
+    {
+        ICoreWebView2Settings9* pSettings9 = nullptr;
+        if (SUCCEEDED(pSettings->QueryInterface(IID_ICoreWebView2Settings9,
+                                                reinterpret_cast<void**>(&pSettings9)))
+            && pSettings9)
+        {
+            pSettings9->put_IsNonClientRegionSupportEnabled(TRUE);
+            pSettings9->Release();
+        }
+        pSettings->Release();
+    }
+
     RECT rcClient = {};
     GetClientRect(m_hParentWnd, &rcClient);
     m_pController->put_Bounds(rcClient);

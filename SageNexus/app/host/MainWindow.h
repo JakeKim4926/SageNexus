@@ -36,10 +36,13 @@ private:
     void OnJobQueueChanged();
     void OnSchedulerTick();
     void OnDestroy();
+    LRESULT OnNcCalcSize(WPARAM wParam, LPARAM lParam);
+    LRESULT OnNcHitTest(LPARAM lParam);
 
     void NavigateToShell();
     void RegisterBridgeHandlers();
     void UpdateCurrentTableFromWorkflow();
+    void InitDwmShadow();
 
     HWND                    m_hWnd;
     WebViewHost*            m_pWebViewHost;

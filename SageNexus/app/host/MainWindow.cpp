@@ -4,6 +4,9 @@
 #include "app/domain/model/ScheduledJob.h"
 #include "Define.h"
 #include <vector>
+#include <dwmapi.h>
+#include <windowsx.h>
+#pragma comment(lib, "dwmapi.lib")
 
 MainWindow::MainWindow()
     : m_hWnd(nullptr)
@@ -117,6 +120,12 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
             OnSchedulerTick();
         return 0;
 
+    case WM_NCCALCSIZE:
+        return OnNcCalcSize(wParam, lParam);
+
+    case WM_NCHITTEST:
+        return OnNcHitTest(lParam);
+
     case WM_DESTROY:
         OnDestroy();
         return 0;
@@ -129,6 +138,8 @@ void MainWindow::OnCreate()
 {
     sageMgr.GetLogger().LogInfo(L"MainWindow: Created");
 
+    InitDwmShadow();
+
     m_pWebViewHost = new WebViewHost(m_hWnd);
 
     CString strUserDataDir = sageMgr.GetUserDataDir() + L"\\" + WEBVIEW_USER_DATA_FOLDER;
@@ -138,7 +149,14 @@ void MainWindow::OnCreate()
 void MainWindow::OnSize(int nWidth, int nHeight)
 {
     if (m_pWebViewHost && m_pWebViewHost->IsReady())
+    {
         m_pWebViewHost->Resize(nWidth, nHeight);
+
+        BOOL bMaximized = IsZoomed(m_hWnd);
+        CString strPayload;
+        strPayload.Format(L"{\"maximized\":%s}", bMaximized ? L"true" : L"false");
+        m_pWebViewHost->SendEvent(L"window:stateChanged", strPayload);
+    }
 }
 
 void MainWindow::OnGetMinMaxInfo(MINMAXINFO* pInfo) const
@@ -172,6 +190,28 @@ void MainWindow::OnWebViewReady(BOOL bSuccess)
 void MainWindow::RegisterBridgeHandlers()
 {
     BridgeDispatcher& dispatcher = m_pWebViewHost->GetDispatcher();
+
+    // 창 컨트롤 핸들러 (타이틀바 대체용)
+    HWND hWnd = m_hWnd;
+    dispatcher.RegisterHandler(L"window", L"minimize",
+        [hWnd](const BridgeMessage&) -> CString
+        {
+            PostMessageW(hWnd, WM_SYSCOMMAND, SC_MINIMIZE, 0);
+            return L"";
+        });
+    dispatcher.RegisterHandler(L"window", L"maximize",
+        [hWnd](const BridgeMessage&) -> CString
+        {
+            PostMessageW(hWnd, WM_SYSCOMMAND, IsZoomed(hWnd) ? SC_RESTORE : SC_MAXIMIZE, 0);
+            return L"";
+        });
+    dispatcher.RegisterHandler(L"window", L"close",
+        [hWnd](const BridgeMessage&) -> CString
+        {
+            PostMessageW(hWnd, WM_CLOSE, 0, 0);
+            return L"";
+        });
+
     m_importBridgeHandler.RegisterHandlers(dispatcher, m_hWnd, &m_currentTable);
     m_transformBridgeHandler.RegisterHandlers(dispatcher, &m_currentTable);
     m_exportBridgeHandler.RegisterHandlers(dispatcher, m_hWnd, &m_currentTable);
@@ -266,4 +306,61 @@ void MainWindow::OnDestroy()
     KillTimer(m_hWnd, SCHEDULER_TIMER_ID);
     sageMgr.GetLogger().LogInfo(L"MainWindow: Destroyed");
     PostQuitMessage(0);
+}
+
+// 타이틀바 제거: WM_NCCALCSIZE에서 0 반환 → 전체 창 영역을 클라이언트 영역으로 확장
+// 최대화 시 화면 밖으로 나가는 프레임 오프셋을 보정한다
+LRESULT MainWindow::OnNcCalcSize(WPARAM wParam, LPARAM lParam)
+{
+    if (wParam == TRUE)
+    {
+        if (IsZoomed(m_hWnd))
+        {
+            NCCALCSIZE_PARAMS* pParams = reinterpret_cast<NCCALCSIZE_PARAMS*>(lParam);
+            int nFrame = GetSystemMetrics(SM_CXSIZEFRAME) + GetSystemMetrics(SM_CXPADDEDBORDER);
+            pParams->rgrc[0].left   += nFrame;
+            pParams->rgrc[0].right  -= nFrame;
+            pParams->rgrc[0].top    += nFrame;
+            pParams->rgrc[0].bottom -= nFrame;
+        }
+        return 0;
+    }
+    return DefWindowProcW(m_hWnd, WM_NCCALCSIZE, wParam, lParam);
+}
+
+// 타이틀바 제거 후 리사이즈 핸들을 직접 반환한다
+// 최대화/최소화 상태에서는 리사이즈가 불필요하므로 HTCLIENT 반환
+LRESULT MainWindow::OnNcHitTest(LPARAM lParam)
+{
+    if (IsZoomed(m_hWnd) || IsIconic(m_hWnd))
+        return HTCLIENT;
+
+    POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+    RECT rcWin;
+    GetWindowRect(m_hWnd, &rcWin);
+
+    int nBorder = GetSystemMetrics(SM_CXSIZEFRAME) + GetSystemMetrics(SM_CXPADDEDBORDER);
+
+    BOOL bLeft   = pt.x <  rcWin.left   + nBorder;
+    BOOL bRight  = pt.x >= rcWin.right  - nBorder;
+    BOOL bTop    = pt.y <  rcWin.top    + nBorder;
+    BOOL bBottom = pt.y >= rcWin.bottom - nBorder;
+
+    if (bTop    && bLeft)  return HTTOPLEFT;
+    if (bTop    && bRight) return HTTOPRIGHT;
+    if (bBottom && bLeft)  return HTBOTTOMLEFT;
+    if (bBottom && bRight) return HTBOTTOMRIGHT;
+    if (bTop)              return HTTOP;
+    if (bBottom)           return HTBOTTOM;
+    if (bLeft)             return HTLEFT;
+    if (bRight)            return HTRIGHT;
+
+    return HTCLIENT;
+}
+
+// DWM 그림자 활성화: 타이틀바 제거 후 그림자가 사라지는 현상 방지
+void MainWindow::InitDwmShadow()
+{
+    MARGINS margins = { 1, 1, 1, 1 };
+    DwmExtendFrameIntoClientArea(m_hWnd, &margins);
 }

@@ -888,3 +888,40 @@ html, body {
     color: var(--t2);
     margin-top: 4px;
 }
+
+/* ============================================================
+   Window Control Buttons (최소화 / 최대화 / 닫기)
+   ============================================================ */
+.wc-btns {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    margin-left: var(--sp2);
+    -webkit-app-region: no-drag;
+}
+
+.wc-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: transparent;
+    color: var(--t2);
+    font-size: 12px;
+    cursor: pointer;
+    border-radius: var(--radius);
+    transition: background 0.1s, color 0.1s;
+    flex-shrink: 0;
+}
+
+.wc-btn:hover {
+    background: var(--bg3);
+    color: var(--t1);
+}
+
+.wc-close:hover {
+    background: var(--err);
+    color: #fff;
+}

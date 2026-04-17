@@ -5,7 +5,6 @@
 #include "Define.h"
 #include <vector>
 #include <dwmapi.h>
-#include <windowsx.h>
 #pragma comment(lib, "dwmapi.lib")
 
 MainWindow::MainWindow()
@@ -41,12 +40,17 @@ BOOL MainWindow::Create(int nCmdShow)
         return FALSE;
     }
 
+    // WS_POPUP | WS_THICKFRAME: OS 타이틀바 없이 리사이즈 가능한 프레임리스 창
+    // WS_EX_APPWINDOW: 작업 표시줄에 표시
+    int nX = (GetSystemMetrics(SM_CXSCREEN) - WINDOW_DEFAULT_WIDTH)  / 2;
+    int nY = (GetSystemMetrics(SM_CYSCREEN) - WINDOW_DEFAULT_HEIGHT) / 2;
+
     m_hWnd = CreateWindowExW(
-        0,
+        WS_EX_APPWINDOW,
         WINDOW_CLASS_NAME,
         WINDOW_TITLE,
-        WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT, CW_USEDEFAULT,
+        WS_POPUP | WS_THICKFRAME | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX,
+        nX, nY,
         WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT,
         nullptr, nullptr, hInst, this);
 
@@ -120,12 +124,6 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
             OnSchedulerTick();
         return 0;
 
-    case WM_NCCALCSIZE:
-        return OnNcCalcSize(wParam, lParam);
-
-    case WM_NCHITTEST:
-        return OnNcHitTest(lParam);
-
     case WM_DESTROY:
         OnDestroy();
         return 0;
@@ -163,6 +161,22 @@ void MainWindow::OnGetMinMaxInfo(MINMAXINFO* pInfo) const
 {
     pInfo->ptMinTrackSize.x = WINDOW_MIN_WIDTH;
     pInfo->ptMinTrackSize.y = WINDOW_MIN_HEIGHT;
+
+    // WS_POPUP은 기본적으로 전체 화면을 덮는다.
+    // 작업 표시줄을 가리지 않도록 모니터 작업 영역 기준으로 최대화 크기를 제한한다.
+    HMONITOR hMonitor = MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONEAREST);
+    if (hMonitor)
+    {
+        MONITORINFO mi = {};
+        mi.cbSize = sizeof(MONITORINFO);
+        if (GetMonitorInfoW(hMonitor, &mi))
+        {
+            pInfo->ptMaxPosition.x = mi.rcWork.left;
+            pInfo->ptMaxPosition.y = mi.rcWork.top;
+            pInfo->ptMaxSize.x     = mi.rcWork.right  - mi.rcWork.left;
+            pInfo->ptMaxSize.y     = mi.rcWork.bottom - mi.rcWork.top;
+        }
+    }
 }
 
 void MainWindow::OnWebViewReady(BOOL bSuccess)
@@ -308,57 +322,7 @@ void MainWindow::OnDestroy()
     PostQuitMessage(0);
 }
 
-// 타이틀바 제거: WM_NCCALCSIZE에서 0 반환 → 전체 창 영역을 클라이언트 영역으로 확장
-// 최대화 시 화면 밖으로 나가는 프레임 오프셋을 보정한다
-LRESULT MainWindow::OnNcCalcSize(WPARAM wParam, LPARAM lParam)
-{
-    if (wParam == TRUE)
-    {
-        if (IsZoomed(m_hWnd))
-        {
-            NCCALCSIZE_PARAMS* pParams = reinterpret_cast<NCCALCSIZE_PARAMS*>(lParam);
-            int nFrame = GetSystemMetrics(SM_CXSIZEFRAME) + GetSystemMetrics(SM_CXPADDEDBORDER);
-            pParams->rgrc[0].left   += nFrame;
-            pParams->rgrc[0].right  -= nFrame;
-            pParams->rgrc[0].top    += nFrame;
-            pParams->rgrc[0].bottom -= nFrame;
-        }
-        return 0;
-    }
-    return DefWindowProcW(m_hWnd, WM_NCCALCSIZE, wParam, lParam);
-}
-
-// 타이틀바 제거 후 리사이즈 핸들을 직접 반환한다
-// 최대화/최소화 상태에서는 리사이즈가 불필요하므로 HTCLIENT 반환
-LRESULT MainWindow::OnNcHitTest(LPARAM lParam)
-{
-    if (IsZoomed(m_hWnd) || IsIconic(m_hWnd))
-        return HTCLIENT;
-
-    POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
-    RECT rcWin;
-    GetWindowRect(m_hWnd, &rcWin);
-
-    int nBorder = GetSystemMetrics(SM_CXSIZEFRAME) + GetSystemMetrics(SM_CXPADDEDBORDER);
-
-    BOOL bLeft   = pt.x <  rcWin.left   + nBorder;
-    BOOL bRight  = pt.x >= rcWin.right  - nBorder;
-    BOOL bTop    = pt.y <  rcWin.top    + nBorder;
-    BOOL bBottom = pt.y >= rcWin.bottom - nBorder;
-
-    if (bTop    && bLeft)  return HTTOPLEFT;
-    if (bTop    && bRight) return HTTOPRIGHT;
-    if (bBottom && bLeft)  return HTBOTTOMLEFT;
-    if (bBottom && bRight) return HTBOTTOMRIGHT;
-    if (bTop)              return HTTOP;
-    if (bBottom)           return HTBOTTOM;
-    if (bLeft)             return HTLEFT;
-    if (bRight)            return HTRIGHT;
-
-    return HTCLIENT;
-}
-
-// DWM 그림자 활성화: 타이틀바 제거 후 그림자가 사라지는 현상 방지
+// DWM 그림자 활성화: WS_POPUP 창에서 그림자가 없는 현상 방지
 void MainWindow::InitDwmShadow()
 {
     MARGINS margins = { 1, 1, 1, 1 };

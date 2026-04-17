@@ -6,7 +6,7 @@
 - **목적**: WebView2 커스텀 토바가 있음에도 OS 기본 타이틀바가 함께 표시되는 문제 해결
 - **변경 내용**: WS_POPUP | WS_THICKFRAME으로 창 스타일 변경하여 타이틀바 완전 제거, NonClientRegionSupportEnabled 활성화로 -webkit-app-region:drag 동작, 토바에 최소화/최대화/닫기 버튼 추가, DWM 그림자 복원
 - **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/48
-- **결과**: pending
+- **결과**: merged ✅
 
 ---
 

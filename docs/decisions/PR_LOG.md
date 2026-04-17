@@ -2,11 +2,19 @@
 
 ---
 
+## [2026-04-17] feature/custom-titlebar
+- **목적**: WebView2 커스텀 토바가 있음에도 OS 기본 타이틀바가 함께 표시되는 문제 해결
+- **변경 내용**: WS_POPUP | WS_THICKFRAME으로 창 스타일 변경하여 타이틀바 완전 제거, NonClientRegionSupportEnabled 활성화로 -webkit-app-region:drag 동작, 토바에 최소화/최대화/닫기 버튼 추가, DWM 그림자 복원
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/48
+- **결과**: pending
+
+---
+
 ## [2026-04-16] feature/dv-resizable-table
 - **목적**: Data Viewer 테이블 출력 영역 높이를 사용자가 드래그로 자유롭게 조절할 수 있도록 개선
 - **변경 내용**: 테이블 하단 드래그 핸들 추가, 높이 localStorage 저장/복원, 창 리사이즈 시 자동 재조정
 - **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/47
-- **결과**: pending
+- **결과**: merged ✅
 
 ---
 

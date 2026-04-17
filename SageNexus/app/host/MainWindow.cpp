@@ -4,6 +4,8 @@
 #include "app/domain/model/ScheduledJob.h"
 #include "Define.h"
 #include <vector>
+#include <dwmapi.h>
+#pragma comment(lib, "dwmapi.lib")
 
 MainWindow::MainWindow()
     : m_hWnd(nullptr)
@@ -38,12 +40,17 @@ BOOL MainWindow::Create(int nCmdShow)
         return FALSE;
     }
 
+    // WS_POPUP | WS_THICKFRAME: OS 타이틀바 없이 리사이즈 가능한 프레임리스 창
+    // WS_EX_APPWINDOW: 작업 표시줄에 표시
+    int nX = (GetSystemMetrics(SM_CXSCREEN) - WINDOW_DEFAULT_WIDTH)  / 2;
+    int nY = (GetSystemMetrics(SM_CYSCREEN) - WINDOW_DEFAULT_HEIGHT) / 2;
+
     m_hWnd = CreateWindowExW(
-        0,
+        WS_EX_APPWINDOW,
         WINDOW_CLASS_NAME,
         WINDOW_TITLE,
-        WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT, CW_USEDEFAULT,
+        WS_POPUP | WS_THICKFRAME | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX,
+        nX, nY,
         WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT,
         nullptr, nullptr, hInst, this);
 
@@ -129,6 +136,8 @@ void MainWindow::OnCreate()
 {
     sageMgr.GetLogger().LogInfo(L"MainWindow: Created");
 
+    InitDwmShadow();
+
     m_pWebViewHost = new WebViewHost(m_hWnd);
 
     CString strUserDataDir = sageMgr.GetUserDataDir() + L"\\" + WEBVIEW_USER_DATA_FOLDER;
@@ -138,13 +147,36 @@ void MainWindow::OnCreate()
 void MainWindow::OnSize(int nWidth, int nHeight)
 {
     if (m_pWebViewHost && m_pWebViewHost->IsReady())
+    {
         m_pWebViewHost->Resize(nWidth, nHeight);
+
+        BOOL bMaximized = IsZoomed(m_hWnd);
+        CString strPayload;
+        strPayload.Format(L"{\"maximized\":%s}", bMaximized ? L"true" : L"false");
+        m_pWebViewHost->SendEvent(L"window:stateChanged", strPayload);
+    }
 }
 
 void MainWindow::OnGetMinMaxInfo(MINMAXINFO* pInfo) const
 {
     pInfo->ptMinTrackSize.x = WINDOW_MIN_WIDTH;
     pInfo->ptMinTrackSize.y = WINDOW_MIN_HEIGHT;
+
+    // WS_POPUP은 기본적으로 전체 화면을 덮는다.
+    // 작업 표시줄을 가리지 않도록 모니터 작업 영역 기준으로 최대화 크기를 제한한다.
+    HMONITOR hMonitor = MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONEAREST);
+    if (hMonitor)
+    {
+        MONITORINFO mi = {};
+        mi.cbSize = sizeof(MONITORINFO);
+        if (GetMonitorInfoW(hMonitor, &mi))
+        {
+            pInfo->ptMaxPosition.x = mi.rcWork.left;
+            pInfo->ptMaxPosition.y = mi.rcWork.top;
+            pInfo->ptMaxSize.x     = mi.rcWork.right  - mi.rcWork.left;
+            pInfo->ptMaxSize.y     = mi.rcWork.bottom - mi.rcWork.top;
+        }
+    }
 }
 
 void MainWindow::OnWebViewReady(BOOL bSuccess)
@@ -172,6 +204,28 @@ void MainWindow::OnWebViewReady(BOOL bSuccess)
 void MainWindow::RegisterBridgeHandlers()
 {
     BridgeDispatcher& dispatcher = m_pWebViewHost->GetDispatcher();
+
+    // 창 컨트롤 핸들러 (타이틀바 대체용)
+    HWND hWnd = m_hWnd;
+    dispatcher.RegisterHandler(L"window", L"minimize",
+        [hWnd](const BridgeMessage&) -> CString
+        {
+            PostMessageW(hWnd, WM_SYSCOMMAND, SC_MINIMIZE, 0);
+            return L"";
+        });
+    dispatcher.RegisterHandler(L"window", L"maximize",
+        [hWnd](const BridgeMessage&) -> CString
+        {
+            PostMessageW(hWnd, WM_SYSCOMMAND, IsZoomed(hWnd) ? SC_RESTORE : SC_MAXIMIZE, 0);
+            return L"";
+        });
+    dispatcher.RegisterHandler(L"window", L"close",
+        [hWnd](const BridgeMessage&) -> CString
+        {
+            PostMessageW(hWnd, WM_CLOSE, 0, 0);
+            return L"";
+        });
+
     m_importBridgeHandler.RegisterHandlers(dispatcher, m_hWnd, &m_currentTable);
     m_transformBridgeHandler.RegisterHandlers(dispatcher, &m_currentTable);
     m_exportBridgeHandler.RegisterHandlers(dispatcher, m_hWnd, &m_currentTable);
@@ -266,4 +320,11 @@ void MainWindow::OnDestroy()
     KillTimer(m_hWnd, SCHEDULER_TIMER_ID);
     sageMgr.GetLogger().LogInfo(L"MainWindow: Destroyed");
     PostQuitMessage(0);
+}
+
+// DWM 그림자 활성화: WS_POPUP 창에서 그림자가 없는 현상 방지
+void MainWindow::InitDwmShadow()
+{
+    MARGINS margins = { 1, 1, 1, 1 };
+    DwmExtendFrameIntoClientArea(m_hWnd, &margins);
 }

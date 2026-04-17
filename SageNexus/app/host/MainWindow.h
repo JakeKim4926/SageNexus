@@ -40,6 +40,7 @@ private:
     void NavigateToShell();
     void RegisterBridgeHandlers();
     void UpdateCurrentTableFromWorkflow();
+    void InitDwmShadow();
 
     HWND                    m_hWnd;
     WebViewHost*            m_pWebViewHost;

@@ -2,6 +2,14 @@
 
 ---
 
+## [2026-04-18] feature/cleanup-build-output
+- **목적**: 배포 산출물에서 런타임 불필요 파일(i18n 원본, 소스 리소스) 제거 및 Debug_x64 레거시 잔재 정리
+- **변경 내용**: vcxproj PostBuildEvent를 런타임 필수 파일(webui/public, webui/src/core, webui/src/styles, resources/app.ico)만 복사하도록 변경; 레거시 폴더 rmdir 안전망 추가
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/53
+- **결과**: merged ✅
+
+---
+
 ## [2026-04-18] feature/settings-security-i18n-keys
 - **목적**: 설정 화면 보안 섹션의 i18n 키 누락으로 사용자에게 키 문자열(`settings.section.security`)이 그대로 노출되는 문제 수정
 - **변경 내용**: `index.html`의 `LOCALES`(ko/en) 및 `src/i18n/*.json`에 `settings.section.security`, `settings.security.changePassword`, `settings.security.ph.*`, `settings.security.btn.change`, `settings.security.err.*`, `settings.security.success` 키 추가

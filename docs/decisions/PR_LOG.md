@@ -2,6 +2,14 @@
 
 ---
 
+## [2026-04-18] feature/multi-company-profile-embedding
+- **목적**: 회사별 프로필 JSON을 빌드 시점에 exe 리소스로 임베딩하고, Configuration으로 선택하여 배포 exe를 회사별로 분리
+- **변경 내용**: profiles/{acme,beta,default}.json 추가, SageNexus.rc RCDATA로 profile.json 임베딩, SolutionProfile LoadFromResource 추가, 파일 기반 프로필 서명/저장 로직 제거, PreBuild 이벤트로 Configuration별 프로필 선택
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/56
+- **결과**: merged ✅
+
+---
+
 ## [2026-04-18] feature/deploy-profile-identity
 - **목적**: 프로필 ID/이름을 개발자가 빌드 전에 설정하고 사용자는 변경 불가하도록 컴파일 타임 상수로 고정
 - **변경 내용**: Define.h에 DEPLOY_PROFILE_ID/NAME 상수 추가, SolutionProfile/SageApp 하드코딩 제거

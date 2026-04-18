@@ -59,6 +59,12 @@ constexpr int BRIDGE_REQUEST_TIMEOUT_MS = 30000;
 constexpr const wchar_t* PROFILE_FILE_NAME = L"profile.json";
 
 // ============================================================
+// Security
+// ============================================================
+constexpr const wchar_t* CREDENTIALS_FILE_NAME = L"credentials.dat";
+constexpr const wchar_t* PROFILE_SIG_FILE_NAME = L"profile.sig";
+
+// ============================================================
 // Import
 // ============================================================
 constexpr int CSV_MAX_PREVIEW_ROWS = 1000;

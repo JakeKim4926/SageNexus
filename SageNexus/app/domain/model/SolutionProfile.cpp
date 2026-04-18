@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "SolutionProfile.h"
-#include "Define.h"
 
 SolutionProfile::SolutionProfile()
 {
@@ -9,31 +8,49 @@ SolutionProfile::SolutionProfile()
 
 void SolutionProfile::SetDefault()
 {
-    m_strProfileId                = DEPLOY_PROFILE_ID;
-    m_strProfileName              = DEPLOY_PROFILE_NAME;
+    m_strProfileId                = L"default";
+    m_strProfileName              = L"Default Profile";
     m_strDefaultInterfaceLanguage = L"ko";
     m_strDefaultOutputLanguage    = L"ko";
 }
 
-BOOL SolutionProfile::LoadFromFile(const CString& strFilePath, CString& strError)
+BOOL SolutionProfile::LoadFromResource(int nResourceId, CString& strError)
 {
-    std::string strPath = WideToUtf8(strFilePath);
-    std::ifstream file(strPath);
-    if (!file.is_open())
+    HMODULE hMod = GetModuleHandleW(nullptr);
+    HRSRC   hRes = FindResourceW(hMod, MAKEINTRESOURCEW(nResourceId), RT_RCDATA);
+    if (!hRes)
     {
-        strError = L"프로필 파일을 열 수 없습니다: " + strFilePath;
+        strError = L"프로필 리소스를 찾을 수 없습니다.";
         return FALSE;
     }
 
-    std::stringstream ss;
-    ss << file.rdbuf();
+    HGLOBAL hGlobal = LoadResource(hMod, hRes);
+    if (!hGlobal)
+    {
+        strError = L"프로필 리소스 로드에 실패했습니다.";
+        return FALSE;
+    }
 
+    const char* pData  = static_cast<const char*>(LockResource(hGlobal));
+    DWORD       dwSize = SizeofResource(hMod, hRes);
+    if (!pData || dwSize == 0)
+    {
+        strError = L"프로필 리소스가 비어있습니다.";
+        return FALSE;
+    }
+
+    std::string strJson(pData, dwSize);
+    return LoadFromJsonString(strJson, strError);
+}
+
+BOOL SolutionProfile::LoadFromJsonString(const std::string& strJson, CString& strError)
+{
     std::map<std::string, std::string> entries;
-    ParseProfileJson(ss.str(), entries);
+    ParseProfileJson(strJson, entries);
 
     if (entries.find("profileId") == entries.end())
     {
-        strError = L"유효하지 않은 프로필 파일 형식입니다.";
+        strError = L"유효하지 않은 프로필 형식입니다.";
         return FALSE;
     }
 

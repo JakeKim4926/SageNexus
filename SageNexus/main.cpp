@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "Define.h"
 #include "app/application/SageApp.h"
 #include "app/host/MainWindow.h"
 #include "app/host/LoginDialog.h"
@@ -32,10 +31,6 @@ int APIENTRY wWinMain(
             CoUninitialize();
             return 0;
         }
-
-        CString strProfilePath = sageMgr.GetAppDir() + L"\\" + PROFILE_FILE_NAME;
-        CString strSignError;
-        security.SignProfile(strProfilePath, strSignError);
     }
     else
     {

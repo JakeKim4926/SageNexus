@@ -44,7 +44,7 @@ constexpr const wchar_t* LOG_DIR_NAME        = L"Logs";
 // User Data (AppData)
 // ============================================================
 // 설치 폴더: exe + WebView2Loader.dll만 존재. 모든 리소스는 exe에 임베딩됨.
-// 사용자 데이터 폴더: profile.json, profile.sig, settings.json, Logs, Data, WebViewData
+// 사용자 데이터 폴더: settings.json, credentials.dat, Logs, Data, WebViewData
 constexpr const wchar_t* USER_DATA_APP_NAME  = L"SageNexus";
 
 // ============================================================
@@ -53,19 +53,9 @@ constexpr const wchar_t* USER_DATA_APP_NAME  = L"SageNexus";
 constexpr int BRIDGE_REQUEST_TIMEOUT_MS = 30000;
 
 // ============================================================
-// Profile
-// ============================================================
-constexpr const wchar_t* PROFILE_FILE_NAME = L"profile.json";
-
-// 배포 시 개발자가 설정하는 프로필 식별 정보
-constexpr const wchar_t* DEPLOY_PROFILE_ID   = L"default";
-constexpr const wchar_t* DEPLOY_PROFILE_NAME = L"Default Profile";
-
-// ============================================================
 // Security
 // ============================================================
 constexpr const wchar_t* CREDENTIALS_FILE_NAME = L"credentials.dat";
-constexpr const wchar_t* PROFILE_SIG_FILE_NAME = L"profile.sig";
 
 // ============================================================
 // Import

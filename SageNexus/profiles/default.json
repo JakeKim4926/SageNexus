@@ -1,0 +1,17 @@
+{
+  "profileId": "default",
+  "profileName": "Default Profile",
+  "defaultInterfaceLanguage": "ko",
+  "defaultOutputLanguage": "ko",
+  "showDataViewer": true,
+  "showTransform": true,
+  "showExport": true,
+  "showHistory": true,
+  "showWorkflow": true,
+  "showWebextract": true,
+  "showSettings": true,
+  "plugin_import": true,
+  "plugin_transform": true,
+  "plugin_export": true,
+  "plugin_history": true
+}

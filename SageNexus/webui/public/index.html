@@ -1224,8 +1224,30 @@ function getColDisplayName(col) {
             if (el) el.textContent = t('status.profile.prefix') + ': ' + detail.profileName;
         }
 
+        if (detail.menuVisibility) {
+            applyMenuVisibility(detail.menuVisibility);
+        }
+
         loadDashboardStats();
     });
+
+    function applyMenuVisibility(vis) {
+        var pageMap = {
+            'data-viewer': vis.showDataViewer,
+            'transform':   vis.showTransform,
+            'export':      vis.showExport,
+            'history':     vis.showHistory,
+            'workflow':    vis.showWorkflow,
+            'webextract':  vis.showWebextract,
+            'settings':    vis.showSettings
+        };
+        Object.keys(pageMap).forEach(function (page) {
+            var navItem = document.querySelector('.nav-item[data-page="' + page + '"]');
+            if (navItem) {
+                navItem.style.display = (pageMap[page] === false) ? 'none' : '';
+            }
+        });
+    }
 
     setStatus('loading', t('status.initializing'));
 })();

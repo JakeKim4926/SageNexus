@@ -13,6 +13,8 @@ struct MenuVisibility
     BOOL m_bShowTransform;
     BOOL m_bShowExport;
     BOOL m_bShowHistory;
+    BOOL m_bShowWorkflow;
+    BOOL m_bShowWebextract;
     BOOL m_bShowSettings;
 
     MenuVisibility()
@@ -20,6 +22,8 @@ struct MenuVisibility
         , m_bShowTransform(TRUE)
         , m_bShowExport(TRUE)
         , m_bShowHistory(TRUE)
+        , m_bShowWorkflow(TRUE)
+        , m_bShowWebextract(TRUE)
         , m_bShowSettings(TRUE)
     {}
 };

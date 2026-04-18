@@ -105,7 +105,8 @@
       <AdditionalDependencies>ole32.lib;oleaut32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y /E /I "$(ProjectDir)webui" "$(OutDir)webui\"</Command>
+      <Command>xcopy /Y /E /I "$(ProjectDir)webui" "$(OutDir)webui\"
+xcopy /Y /E /I "$(ProjectDir)resources" "$(OutDir)resources\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -128,7 +129,8 @@
       <AdditionalDependencies>ole32.lib;oleaut32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y /E /I "$(ProjectDir)webui" "$(OutDir)webui\"</Command>
+      <Command>xcopy /Y /E /I "$(ProjectDir)webui" "$(OutDir)webui\"
+xcopy /Y /E /I "$(ProjectDir)resources" "$(OutDir)resources\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -149,7 +151,8 @@
       <AdditionalDependencies>ole32.lib;oleaut32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y /E /I "$(ProjectDir)webui" "$(OutDir)webui\"</Command>
+      <Command>xcopy /Y /E /I "$(ProjectDir)webui" "$(OutDir)webui\"
+xcopy /Y /E /I "$(ProjectDir)resources" "$(OutDir)resources\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -172,7 +175,8 @@
       <AdditionalDependencies>ole32.lib;oleaut32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y /E /I "$(ProjectDir)webui" "$(OutDir)webui\"</Command>
+      <Command>xcopy /Y /E /I "$(ProjectDir)webui" "$(OutDir)webui\"
+xcopy /Y /E /I "$(ProjectDir)resources" "$(OutDir)resources\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -283,6 +287,12 @@
     <ClInclude Include="app\domain\model\ScheduledJob.h" />
     <ClInclude Include="app\application\services\SchedulerService.h" />
     <ClInclude Include="app\infrastructure\bridge\SchedulerBridgeHandler.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resources\SageNexus.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resources\resource.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

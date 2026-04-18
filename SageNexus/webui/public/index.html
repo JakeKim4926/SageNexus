@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SageNexus</title>
-    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+    <link rel="preload" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" onload="this.rel='stylesheet'">
     <link rel="stylesheet" href="../src/styles/styles.css">
 </head>
 <body>
@@ -20,8 +20,11 @@
 
     <!-- Top Bar -->
     <div id="topbar">
-        <span class="app-logo">SageNexus</span>
-        <span class="breadcrumb" id="breadcrumb" data-i18n="nav.dashboard">대시보드</span>
+        <img class="app-logo-icon" src="../../resources/app.ico" alt="">
+        <div class="topbar-title">
+            <span class="app-logo">SageNexus</span>
+            <span class="breadcrumb" id="breadcrumb" data-i18n="nav.dashboard">대시보드</span>
+        </div>
         <div class="topbar-actions">
             <!-- Phase 2+에서 액션 버튼 추가 -->
         </div>

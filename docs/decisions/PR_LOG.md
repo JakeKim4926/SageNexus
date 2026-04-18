@@ -2,6 +2,14 @@
 
 ---
 
+## [2026-04-18] feature/profile-security
+- **목적**: B2B 배포 시 profile.json 변조 방지 및 회사별 접근 제어
+- **변경 내용**: PBKDF2-SHA256 패스워드 인증(ProfileSecurity), Win32 로그인 다이얼로그(LoginDialog), HMAC-SHA256 프로필 서명 검증, 시작 시 로그인 흐름 추가, Settings 보안 섹션(비밀번호 변경) 추가, settings.security/changePassword 브릿지 핸들러
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/51
+- **결과**: merged ✅
+
+---
+
 ## [2026-04-18] feature/profile-menu-visibility
 - **목적**: profile.json 설정으로 회사별 사이드바 메뉴를 선택적으로 제어
 - **변경 내용**: MenuVisibility에 showWorkflow/showWebextract 추가, appReady 이벤트에 menuVisibility 포함, UI에서 applyMenuVisibility()로 nav-item 표시/숨김 처리

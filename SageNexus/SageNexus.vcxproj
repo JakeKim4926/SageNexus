@@ -104,15 +104,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>ole32.lib;oleaut32.lib;Bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>xcopy /Y /E /I "$(ProjectDir)webui\public" "$(OutDir)webui\public\"
-xcopy /Y /E /I "$(ProjectDir)webui\src\core" "$(OutDir)webui\src\core\"
-xcopy /Y /E /I "$(ProjectDir)webui\src\styles" "$(OutDir)webui\src\styles\"
-if not exist "$(OutDir)resources" mkdir "$(OutDir)resources"
-copy /Y "$(ProjectDir)resources\app.ico" "$(OutDir)resources\app.ico"
-if exist "$(OutDir)Web" rmdir /S /Q "$(OutDir)Web"
-if exist "$(OutDir)webui\src\i18n" rmdir /S /Q "$(OutDir)webui\src\i18n"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -133,15 +124,6 @@ if exist "$(OutDir)webui\src\i18n" rmdir /S /Q "$(OutDir)webui\src\i18n"</Comman
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>ole32.lib;oleaut32.lib;Bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>xcopy /Y /E /I "$(ProjectDir)webui\public" "$(OutDir)webui\public\"
-xcopy /Y /E /I "$(ProjectDir)webui\src\core" "$(OutDir)webui\src\core\"
-xcopy /Y /E /I "$(ProjectDir)webui\src\styles" "$(OutDir)webui\src\styles\"
-if not exist "$(OutDir)resources" mkdir "$(OutDir)resources"
-copy /Y "$(ProjectDir)resources\app.ico" "$(OutDir)resources\app.ico"
-if exist "$(OutDir)Web" rmdir /S /Q "$(OutDir)Web"
-if exist "$(OutDir)webui\src\i18n" rmdir /S /Q "$(OutDir)webui\src\i18n"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -160,15 +142,6 @@ if exist "$(OutDir)webui\src\i18n" rmdir /S /Q "$(OutDir)webui\src\i18n"</Comman
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>ole32.lib;oleaut32.lib;Bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>xcopy /Y /E /I "$(ProjectDir)webui\public" "$(OutDir)webui\public\"
-xcopy /Y /E /I "$(ProjectDir)webui\src\core" "$(OutDir)webui\src\core\"
-xcopy /Y /E /I "$(ProjectDir)webui\src\styles" "$(OutDir)webui\src\styles\"
-if not exist "$(OutDir)resources" mkdir "$(OutDir)resources"
-copy /Y "$(ProjectDir)resources\app.ico" "$(OutDir)resources\app.ico"
-if exist "$(OutDir)Web" rmdir /S /Q "$(OutDir)Web"
-if exist "$(OutDir)webui\src\i18n" rmdir /S /Q "$(OutDir)webui\src\i18n"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -189,15 +162,6 @@ if exist "$(OutDir)webui\src\i18n" rmdir /S /Q "$(OutDir)webui\src\i18n"</Comman
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>ole32.lib;oleaut32.lib;Bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>xcopy /Y /E /I "$(ProjectDir)webui\public" "$(OutDir)webui\public\"
-xcopy /Y /E /I "$(ProjectDir)webui\src\core" "$(OutDir)webui\src\core\"
-xcopy /Y /E /I "$(ProjectDir)webui\src\styles" "$(OutDir)webui\src\styles\"
-if not exist "$(OutDir)resources" mkdir "$(OutDir)resources"
-copy /Y "$(ProjectDir)resources\app.ico" "$(OutDir)resources\app.ico"
-if exist "$(OutDir)Web" rmdir /S /Q "$(OutDir)Web"
-if exist "$(OutDir)webui\src\i18n" rmdir /S /Q "$(OutDir)webui\src\i18n"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">

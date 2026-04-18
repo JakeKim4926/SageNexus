@@ -14,4 +14,9 @@
 #define IDC_EDIT_CONFIRM  1002
 #define IDC_STATIC_ERROR  1003
 
+#define IDR_WEBUI_INDEX_HTML 301
+#define IDR_WEBUI_STYLES_CSS 302
+#define IDR_WEBUI_BRIDGE_JS  303
+#define IDR_APP_ICO          304
+
 #endif

@@ -244,9 +244,7 @@ void MainWindow::RegisterBridgeHandlers()
 
 void MainWindow::NavigateToShell()
 {
-    CString strUrl = L"file:///" + sageMgr.GetAppDir() + L"\\" + WEB_ENTRY_FILE;
-    strUrl.Replace(L'\\', L'/');
-    m_pWebViewHost->Navigate(strUrl);
+    m_pWebViewHost->Navigate(WEB_VIRTUAL_HOST);
 }
 
 void MainWindow::OnWorkflowProgress(int nStep, int nTotal)

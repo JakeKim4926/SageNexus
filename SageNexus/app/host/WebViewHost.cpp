@@ -3,6 +3,7 @@
 #include "app/application/SageApp.h"
 #include "app/domain/model/SolutionProfile.h"
 #include "Define.h"
+#include "resources/resource.h"
 
 using namespace Microsoft::WRL;
 
@@ -14,6 +15,7 @@ WebViewHost::WebViewHost(HWND hParentWnd)
     , m_pController(nullptr)
     , m_pWebView(nullptr)
     , m_tokenNavigationCompleted({})
+    , m_tokenWebResourceRequested({})
 {
 }
 
@@ -150,12 +152,107 @@ void WebViewHost::OnControllerCreated(HRESULT hrResult, ICoreWebView2Controller*
             }).Get(),
         nullptr);
 
+    RegisterWebResourceHandler();
     RegisterBridgeHandlers();
 
     m_eState = WebViewState::Ready;
     sageMgr.GetLogger().LogInfo(L"WebViewHost: Ready");
 
     PostMessageW(m_hParentWnd, WM_WEBVIEW_READY, 1, 0);
+}
+
+void WebViewHost::RegisterWebResourceHandler()
+{
+    m_pWebView->AddWebResourceRequestedFilter(
+        L"https://app.sagenexus/*",
+        COREWEBVIEW2_WEB_RESOURCE_CONTEXT_ALL);
+
+    ICoreWebView2Environment* pEnv = m_pEnvironment;
+
+    m_pWebView->add_WebResourceRequested(
+        Callback<ICoreWebView2WebResourceRequestedEventHandler>(
+            [pEnv](ICoreWebView2* /*pSender*/,
+                   ICoreWebView2WebResourceRequestedEventArgs* pArgs) -> HRESULT
+            {
+                ICoreWebView2WebResourceRequest* pReq = nullptr;
+                pArgs->get_Request(&pReq);
+                if (!pReq)
+                    return S_OK;
+
+                LPWSTR pszUri = nullptr;
+                pReq->get_Uri(&pszUri);
+                pReq->Release();
+                if (!pszUri)
+                    return S_OK;
+
+                CString strUri(pszUri);
+                CoTaskMemFree(pszUri);
+
+                int            nResId  = 0;
+                const wchar_t* pszMime = L"application/octet-stream";
+
+                if (strUri == L"https://app.sagenexus/index.html")
+                {
+                    nResId  = IDR_WEBUI_INDEX_HTML;
+                    pszMime = L"text/html; charset=utf-8";
+                }
+                else if (strUri == L"https://app.sagenexus/src/styles/styles.css")
+                {
+                    nResId  = IDR_WEBUI_STYLES_CSS;
+                    pszMime = L"text/css; charset=utf-8";
+                }
+                else if (strUri == L"https://app.sagenexus/src/core/bridge/bridge.js")
+                {
+                    nResId  = IDR_WEBUI_BRIDGE_JS;
+                    pszMime = L"application/javascript; charset=utf-8";
+                }
+                else if (strUri == L"https://app.sagenexus/resources/app.ico")
+                {
+                    nResId  = IDR_APP_ICO;
+                    pszMime = L"image/x-icon";
+                }
+
+                if (nResId == 0)
+                    return S_OK;
+
+                HMODULE hMod    = GetModuleHandleW(nullptr);
+                HRSRC   hRes    = FindResourceW(hMod, MAKEINTRESOURCEW(nResId), RT_RCDATA);
+                if (!hRes)
+                    return S_OK;
+
+                HGLOBAL hGlobal = LoadResource(hMod, hRes);
+                if (!hGlobal)
+                    return S_OK;
+
+                void*  pData  = LockResource(hGlobal);
+                DWORD  dwSize = SizeofResource(hMod, hRes);
+                if (!pData || dwSize == 0)
+                    return S_OK;
+
+                IStream* pStream = nullptr;
+                if (FAILED(CreateStreamOnHGlobal(nullptr, TRUE, &pStream)))
+                    return S_OK;
+
+                ULONG nWritten = 0;
+                pStream->Write(pData, dwSize, &nWritten);
+                LARGE_INTEGER liZero = {};
+                pStream->Seek(liZero, STREAM_SEEK_SET, nullptr);
+
+                CString strHeaders;
+                strHeaders.Format(L"Content-Type: %s", pszMime);
+
+                ICoreWebView2WebResourceResponse* pResponse = nullptr;
+                pEnv->CreateWebResourceResponse(pStream, 200, L"OK", strHeaders, &pResponse);
+                pStream->Release();
+
+                if (pResponse)
+                {
+                    pArgs->put_Response(pResponse);
+                    pResponse->Release();
+                }
+                return S_OK;
+            }).Get(),
+        &m_tokenWebResourceRequested);
 }
 
 void WebViewHost::RegisterBridgeHandlers()

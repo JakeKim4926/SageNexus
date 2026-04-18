@@ -17,5 +17,6 @@ private:
     CString HandleSetOutputLanguage(const BridgeMessage& msg);
     CString HandleGetInterfaceLanguage(const BridgeMessage& msg);
     CString HandleSetInterfaceLanguage(const BridgeMessage& msg);
+    CString HandleChangePassword(const BridgeMessage& msg);
 
 };

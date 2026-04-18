@@ -102,7 +102,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ole32.lib;oleaut32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ole32.lib;oleaut32.lib;Bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y /E /I "$(ProjectDir)webui" "$(OutDir)webui\"
@@ -126,7 +126,7 @@ xcopy /Y /E /I "$(ProjectDir)resources" "$(OutDir)resources\"</Command>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ole32.lib;oleaut32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ole32.lib;oleaut32.lib;Bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y /E /I "$(ProjectDir)webui" "$(OutDir)webui\"
@@ -148,7 +148,7 @@ xcopy /Y /E /I "$(ProjectDir)resources" "$(OutDir)resources\"</Command>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ole32.lib;oleaut32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ole32.lib;oleaut32.lib;Bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y /E /I "$(ProjectDir)webui" "$(OutDir)webui\"
@@ -172,7 +172,7 @@ xcopy /Y /E /I "$(ProjectDir)resources" "$(OutDir)resources\"</Command>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ole32.lib;oleaut32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ole32.lib;oleaut32.lib;Bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y /E /I "$(ProjectDir)webui" "$(OutDir)webui\"
@@ -226,6 +226,8 @@ xcopy /Y /E /I "$(ProjectDir)resources" "$(OutDir)resources\"</Command>
     <ClCompile Include="app\infrastructure\bridge\JobQueueBridgeHandler.cpp" />
     <ClCompile Include="app\application\services\SchedulerService.cpp" />
     <ClCompile Include="app\infrastructure\bridge\SchedulerBridgeHandler.cpp" />
+    <ClCompile Include="app\infrastructure\security\ProfileSecurity.cpp" />
+    <ClCompile Include="app\host\LoginDialog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -287,6 +289,8 @@ xcopy /Y /E /I "$(ProjectDir)resources" "$(OutDir)resources\"</Command>
     <ClInclude Include="app\domain\model\ScheduledJob.h" />
     <ClInclude Include="app\application\services\SchedulerService.h" />
     <ClInclude Include="app\infrastructure\bridge\SchedulerBridgeHandler.h" />
+    <ClInclude Include="app\infrastructure\security\ProfileSecurity.h" />
+    <ClInclude Include="app\host\LoginDialog.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resources\SageNexus.rc" />

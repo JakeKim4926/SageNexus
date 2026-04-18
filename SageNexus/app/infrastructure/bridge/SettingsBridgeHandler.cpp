@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "app/infrastructure/bridge/SettingsBridgeHandler.h"
 #include "app/application/SageApp.h"
+#include "Define.h"
 
 SettingsBridgeHandler::SettingsBridgeHandler()
 {
@@ -48,6 +49,12 @@ void SettingsBridgeHandler::RegisterHandlers(BridgeDispatcher& dispatcher)
         [this](const BridgeMessage& msg) -> CString
         {
             return HandleSetInterfaceLanguage(msg);
+        });
+
+    dispatcher.RegisterHandler(L"settings.security", L"changePassword",
+        [this](const BridgeMessage& msg) -> CString
+        {
+            return HandleChangePassword(msg);
         });
 }
 
@@ -184,4 +191,33 @@ CString SettingsBridgeHandler::HandleSetInterfaceLanguage(const BridgeMessage& m
 
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
            L"\",\"success\":true,\"payload\":{\"interfaceLanguage\":\"" + strLang + L"\"}}";
+}
+
+CString SettingsBridgeHandler::HandleChangePassword(const BridgeMessage& msg)
+{
+    CString strOldPassword = JsonExtractString(msg.m_strPayloadJson, L"oldPassword");
+    CString strNewPassword = JsonExtractString(msg.m_strPayloadJson, L"newPassword");
+
+    if (strNewPassword.IsEmpty())
+    {
+        return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+               L"\",\"success\":false,\"error\":{\"code\":\"INVALID_PAYLOAD\","
+               L"\"message\":\"newPassword is required\"}}";
+    }
+
+    ProfileSecurity& security = sageMgr.GetSecurity();
+    CString strError;
+    if (!security.ChangePassword(strOldPassword, strNewPassword, strError))
+    {
+        return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+               L"\",\"success\":false,\"error\":{\"code\":\"CHANGE_PASSWORD_FAILED\",\"message\":\"" +
+               JsonEscapeString(strError) + L"\"}}";
+    }
+
+    CString strProfilePath = sageMgr.GetAppDir() + L"\\" + PROFILE_FILE_NAME;
+    CString strSignError;
+    security.SignProfile(strProfilePath, strSignError);
+
+    return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+           L"\",\"success\":true,\"payload\":{}}";
 }

@@ -4,6 +4,7 @@
 #include "app/infrastructure/config/JsonConfigStore.h"
 #include "app/domain/model/SolutionProfile.h"
 #include "app/infrastructure/plugins/PluginManager.h"
+#include "app/infrastructure/security/ProfileSecurity.h"
 
 #define sageMgr SageApp::GetInstance()
 
@@ -25,7 +26,8 @@ public:
     JsonConfigStore&  GetConfigStore();
     SolutionProfile&  GetProfile();
     PluginManager&    GetPluginManager();
-    void              SaveProfileFile() const;
+    ProfileSecurity&  GetSecurity();
+    void              SaveProfileFile();
 
 private:
     SageApp();
@@ -48,4 +50,5 @@ private:
     JsonConfigStore* m_pConfigStore;
     SolutionProfile  m_profile;
     PluginManager    m_pluginManager;
+    ProfileSecurity  m_security;
 };

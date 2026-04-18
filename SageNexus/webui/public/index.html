@@ -607,6 +607,22 @@
                             <div class="empty-title" style="font-size:13px;" data-i18n="settings.connector.empty">등록된 커넥터가 없습니다</div>
                         </div>
                     </div>
+
+                    <div class="settings-section-title" style="margin-top:24px;" data-i18n="settings.section.security">보안</div>
+                    <div class="settings-card">
+                        <div class="settings-row" style="align-items:flex-start;flex-wrap:wrap;gap:8px;">
+                            <div class="settings-label" data-i18n="settings.security.changePassword">비밀번호 변경</div>
+                            <div class="settings-value" style="display:flex;flex-direction:column;gap:6px;width:100%;max-width:320px;">
+                                <input type="password" id="st-security-old-pw" class="tf-input" data-i18n-placeholder="settings.security.ph.old" placeholder="현재 비밀번호" />
+                                <input type="password" id="st-security-new-pw" class="tf-input" data-i18n-placeholder="settings.security.ph.new" placeholder="새 비밀번호" />
+                                <input type="password" id="st-security-confirm-pw" class="tf-input" data-i18n-placeholder="settings.security.ph.confirm" placeholder="새 비밀번호 확인" />
+                                <div>
+                                    <button class="btn btn-primary" id="st-security-btn-change" data-i18n="settings.security.btn.change">변경</button>
+                                </div>
+                                <div id="st-security-msg" style="font-size:12px;display:none;"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -2345,6 +2361,54 @@ function getColDisplayName(col) {
                     .catch(function () {
                         interfaceSel.value = _interfaceLanguage;
                     });
+            });
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var btnChange = document.getElementById('st-security-btn-change');
+        if (btnChange) {
+            btnChange.addEventListener('click', function () {
+                var oldPw     = document.getElementById('st-security-old-pw');
+                var newPw     = document.getElementById('st-security-new-pw');
+                var confirmPw = document.getElementById('st-security-confirm-pw');
+                var msgEl     = document.getElementById('st-security-msg');
+
+                if (!oldPw || !newPw || !confirmPw || !msgEl) return;
+
+                msgEl.style.display = 'none';
+
+                if (!newPw.value) {
+                    msgEl.textContent = t('settings.security.err.emptyNew') || '새 비밀번호를 입력해주세요.';
+                    msgEl.style.color = 'var(--error)';
+                    msgEl.style.display = 'block';
+                    return;
+                }
+
+                if (newPw.value !== confirmPw.value) {
+                    msgEl.textContent = t('settings.security.err.mismatch') || '비밀번호가 일치하지 않습니다.';
+                    msgEl.style.color = 'var(--error)';
+                    msgEl.style.display = 'block';
+                    return;
+                }
+
+                bridgeClient.sendCommand('settings.security', 'changePassword', {
+                    oldPassword: oldPw.value,
+                    newPassword: newPw.value
+                })
+                .then(function () {
+                    oldPw.value = '';
+                    newPw.value = '';
+                    confirmPw.value = '';
+                    msgEl.textContent = t('settings.security.success') || '비밀번호가 변경되었습니다.';
+                    msgEl.style.color = 'var(--color-success)';
+                    msgEl.style.display = 'block';
+                })
+                .catch(function (err) {
+                    msgEl.textContent = (err && err.message) ? err.message : (t('settings.security.err.failed') || '비밀번호 변경에 실패했습니다.');
+                    msgEl.style.color = 'var(--error)';
+                    msgEl.style.display = 'block';
+                });
             });
         }
     });

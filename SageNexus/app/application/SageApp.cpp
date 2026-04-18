@@ -39,6 +39,10 @@ BOOL SageApp::Initialize(HINSTANCE hInstance)
         return FALSE;
     }
 
+    CString strCredPath = m_strUserDataDir + L"\\" + CREDENTIALS_FILE_NAME;
+    CString strSigPath  = m_strAppDir      + L"\\" + PROFILE_SIG_FILE_NAME;
+    m_security.SetPaths(strCredPath, strSigPath);
+
     m_pConfigStore = new JsonConfigStore(m_strUserDataDir);
     m_pConfigStore->Load();
 
@@ -50,10 +54,20 @@ BOOL SageApp::Initialize(HINSTANCE hInstance)
     {
         m_pLogger->LogInfo(L"Profile file not found, creating default: " + strProfilePath);
         WriteDefaultProfileFile(strProfilePath);
+        m_profile.LoadFromFile(strProfilePath, strProfileError);
     }
     else
     {
         m_pLogger->LogInfo(L"Profile loaded: " + m_profile.GetProfileName());
+
+        if (GetFileAttributesW(strSigPath) != INVALID_FILE_ATTRIBUTES)
+        {
+            if (!m_security.VerifyProfileSignature(strProfilePath))
+            {
+                m_pLogger->LogError(L"Profile signature verification failed - using default profile");
+                m_profile.SetDefault();
+            }
+        }
     }
 
     m_pluginManager.RegisterBuiltIn(L"import",     L"데이터 가져오기");
@@ -155,7 +169,7 @@ void SageApp::WriteDefaultProfileFile(const CString& strFilePath) const
     file << "}\n";
 }
 
-void SageApp::SaveProfileFile() const
+void SageApp::SaveProfileFile()
 {
     CString strPath = m_strAppDir + L"\\" + PROFILE_FILE_NAME;
     std::string strFilePath = WideToUtf8(strPath);
@@ -187,6 +201,13 @@ void SageApp::SaveProfileFile() const
     }
 
     file << "\n}\n";
+    file.close();
+
+    if (m_security.IsCredentialsFileExists())
+    {
+        CString strSignError;
+        m_security.SignProfile(strPath, strSignError);
+    }
 }
 
 HINSTANCE SageApp::GetHInstance() const
@@ -234,4 +255,9 @@ SolutionProfile& SageApp::GetProfile()
 PluginManager& SageApp::GetPluginManager()
 {
     return m_pluginManager;
+}
+
+ProfileSecurity& SageApp::GetSecurity()
+{
+    return m_security;
 }

@@ -49,6 +49,10 @@ BOOL SolutionProfile::LoadFromFile(const CString& strFilePath, CString& strError
         m_menuVisibility.m_bShowExport     = (entries["showExport"] == "true") ? TRUE : FALSE;
     if (entries.find("showHistory") != entries.end())
         m_menuVisibility.m_bShowHistory    = (entries["showHistory"] == "true") ? TRUE : FALSE;
+    if (entries.find("showWorkflow") != entries.end())
+        m_menuVisibility.m_bShowWorkflow   = (entries["showWorkflow"] == "true") ? TRUE : FALSE;
+    if (entries.find("showWebextract") != entries.end())
+        m_menuVisibility.m_bShowWebextract = (entries["showWebextract"] == "true") ? TRUE : FALSE;
     if (entries.find("showSettings") != entries.end())
         m_menuVisibility.m_bShowSettings   = (entries["showSettings"] == "true") ? TRUE : FALSE;
 

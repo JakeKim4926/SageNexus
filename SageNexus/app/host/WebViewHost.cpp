@@ -201,12 +201,32 @@ void WebViewHost::Navigate(const CString& strUrl)
                 m_bAppReadySent = TRUE;
 
                 const SolutionProfile& profile = sageMgr.GetProfile();
+                const MenuVisibility&  vis     = profile.GetMenuVisibility();
                 CString strPayload;
                 strPayload.Format(
-                    L"{\"profileName\":\"%s\",\"interfaceLanguage\":\"%s\",\"outputLanguage\":\"%s\"}",
+                    L"{"
+                    L"\"profileName\":\"%s\","
+                    L"\"interfaceLanguage\":\"%s\","
+                    L"\"outputLanguage\":\"%s\","
+                    L"\"menuVisibility\":{"
+                    L"\"showDataViewer\":%s,"
+                    L"\"showTransform\":%s,"
+                    L"\"showExport\":%s,"
+                    L"\"showHistory\":%s,"
+                    L"\"showWorkflow\":%s,"
+                    L"\"showWebextract\":%s,"
+                    L"\"showSettings\":%s"
+                    L"}}",
                     (LPCWSTR)profile.GetProfileName(),
                     (LPCWSTR)profile.GetDefaultInterfaceLanguage(),
-                    (LPCWSTR)profile.GetDefaultOutputLanguage());
+                    (LPCWSTR)profile.GetDefaultOutputLanguage(),
+                    vis.m_bShowDataViewer  ? L"true" : L"false",
+                    vis.m_bShowTransform   ? L"true" : L"false",
+                    vis.m_bShowExport      ? L"true" : L"false",
+                    vis.m_bShowHistory     ? L"true" : L"false",
+                    vis.m_bShowWorkflow    ? L"true" : L"false",
+                    vis.m_bShowWebextract  ? L"true" : L"false",
+                    vis.m_bShowSettings    ? L"true" : L"false");
 
                 m_dispatcher.SendEvent(L"appReady", strPayload, m_pWebView);
                 sageMgr.GetLogger().LogInfo(L"WebViewHost: appReady event sent");

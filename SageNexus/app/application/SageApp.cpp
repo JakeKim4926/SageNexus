@@ -145,6 +145,8 @@ void SageApp::WriteDefaultProfileFile(const CString& strFilePath) const
     file << "  \"showTransform\": true,\n";
     file << "  \"showExport\": true,\n";
     file << "  \"showHistory\": true,\n";
+    file << "  \"showWorkflow\": true,\n";
+    file << "  \"showWebextract\": true,\n";
     file << "  \"showSettings\": true,\n";
     file << "  \"plugin_import\": true,\n";
     file << "  \"plugin_transform\": true,\n";
@@ -173,6 +175,8 @@ void SageApp::SaveProfileFile() const
     file << "  \"showTransform\": " << (vis.m_bShowTransform ? "true" : "false") << ",\n";
     file << "  \"showExport\": " << (vis.m_bShowExport ? "true" : "false") << ",\n";
     file << "  \"showHistory\": " << (vis.m_bShowHistory ? "true" : "false") << ",\n";
+    file << "  \"showWorkflow\": " << (vis.m_bShowWorkflow ? "true" : "false") << ",\n";
+    file << "  \"showWebextract\": " << (vis.m_bShowWebextract ? "true" : "false") << ",\n";
     file << "  \"showSettings\": " << (vis.m_bShowSettings ? "true" : "false");
 
     for (int i = 0; i < static_cast<int>(arrPlugins.size()); ++i)

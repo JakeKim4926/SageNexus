@@ -68,17 +68,21 @@ CString SettingsBridgeHandler::HandleGetProfile(const BridgeMessage& msg)
         L"\"showTransform\":%s,"
         L"\"showExport\":%s,"
         L"\"showHistory\":%s,"
+        L"\"showWorkflow\":%s,"
+        L"\"showWebextract\":%s,"
         L"\"showSettings\":%s"
         L"}}",
         (LPCWSTR)profile.GetProfileId(),
         (LPCWSTR)profile.GetProfileName(),
         (LPCWSTR)profile.GetDefaultInterfaceLanguage(),
         (LPCWSTR)profile.GetDefaultOutputLanguage(),
-        vis.m_bShowDataViewer ? L"true" : L"false",
-        vis.m_bShowTransform  ? L"true" : L"false",
-        vis.m_bShowExport     ? L"true" : L"false",
-        vis.m_bShowHistory    ? L"true" : L"false",
-        vis.m_bShowSettings   ? L"true" : L"false"
+        vis.m_bShowDataViewer  ? L"true" : L"false",
+        vis.m_bShowTransform   ? L"true" : L"false",
+        vis.m_bShowExport      ? L"true" : L"false",
+        vis.m_bShowHistory     ? L"true" : L"false",
+        vis.m_bShowWorkflow    ? L"true" : L"false",
+        vis.m_bShowWebextract  ? L"true" : L"false",
+        vis.m_bShowSettings    ? L"true" : L"false"
     );
 
     return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +

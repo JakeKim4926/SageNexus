@@ -20,6 +20,8 @@ Debug_x64/
 Release_x64/
 Debug_x32/
 Release_x32/
+Debug-*_x64/
+Release-*_x64/
 ARM/
 ARM64/
 Win32/
@@ -146,3 +148,5 @@ yarn-error.log*
 #!*.bmp
 #!*.png
 #!res/**
+# SageNexus: build-time profile copy (selected from SageNexus/profiles/*.json)
+SageNexus/profile.json

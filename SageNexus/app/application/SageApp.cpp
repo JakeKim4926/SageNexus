@@ -151,8 +151,8 @@ void SageApp::WriteDefaultProfileFile(const CString& strFilePath) const
         return;
 
     file << "{\n";
-    file << "  \"profileId\": \"default\",\n";
-    file << "  \"profileName\": \"Default Profile\",\n";
+    file << "  \"profileId\": \"" << WideToUtf8(DEPLOY_PROFILE_ID) << "\",\n";
+    file << "  \"profileName\": \"" << WideToUtf8(DEPLOY_PROFILE_NAME) << "\",\n";
     file << "  \"defaultInterfaceLanguage\": \"ko\",\n";
     file << "  \"defaultOutputLanguage\": \"ko\",\n";
     file << "  \"showDataViewer\": true,\n";

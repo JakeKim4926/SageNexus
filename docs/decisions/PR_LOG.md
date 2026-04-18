@@ -2,6 +2,14 @@
 
 ---
 
+## [2026-04-18] feature/settings-security-i18n-keys
+- **목적**: 설정 화면 보안 섹션의 i18n 키 누락으로 사용자에게 키 문자열(`settings.section.security`)이 그대로 노출되는 문제 수정
+- **변경 내용**: `index.html`의 `LOCALES`(ko/en) 및 `src/i18n/*.json`에 `settings.section.security`, `settings.security.changePassword`, `settings.security.ph.*`, `settings.security.btn.change`, `settings.security.err.*`, `settings.security.success` 키 추가
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/52
+- **결과**: merged ✅
+
+---
+
 ## [2026-04-18] feature/profile-security
 - **목적**: B2B 배포 시 profile.json 변조 방지 및 회사별 접근 제어
 - **변경 내용**: PBKDF2-SHA256 패스워드 인증(ProfileSecurity), Win32 로그인 다이얼로그(LoginDialog), HMAC-SHA256 프로필 서명 검증, 시작 시 로그인 흐름 추가, Settings 보안 섹션(비밀번호 변경) 추가, settings.security/changePassword 브릿지 핸들러

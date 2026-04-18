@@ -18,5 +18,6 @@
 #define IDR_WEBUI_STYLES_CSS 302
 #define IDR_WEBUI_BRIDGE_JS  303
 #define IDR_APP_ICO          304
+#define IDR_PROFILE_JSON     305
 
 #endif

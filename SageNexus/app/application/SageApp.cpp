@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "app/application/SageApp.h"
 #include "Define.h"
+#include "resources/resource.h"
 
 SageApp& SageApp::GetInstance()
 {
@@ -39,36 +40,23 @@ BOOL SageApp::Initialize(HINSTANCE hInstance)
         return FALSE;
     }
 
-    CString strCredPath    = m_strUserDataDir + L"\\" + CREDENTIALS_FILE_NAME;
-    CString strSigPath     = m_strUserDataDir + L"\\" + PROFILE_SIG_FILE_NAME;
-    m_security.SetPaths(strCredPath, strSigPath);
+    CString strCredPath = m_strUserDataDir + L"\\" + CREDENTIALS_FILE_NAME;
+    m_security.SetCredentialsPath(strCredPath);
 
     m_pConfigStore = new JsonConfigStore(m_strUserDataDir);
     m_pConfigStore->Load();
 
     m_profile.SetDefault();
 
-    CString strProfilePath = m_strUserDataDir + L"\\" + PROFILE_FILE_NAME;
     CString strProfileError;
-    if (!m_profile.LoadFromFile(strProfilePath, strProfileError))
+    if (!m_profile.LoadFromResource(IDR_PROFILE_JSON, strProfileError))
     {
-        m_pLogger->LogInfo(L"Profile file not found, creating default: " + strProfilePath);
-        WriteDefaultProfileFile(strProfilePath);
-        m_profile.LoadFromFile(strProfilePath, strProfileError);
+        m_pLogger->LogError(L"Embedded profile load failed: " + strProfileError);
+        ReleaseResources();
+        return FALSE;
     }
-    else
-    {
-        m_pLogger->LogInfo(L"Profile loaded: " + m_profile.GetProfileName());
 
-        if (GetFileAttributesW(strSigPath) != INVALID_FILE_ATTRIBUTES)
-        {
-            if (!m_security.VerifyProfileSignature(strProfilePath))
-            {
-                m_pLogger->LogError(L"Profile signature verification failed - using default profile");
-                m_profile.SetDefault();
-            }
-        }
-    }
+    m_pLogger->LogInfo(L"Profile loaded: " + m_profile.GetProfileName());
 
     m_pluginManager.RegisterBuiltIn(L"import",     L"데이터 가져오기");
     m_pluginManager.RegisterBuiltIn(L"transform",  L"데이터 변환");
@@ -141,73 +129,6 @@ BOOL SageApp::InitializePaths()
     CreateDirectoryW(m_strDataDir, nullptr);
     CreateDirectoryW(m_strLogDir, nullptr);
     return TRUE;
-}
-
-void SageApp::WriteDefaultProfileFile(const CString& strFilePath) const
-{
-    std::string strPath = WideToUtf8(strFilePath);
-    std::ofstream file(strPath, std::ios::out | std::ios::trunc);
-    if (!file.is_open())
-        return;
-
-    file << "{\n";
-    file << "  \"profileId\": \"" << WideToUtf8(DEPLOY_PROFILE_ID) << "\",\n";
-    file << "  \"profileName\": \"" << WideToUtf8(DEPLOY_PROFILE_NAME) << "\",\n";
-    file << "  \"defaultInterfaceLanguage\": \"ko\",\n";
-    file << "  \"defaultOutputLanguage\": \"ko\",\n";
-    file << "  \"showDataViewer\": true,\n";
-    file << "  \"showTransform\": true,\n";
-    file << "  \"showExport\": true,\n";
-    file << "  \"showHistory\": true,\n";
-    file << "  \"showWorkflow\": true,\n";
-    file << "  \"showWebextract\": true,\n";
-    file << "  \"showSettings\": true,\n";
-    file << "  \"plugin_import\": true,\n";
-    file << "  \"plugin_transform\": true,\n";
-    file << "  \"plugin_export\": true,\n";
-    file << "  \"plugin_history\": true\n";
-    file << "}\n";
-}
-
-void SageApp::SaveProfileFile()
-{
-    CString strPath = m_strUserDataDir + L"\\" + PROFILE_FILE_NAME;
-    std::string strFilePath = WideToUtf8(strPath);
-    std::ofstream file(strFilePath, std::ios::out | std::ios::trunc);
-    if (!file.is_open())
-        return;
-
-    const MenuVisibility& vis = m_profile.GetMenuVisibility();
-    const std::vector<PluginEntry>& arrPlugins = m_pluginManager.GetAllPlugins();
-
-    file << "{\n";
-    file << "  \"profileId\": \"" << WideToUtf8(m_profile.GetProfileId()) << "\",\n";
-    file << "  \"profileName\": \"" << WideToUtf8(m_profile.GetProfileName()) << "\",\n";
-    file << "  \"defaultInterfaceLanguage\": \"" << WideToUtf8(m_profile.GetDefaultInterfaceLanguage()) << "\",\n";
-    file << "  \"defaultOutputLanguage\": \"" << WideToUtf8(m_profile.GetDefaultOutputLanguage()) << "\",\n";
-    file << "  \"showDataViewer\": " << (vis.m_bShowDataViewer ? "true" : "false") << ",\n";
-    file << "  \"showTransform\": " << (vis.m_bShowTransform ? "true" : "false") << ",\n";
-    file << "  \"showExport\": " << (vis.m_bShowExport ? "true" : "false") << ",\n";
-    file << "  \"showHistory\": " << (vis.m_bShowHistory ? "true" : "false") << ",\n";
-    file << "  \"showWorkflow\": " << (vis.m_bShowWorkflow ? "true" : "false") << ",\n";
-    file << "  \"showWebextract\": " << (vis.m_bShowWebextract ? "true" : "false") << ",\n";
-    file << "  \"showSettings\": " << (vis.m_bShowSettings ? "true" : "false");
-
-    for (int i = 0; i < static_cast<int>(arrPlugins.size()); ++i)
-    {
-        file << ",\n";
-        file << "  \"plugin_" << WideToUtf8(arrPlugins[i].m_strPluginId) << "\": ";
-        file << (m_profile.IsPluginEnabled(arrPlugins[i].m_strPluginId) ? "true" : "false");
-    }
-
-    file << "\n}\n";
-    file.close();
-
-    if (m_security.IsCredentialsFileExists())
-    {
-        CString strSignError;
-        m_security.SignProfile(strPath, strSignError);
-    }
 }
 
 HINSTANCE SageApp::GetHInstance() const

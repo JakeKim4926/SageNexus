@@ -27,7 +27,6 @@ public:
     SolutionProfile&  GetProfile();
     PluginManager&    GetPluginManager();
     ProfileSecurity&  GetSecurity();
-    void              SaveProfileFile();
 
 private:
     SageApp();
@@ -36,7 +35,6 @@ private:
     SageApp& operator=(const SageApp&) = delete;
 
     BOOL InitializePaths();
-    void WriteDefaultProfileFile(const CString& strFilePath) const;
     void ReleaseResources();
 
     HINSTANCE        m_hInstance;

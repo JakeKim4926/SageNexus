@@ -2,6 +2,14 @@
 
 ---
 
+## [2026-04-18] feature/deploy-profile-identity
+- **목적**: 프로필 ID/이름을 개발자가 빌드 전에 설정하고 사용자는 변경 불가하도록 컴파일 타임 상수로 고정
+- **변경 내용**: Define.h에 DEPLOY_PROFILE_ID/NAME 상수 추가, SolutionProfile/SageApp 하드코딩 제거
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/55
+- **결과**: merged ✅
+
+---
+
 ## [2026-04-18] refactor/embed-resources-into-exe
 - **목적**: 배포 파일을 exe + WebView2Loader.dll만으로 최소화. webui, profile, sig 파일이 사용자에게 노출되지 않도록 구조 변경
 - **변경 내용**: webui HTML/CSS/JS/ICO를 exe RCDATA로 임베딩, WebResourceRequested 가상 호스트 서빙 추가, profile/sig 경로를 AppData로 이동, PostBuildEvent 전면 제거

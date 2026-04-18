@@ -39,8 +39,8 @@ BOOL SageApp::Initialize(HINSTANCE hInstance)
         return FALSE;
     }
 
-    CString strCredPath = m_strUserDataDir + L"\\" + CREDENTIALS_FILE_NAME;
-    CString strSigPath  = m_strAppDir      + L"\\" + PROFILE_SIG_FILE_NAME;
+    CString strCredPath    = m_strUserDataDir + L"\\" + CREDENTIALS_FILE_NAME;
+    CString strSigPath     = m_strUserDataDir + L"\\" + PROFILE_SIG_FILE_NAME;
     m_security.SetPaths(strCredPath, strSigPath);
 
     m_pConfigStore = new JsonConfigStore(m_strUserDataDir);
@@ -48,7 +48,7 @@ BOOL SageApp::Initialize(HINSTANCE hInstance)
 
     m_profile.SetDefault();
 
-    CString strProfilePath = m_strAppDir + L"\\" + PROFILE_FILE_NAME;
+    CString strProfilePath = m_strUserDataDir + L"\\" + PROFILE_FILE_NAME;
     CString strProfileError;
     if (!m_profile.LoadFromFile(strProfilePath, strProfileError))
     {
@@ -117,7 +117,7 @@ void SageApp::ReleaseResources()
 
 BOOL SageApp::InitializePaths()
 {
-    // 설치 폴더: exe 위치 (webui, templates, profile.json 등 읽기 전용 리소스)
+    // 설치 폴더: exe 위치 (WebView2Loader.dll)
     wchar_t szExePath[MAX_PATH] = {};
     if (!GetModuleFileNameW(m_hInstance, szExePath, MAX_PATH))
         return FALSE;
@@ -171,7 +171,7 @@ void SageApp::WriteDefaultProfileFile(const CString& strFilePath) const
 
 void SageApp::SaveProfileFile()
 {
-    CString strPath = m_strAppDir + L"\\" + PROFILE_FILE_NAME;
+    CString strPath = m_strUserDataDir + L"\\" + PROFILE_FILE_NAME;
     std::string strFilePath = WideToUtf8(strPath);
     std::ofstream file(strFilePath, std::ios::out | std::ios::trunc);
     if (!file.is_open())

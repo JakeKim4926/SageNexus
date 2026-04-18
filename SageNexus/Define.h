@@ -57,6 +57,10 @@ constexpr int BRIDGE_REQUEST_TIMEOUT_MS = 30000;
 // ============================================================
 constexpr const wchar_t* PROFILE_FILE_NAME = L"profile.json";
 
+// 배포 시 개발자가 설정하는 프로필 식별 정보
+constexpr const wchar_t* DEPLOY_PROFILE_ID   = L"default";
+constexpr const wchar_t* DEPLOY_PROFILE_NAME = L"Default Profile";
+
 // ============================================================
 // Security
 // ============================================================

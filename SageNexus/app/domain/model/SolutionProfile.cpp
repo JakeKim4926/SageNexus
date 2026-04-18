@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "SolutionProfile.h"
+#include "Define.h"
 
 SolutionProfile::SolutionProfile()
 {
@@ -8,8 +9,8 @@ SolutionProfile::SolutionProfile()
 
 void SolutionProfile::SetDefault()
 {
-    m_strProfileId                = L"default";
-    m_strProfileName              = L"Default Profile";
+    m_strProfileId                = DEPLOY_PROFILE_ID;
+    m_strProfileName              = DEPLOY_PROFILE_NAME;
     m_strDefaultInterfaceLanguage = L"ko";
     m_strDefaultOutputLanguage    = L"ko";
 }

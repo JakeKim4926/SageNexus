@@ -2,6 +2,14 @@
 
 ---
 
+## [2026-04-18] feature/profile-menu-visibility
+- **목적**: profile.json 설정으로 회사별 사이드바 메뉴를 선택적으로 제어
+- **변경 내용**: MenuVisibility에 showWorkflow/showWebextract 추가, appReady 이벤트에 menuVisibility 포함, UI에서 applyMenuVisibility()로 nav-item 표시/숨김 처리
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/50
+- **결과**: merged ✅
+
+---
+
 ## [2026-04-18] feature/app-icon
 - **목적**: 앱 아이콘 등록 및 타이틀바 좌측 표시, 초기 로딩 지연 해소
 - **변경 내용**: resource.h / SageNexus.rc로 app.ico를 Win32 리소스 등록, MainWindow LoadIcon 리소스 기반으로 변경, topbar 좌측 32×32 아이콘 표시, topbar-title wrapper 도입으로 baseline 정렬 개선, CDN 폰트 non-blocking 로드로 변경하여 초기 로딩 23초 지연 해소, PostBuildEvent에 resources 폴더 복사 추가

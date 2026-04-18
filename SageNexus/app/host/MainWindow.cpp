@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "app/host/MainWindow.h"
+#include "resources/resource.h"
 #include "app/application/SageApp.h"
 #include "app/domain/model/ScheduledJob.h"
 #include "Define.h"
@@ -31,8 +32,8 @@ BOOL MainWindow::Create(int nCmdShow)
     wc.hCursor       = LoadCursorW(nullptr, IDC_ARROW);
     wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
     wc.lpszClassName = WINDOW_CLASS_NAME;
-    wc.hIcon         = LoadIconW(hInst, IDI_APPLICATION);
-    wc.hIconSm       = LoadIconW(hInst, IDI_APPLICATION);
+    wc.hIcon         = LoadIconW(hInst, MAKEINTRESOURCEW(IDI_APP_ICON));
+    wc.hIconSm       = LoadIconW(hInst, MAKEINTRESOURCEW(IDI_APP_ICON));
 
     if (!RegisterClassExW(&wc))
     {

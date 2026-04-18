@@ -6,7 +6,7 @@
 - **목적**: 배포 파일을 exe + WebView2Loader.dll만으로 최소화. webui, profile, sig 파일이 사용자에게 노출되지 않도록 구조 변경
 - **변경 내용**: webui HTML/CSS/JS/ICO를 exe RCDATA로 임베딩, WebResourceRequested 가상 호스트 서빙 추가, profile/sig 경로를 AppData로 이동, PostBuildEvent 전면 제거
 - **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/54
-- **결과**: pending
+- **결과**: merged ✅
 
 ---
 

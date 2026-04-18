@@ -31,7 +31,7 @@ constexpr const wchar_t* WINDOW_TITLE      = L"SageNexus";
 // WebView2
 // ============================================================
 constexpr const wchar_t* WEBVIEW_USER_DATA_FOLDER = L"WebViewData";
-constexpr const wchar_t* WEB_ENTRY_FILE           = L"webui\\public\\index.html";
+constexpr const wchar_t* WEB_VIRTUAL_HOST         = L"https://app.sagenexus/index.html";
 
 // ============================================================
 // Config / Log
@@ -43,9 +43,8 @@ constexpr const wchar_t* LOG_DIR_NAME        = L"Logs";
 // ============================================================
 // User Data (AppData)
 // ============================================================
-// 설치 폴더(exe 위치)와 사용자 데이터 폴더(%APPDATA%\SageNexus\)를 분리한다.
-// 설치 폴더: exe, webui, templates, profile.json (회사 지급, 읽기 전용)
-// 사용자 데이터 폴더: settings.json, Logs, Data, WebViewData (쓰기 가능)
+// 설치 폴더: exe + WebView2Loader.dll만 존재. 모든 리소스는 exe에 임베딩됨.
+// 사용자 데이터 폴더: profile.json, profile.sig, settings.json, Logs, Data, WebViewData
 constexpr const wchar_t* USER_DATA_APP_NAME  = L"SageNexus";
 
 // ============================================================

@@ -31,6 +31,7 @@ public:
 private:
     void OnEnvironmentCreated(HRESULT hrResult, ICoreWebView2Environment* pEnv);
     void OnControllerCreated(HRESULT hrResult, ICoreWebView2Controller* pController);
+    void RegisterWebResourceHandler();
     void RegisterBridgeHandlers();
 
     HWND                    m_hParentWnd;
@@ -42,5 +43,6 @@ private:
     ICoreWebView2*            m_pWebView;
 
     EventRegistrationToken m_tokenNavigationCompleted;
+    EventRegistrationToken m_tokenWebResourceRequested;
     BridgeDispatcher m_dispatcher;
 };

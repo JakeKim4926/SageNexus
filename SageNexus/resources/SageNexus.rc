@@ -4,6 +4,11 @@
 
 IDI_APP_ICON ICON "app.ico"
 
+IDR_WEBUI_INDEX_HTML RCDATA "..\webui\public\index.html"
+IDR_WEBUI_STYLES_CSS RCDATA "..\webui\src\styles\styles.css"
+IDR_WEBUI_BRIDGE_JS  RCDATA "..\webui\src\core\bridge\bridge.js"
+IDR_APP_ICO          RCDATA "app.ico"
+
 IDD_LOGIN DIALOGEX 0, 0, 220, 90
 STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "SageNexus"

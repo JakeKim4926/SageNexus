@@ -2,6 +2,14 @@
 
 ---
 
+## [2026-04-18] feature/app-icon
+- **목적**: 앱 아이콘 등록 및 타이틀바 좌측 표시, 초기 로딩 지연 해소
+- **변경 내용**: resource.h / SageNexus.rc로 app.ico를 Win32 리소스 등록, MainWindow LoadIcon 리소스 기반으로 변경, topbar 좌측 32×32 아이콘 표시, topbar-title wrapper 도입으로 baseline 정렬 개선, CDN 폰트 non-blocking 로드로 변경하여 초기 로딩 23초 지연 해소, PostBuildEvent에 resources 폴더 복사 추가
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/49
+- **결과**: merged ✅
+
+---
+
 ## [2026-04-17] feature/custom-titlebar
 - **목적**: WebView2 커스텀 토바가 있음에도 OS 기본 타이틀바가 함께 표시되는 문제 해결
 - **변경 내용**: WS_POPUP | WS_THICKFRAME으로 창 스타일 변경하여 타이틀바 완전 제거, NonClientRegionSupportEnabled 활성화로 -webkit-app-region:drag 동작, 토바에 최소화/최대화/닫기 버튼 추가, DWM 그림자 복원

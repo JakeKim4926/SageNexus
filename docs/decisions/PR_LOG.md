@@ -2,6 +2,14 @@
 
 ---
 
+## [2026-04-20] feature/login-dialog-polish
+- **목적**: 최초 비밀번호 설정 화면에서 사용자가 설정 목적을 직관적으로 인지할 수 있도록 안내 문구 추가, 비밀번호 입력/설정 다이얼로그의 여백·버튼 크기 정리
+- **변경 내용**: SageNexus.rc의 IDD_SET_PASSWORD에 보조 설명 2줄(사용 목적 / 분실 시 복구 불가) 추가, 다이얼로그 크기 220x110 → 280x180 확장, 라벨 폭/입력창 정리. IDD_LOGIN도 동일 톤으로 여백·버튼 크기 정리. 코드 로직 변경 없음
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/57
+- **결과**: pending
+
+---
+
 ## [2026-04-18] feature/multi-company-profile-embedding
 - **목적**: 회사별 프로필 JSON을 빌드 시점에 exe 리소스로 임베딩하고, Configuration으로 선택하여 배포 exe를 회사별로 분리
 - **변경 내용**: profiles/{acme,beta,default}.json 추가, SageNexus.rc RCDATA로 profile.json 임베딩, SolutionProfile LoadFromResource 추가, 파일 기반 프로필 서명/저장 로직 제거, PreBuild 이벤트로 Configuration별 프로필 선택

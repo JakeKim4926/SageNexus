@@ -10,29 +10,31 @@ IDR_WEBUI_BRIDGE_JS  RCDATA "..\webui\src\core\bridge\bridge.js"
 IDR_APP_ICO          RCDATA "app.ico"
 IDR_PROFILE_JSON     RCDATA "..\profile.json"
 
-IDD_LOGIN DIALOGEX 0, 0, 220, 90
+IDD_LOGIN DIALOGEX 0, 0, 240, 110
 STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "SageNexus"
 FONT 9, "Segoe UI"
 BEGIN
-    LTEXT           "비밀번호를 입력해주세요", IDC_STATIC, 12, 12, 196, 10
-    LTEXT           "비밀번호", IDC_STATIC, 12, 34, 48, 10
-    EDITTEXT        IDC_EDIT_PASSWORD, 64, 32, 144, 14, ES_PASSWORD | ES_AUTOHSCROLL
-    LTEXT           "", IDC_STATIC_ERROR, 12, 52, 196, 10
-    DEFPUSHBUTTON   "확인", IDOK, 108, 70, 48, 14
-    PUSHBUTTON      "취소", IDCANCEL, 162, 70, 48, 14
+    LTEXT           "비밀번호를 입력해주세요", IDC_STATIC, 16, 16, 208, 12
+    LTEXT           "비밀번호", IDC_STATIC, 16, 42, 48, 10
+    EDITTEXT        IDC_EDIT_PASSWORD, 68, 40, 156, 14, ES_PASSWORD | ES_AUTOHSCROLL
+    LTEXT           "", IDC_STATIC_ERROR, 16, 62, 208, 10
+    DEFPUSHBUTTON   "확인", IDOK, 122, 86, 50, 16
+    PUSHBUTTON      "취소", IDCANCEL, 176, 86, 50, 16
 END
 
-IDD_SET_PASSWORD DIALOGEX 0, 0, 220, 110
+IDD_SET_PASSWORD DIALOGEX 0, 0, 280, 180
 STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "SageNexus 초기 설정"
 FONT 9, "Segoe UI"
 BEGIN
-    LTEXT           "관리자 비밀번호를 설정해주세요", IDC_STATIC, 12, 12, 196, 10
-    LTEXT           "비밀번호", IDC_STATIC, 12, 34, 48, 10
-    EDITTEXT        IDC_EDIT_PASSWORD, 64, 32, 144, 14, ES_PASSWORD | ES_AUTOHSCROLL
-    LTEXT           "비밀번호 확인", IDC_STATIC, 12, 54, 48, 10
-    EDITTEXT        IDC_EDIT_CONFIRM, 64, 52, 144, 14, ES_PASSWORD | ES_AUTOHSCROLL
-    LTEXT           "", IDC_STATIC_ERROR, 12, 72, 196, 10
-    DEFPUSHBUTTON   "설정", IDOK, 162, 90, 48, 14
+    LTEXT           "관리자 비밀번호를 설정해주세요", IDC_STATIC, 16, 16, 248, 12
+    LTEXT           "이 비밀번호는 프로필 설정과 민감 데이터 보호에 사용됩니다.", IDC_STATIC, 16, 34, 248, 10
+    LTEXT           "분실 시 복구되지 않으니 안전하게 보관해주세요.", IDC_STATIC, 16, 46, 248, 10
+    LTEXT           "비밀번호", IDC_STATIC, 16, 72, 60, 10
+    EDITTEXT        IDC_EDIT_PASSWORD, 80, 70, 184, 14, ES_PASSWORD | ES_AUTOHSCROLL
+    LTEXT           "비밀번호 확인", IDC_STATIC, 16, 94, 60, 10
+    EDITTEXT        IDC_EDIT_CONFIRM, 80, 92, 184, 14, ES_PASSWORD | ES_AUTOHSCROLL
+    LTEXT           "", IDC_STATIC_ERROR, 16, 118, 248, 20
+    DEFPUSHBUTTON   "설정", IDOK, 214, 150, 50, 16
 END

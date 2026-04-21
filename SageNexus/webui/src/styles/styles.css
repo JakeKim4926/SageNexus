@@ -38,11 +38,11 @@
     --font: 'Pretendard Variable', Pretendard, system-ui, -apple-system, sans-serif;
     --font-mono: 'SF Mono', Consolas, monospace;
 
-    --fs-xs:   10px;
-    --fs-sm:   11px;
-    --fs-base: 11px;
-    --fs-md:   11.5px;
-    --fs-lg:   14px;
+    --fs-xs:   13px;
+    --fs-sm:   14.5px;
+    --fs-base: 14.5px;
+    --fs-md:   15px;
+    --fs-lg:   18px;
 
     /* Layout */
     --sidebar-w:   220px;
@@ -141,6 +141,21 @@ html, body {
     overflow-y: auto;
 }
 
+#sidebar-profile {
+    padding: var(--sp4) var(--sp4) var(--sp3);
+    border-bottom: 0.5px solid var(--bdL);
+    flex-shrink: 0;
+}
+
+#sidebar-profile-name {
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--t2);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .nav-section {
     padding: var(--sp3) 0 var(--sp2);
 }
@@ -180,7 +195,7 @@ html, body {
 }
 
 .nav-item .nav-icon {
-    font-size: 14px;
+    font-size: 18px;
     width: 18px;
     text-align: center;
     flex-shrink: 0;
@@ -279,18 +294,10 @@ html, body {
     border-bottom: 0.5px solid var(--bdL);
 }
 
-.dashboard-profile-name {
-    font-size: 22px;
-    font-weight: 600;
-    color: var(--t1);
-    letter-spacing: -0.01em;
-    margin-bottom: var(--sp3);
-}
-
 .dashboard-title {
     font-size: var(--fs-lg);
-    font-weight: 500;
-    color: var(--t2);
+    font-weight: 600;
+    color: var(--t1);
     margin-bottom: var(--sp3);
 }
 
@@ -333,13 +340,13 @@ html, body {
 }
 
 .dashboard-card-icon {
-    width: 34px;
-    height: 34px;
+    width: 38px;
+    height: 38px;
     flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 24px;
     color: var(--acT);
     background: var(--acBg);
     border-radius: var(--radius);

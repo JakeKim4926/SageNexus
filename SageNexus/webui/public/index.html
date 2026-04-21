@@ -40,6 +40,9 @@
 
         <!-- Sidebar Navigation -->
         <nav id="sidebar">
+            <div id="sidebar-profile">
+                <div id="sidebar-profile-name" data-i18n="status.profile.default">기본 프로필</div>
+            </div>
             <div class="nav-section">
                 <div class="nav-section-label" data-i18n="nav.section.main">메인</div>
                 <div class="nav-item active" data-page="dashboard">
@@ -92,7 +95,6 @@
             <!-- Dashboard Page -->
             <div class="page active" id="page-dashboard">
                 <div class="dashboard-hero">
-                    <div class="dashboard-profile-name" id="dashboard-profile-name" data-i18n="status.profile.default">프로필: 기본</div>
                     <div class="dashboard-title" data-i18n="page.dashboard.title">대시보드</div>
                     <div class="dashboard-last-run">
                         <span data-i18n="dashboard.stat.lastRun">마지막 실행</span>
@@ -1283,10 +1285,10 @@ function getColDisplayName(col) {
         if (detail.profileName) {
             var el = document.getElementById('status-profile');
             if (el) el.textContent = t('status.profile.prefix') + ': ' + detail.profileName;
-            var heroEl = document.getElementById('dashboard-profile-name');
-            if (heroEl) {
-                heroEl.removeAttribute('data-i18n');
-                heroEl.textContent = detail.profileName;
+            var sidebarProfileEl = document.getElementById('sidebar-profile-name');
+            if (sidebarProfileEl) {
+                sidebarProfileEl.removeAttribute('data-i18n');
+                sidebarProfileEl.textContent = detail.profileName;
             }
         }
 

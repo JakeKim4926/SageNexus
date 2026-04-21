@@ -2,6 +2,14 @@
 
 ---
 
+## [2026-04-21] feature/sidebar-profile-display
+- **목적**: 대시보드 히어로의 프로필명을 사이드바 상단으로 이동하여 레이아웃 정리, 전체 UI 가독성 개선을 위한 폰트/아이콘 크기 상향
+- **변경 내용**: 사이드바 상단 `#sidebar-profile` 영역 추가 및 JS 연결. 대시보드 히어로에서 `.dashboard-profile-name` 제거. 폰트 토큰 상향(xs: 10→13px, sm: 11→14.5px, lg: 14→18px), 사이드바 아이콘 14→18px, 카드 아이콘 18→24px
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/63
+- **결과**: merged ✅
+
+---
+
 ## [2026-04-21] fix/webview2-no-cache-headers
 - **목적**: WebView2 임베딩 리소스 캐시 방지 및 CRLF 파싱 버그로 인한 메뉴/카드 전체 숨김 수정
 - **변경 내용**: `WebViewHost.cpp` WebResource 응답에 `Cache-Control: no-store` 헤더 추가. `SolutionProfile.cpp`의 `ParseProfileJson`에서 CRLF 파일의 `\r`을 제거하지 않아 `"true\r" == "true"` 비교가 false로 평가되던 버그 수정 → 모든 `show*` 메뉴가 FALSE 파싱되어 사이드바·대시보드 카드 전체 숨김되던 문제 해결

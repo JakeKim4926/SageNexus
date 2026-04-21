@@ -251,13 +251,6 @@ html, body {
     color: var(--t2);
 }
 
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: var(--sp3);
-    margin-bottom: var(--sp5);
-}
-
 .stat-card {
     background: var(--bg2);
     border: 0.5px solid var(--bdL);
@@ -278,6 +271,96 @@ html, body {
     font-size: 22px;
     font-weight: 600;
     color: var(--t1);
+}
+
+.dashboard-hero {
+    padding: var(--sp6) 0 var(--sp5);
+    margin-bottom: var(--sp6);
+    border-bottom: 0.5px solid var(--bdL);
+}
+
+.dashboard-profile-name {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--t1);
+    letter-spacing: -0.01em;
+    margin-bottom: var(--sp3);
+}
+
+.dashboard-title {
+    font-size: var(--fs-lg);
+    font-weight: 500;
+    color: var(--t2);
+    margin-bottom: var(--sp3);
+}
+
+.dashboard-last-run {
+    font-size: var(--fs-sm);
+    color: var(--t3);
+    display: flex;
+    align-items: center;
+    gap: var(--sp2);
+}
+
+.dashboard-last-run-sep {
+    color: var(--t3);
+    opacity: 0.6;
+}
+
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: var(--sp4);
+    align-content: start;
+}
+
+.dashboard-card {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sp4);
+    background: var(--bg2);
+    border: 0.5px solid var(--bdL);
+    border-radius: var(--radius-lg);
+    padding: var(--sp5);
+    cursor: pointer;
+    transition: background 0.12s, border-color 0.12s, transform 0.12s;
+}
+
+.dashboard-card:hover {
+    background: var(--bgH);
+    border-color: var(--bd);
+    transform: translateY(-1px);
+}
+
+.dashboard-card-icon {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: var(--acT);
+    background: var(--acBg);
+    border-radius: var(--radius);
+}
+
+.dashboard-card-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.dashboard-card-label {
+    font-size: var(--fs-md);
+    font-weight: 600;
+    color: var(--t1);
+    margin-bottom: var(--sp1);
+}
+
+.dashboard-card-desc {
+    font-size: var(--fs-sm);
+    color: var(--t2);
+    line-height: 1.45;
 }
 
 .empty-state {

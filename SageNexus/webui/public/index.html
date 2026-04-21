@@ -91,32 +91,65 @@
 
             <!-- Dashboard Page -->
             <div class="page active" id="page-dashboard">
-                <div class="page-header">
-                    <div class="page-title" data-i18n="page.dashboard.title">대시보드</div>
-                    <div class="page-subtitle" data-i18n="page.dashboard.subtitle">업무 자동화 현황을 확인합니다.</div>
-                </div>
-                <div class="dashboard-grid">
-                    <div class="stat-card">
-                        <div class="stat-label" data-i18n="dashboard.stat.totalRuns">총 실행 횟수</div>
-                        <div class="stat-value" id="stat-total-runs">—</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label" data-i18n="dashboard.stat.todayRuns">오늘 실행</div>
-                        <div class="stat-value" id="stat-today-runs">—</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label" data-i18n="dashboard.stat.successRate">성공률</div>
-                        <div class="stat-value" id="stat-success-rate">—</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label" data-i18n="dashboard.stat.lastRun">마지막 실행</div>
-                        <div class="stat-value" id="stat-last-run">—</div>
+                <div class="dashboard-hero">
+                    <div class="dashboard-profile-name" id="dashboard-profile-name" data-i18n="status.profile.default">프로필: 기본</div>
+                    <div class="dashboard-title" data-i18n="page.dashboard.title">대시보드</div>
+                    <div class="dashboard-last-run">
+                        <span data-i18n="dashboard.stat.lastRun">마지막 실행</span>
+                        <span class="dashboard-last-run-sep">·</span>
+                        <span id="stat-last-run" data-i18n="dashboard.lastRun.never">아직 실행 기록이 없습니다</span>
                     </div>
                 </div>
-                <div class="empty-state" id="dashboard-empty">
-                    <div class="empty-icon">⊞</div>
-                    <div class="empty-title" data-i18n="dashboard.empty.title">아직 실행된 작업이 없습니다</div>
-                    <div class="empty-desc" data-i18n="dashboard.empty.desc">데이터 뷰어에서 파일을 불러와 작업을 시작하세요.</div>
+                <div class="dashboard-cards">
+                    <div class="dashboard-card" data-page="data-viewer">
+                        <div class="dashboard-card-icon">⊟</div>
+                        <div class="dashboard-card-body">
+                            <div class="dashboard-card-label" data-i18n="nav.dataViewer">데이터 뷰어</div>
+                            <div class="dashboard-card-desc" data-i18n="page.dataViewer.subtitle">파일을 불러와 데이터를 확인합니다.</div>
+                        </div>
+                    </div>
+                    <div class="dashboard-card" data-page="transform">
+                        <div class="dashboard-card-icon">⇌</div>
+                        <div class="dashboard-card-body">
+                            <div class="dashboard-card-label" data-i18n="nav.transform">변환</div>
+                            <div class="dashboard-card-desc" data-i18n="page.transform.subtitle">데이터를 정리하고 변환합니다.</div>
+                        </div>
+                    </div>
+                    <div class="dashboard-card" data-page="export">
+                        <div class="dashboard-card-icon">↑</div>
+                        <div class="dashboard-card-body">
+                            <div class="dashboard-card-label" data-i18n="nav.export">내보내기</div>
+                            <div class="dashboard-card-desc" data-i18n="page.export.subtitle">처리된 데이터를 파일로 내보냅니다.</div>
+                        </div>
+                    </div>
+                    <div class="dashboard-card" data-page="workflow">
+                        <div class="dashboard-card-icon">▶</div>
+                        <div class="dashboard-card-body">
+                            <div class="dashboard-card-label" data-i18n="nav.workflow">워크플로우</div>
+                            <div class="dashboard-card-desc" data-i18n="page.workflow.subtitle">자동화 워크플로우를 관리하고 실행합니다.</div>
+                        </div>
+                    </div>
+                    <div class="dashboard-card" data-page="webextract">
+                        <div class="dashboard-card-icon">🌐</div>
+                        <div class="dashboard-card-body">
+                            <div class="dashboard-card-label" data-i18n="nav.webextract">웹 추출</div>
+                            <div class="dashboard-card-desc" data-i18n="page.webextract.subtitle">웹 페이지에서 테이블 데이터를 추출합니다.</div>
+                        </div>
+                    </div>
+                    <div class="dashboard-card" data-page="history">
+                        <div class="dashboard-card-icon">◷</div>
+                        <div class="dashboard-card-body">
+                            <div class="dashboard-card-label" data-i18n="nav.history">실행 이력</div>
+                            <div class="dashboard-card-desc" data-i18n="page.history.subtitle">이전 실행 결과를 확인합니다.</div>
+                        </div>
+                    </div>
+                    <div class="dashboard-card" data-page="settings">
+                        <div class="dashboard-card-icon">⚙</div>
+                        <div class="dashboard-card-body">
+                            <div class="dashboard-card-label" data-i18n="nav.settings">설정</div>
+                            <div class="dashboard-card-desc" data-i18n="page.settings.subtitle">앱 설정을 관리합니다.</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -742,12 +775,8 @@ var LOCALES = {
         'status.profile.prefix': '프로필',
         'status.profile.default': '프로필: 기본',
         'state.loading':                 '불러오는 중...',
-        'dashboard.stat.totalRuns':      '총 실행 횟수',
-        'dashboard.stat.todayRuns':      '오늘 실행',
-        'dashboard.stat.successRate':    '성공률',
         'dashboard.stat.lastRun':        '마지막 실행',
-        'dashboard.empty.title':         '아직 실행된 작업이 없습니다',
-        'dashboard.empty.desc':          '데이터 뷰어에서 파일을 불러와 작업을 시작하세요.',
+        'dashboard.lastRun.never':       '아직 실행 기록이 없습니다',
         'dv.btn.openFile':               '파일 열기',
         'dv.empty.title':                '불러온 파일이 없습니다',
         'dv.empty.desc':                 '파일 열기 버튼을 눌러 CSV 파일을 선택하세요.',
@@ -995,12 +1024,8 @@ var LOCALES = {
         'status.profile.prefix': 'Profile',
         'status.profile.default': 'Profile: Default',
         'state.loading':                 'Loading...',
-        'dashboard.stat.totalRuns':      'Total Runs',
-        'dashboard.stat.todayRuns':      'Today',
-        'dashboard.stat.successRate':    'Success Rate',
         'dashboard.stat.lastRun':        'Last Run',
-        'dashboard.empty.title':         'No executions yet',
-        'dashboard.empty.desc':          'Start by loading a file in the Data Viewer.',
+        'dashboard.lastRun.never':       'No executions yet',
         'dv.btn.openFile':               'Open File',
         'dv.empty.title':                'No file loaded',
         'dv.empty.desc':                 'Click Open File to select a CSV or Excel file.',
@@ -1258,6 +1283,11 @@ function getColDisplayName(col) {
         if (detail.profileName) {
             var el = document.getElementById('status-profile');
             if (el) el.textContent = t('status.profile.prefix') + ': ' + detail.profileName;
+            var heroEl = document.getElementById('dashboard-profile-name');
+            if (heroEl) {
+                heroEl.removeAttribute('data-i18n');
+                heroEl.textContent = detail.profileName;
+            }
         }
 
         if (detail.menuVisibility) {
@@ -1278,9 +1308,14 @@ function getColDisplayName(col) {
             'settings':    vis.showSettings
         };
         Object.keys(pageMap).forEach(function (page) {
+            var hidden = (pageMap[page] === false);
             var navItem = document.querySelector('.nav-item[data-page="' + page + '"]');
             if (navItem) {
-                navItem.style.display = (pageMap[page] === false) ? 'none' : '';
+                navItem.style.display = hidden ? 'none' : '';
+            }
+            var dashCard = document.querySelector('.dashboard-card[data-page="' + page + '"]');
+            if (dashCard) {
+                dashCard.style.display = hidden ? 'none' : '';
             }
         });
     }
@@ -1326,31 +1361,29 @@ function getColDisplayName(col) {
         bridgeClient.sendCommand('history.query', 'getHistory', {})
             .then(function (result) {
                 var records = result.records || [];
-                if (records.length === 0) return;
-
-                var today = new Date().toISOString().slice(0, 10);
-                var todayCount = 0;
-                var successCount = 0;
-                records.forEach(function (rec) {
-                    if (rec.success) successCount++;
-                    if (rec.timestamp && rec.timestamp.slice(0, 10) === today) todayCount++;
-                });
-
-                var successRate = Math.round((successCount / records.length) * 100);
+                var el = document.getElementById('stat-last-run');
+                if (!el) return;
+                if (records.length === 0) {
+                    el.removeAttribute('data-i18n-resolved');
+                    el.setAttribute('data-i18n', 'dashboard.lastRun.never');
+                    el.textContent = t('dashboard.lastRun.never');
+                    return;
+                }
                 var lastRun = records[records.length - 1].timestamp || '—';
-
-                document.getElementById('stat-total-runs').textContent  = records.length;
-                document.getElementById('stat-today-runs').textContent  = todayCount;
-                document.getElementById('stat-success-rate').textContent = successRate + '%';
-                document.getElementById('stat-last-run').textContent    = lastRun;
-
-                var emptyEl = document.getElementById('dashboard-empty');
-                if (emptyEl) emptyEl.classList.add('hidden');
+                el.removeAttribute('data-i18n');
+                el.textContent = lastRun;
             })
             .catch(function () {});
     }
 
     window.loadDashboardStats = loadDashboardStats;
+
+    document.querySelectorAll('.dashboard-card[data-page]').forEach(function (card) {
+        card.addEventListener('click', function () {
+            var target = document.querySelector('.nav-item[data-page="' + card.dataset.page + '"]');
+            if (target) target.click();
+        });
+    });
 
     document.querySelectorAll('.nav-item[data-page]').forEach(function (el) {
         el.addEventListener('click', function () {

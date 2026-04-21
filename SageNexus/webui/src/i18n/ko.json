@@ -93,12 +93,8 @@
 
   "state.loading": "불러오는 중...",
 
-  "dashboard.stat.totalRuns": "총 실행 횟수",
-  "dashboard.stat.todayRuns": "오늘 실행",
-  "dashboard.stat.successRate": "성공률",
   "dashboard.stat.lastRun": "마지막 실행",
-  "dashboard.empty.title": "아직 실행된 작업이 없습니다",
-  "dashboard.empty.desc": "데이터 뷰어에서 파일을 불러와 작업을 시작하세요.",
+  "dashboard.lastRun.never": "아직 실행 기록이 없습니다",
 
   "dv.btn.openFile": "파일 열기",
   "dv.empty.title": "불러온 파일이 없습니다",

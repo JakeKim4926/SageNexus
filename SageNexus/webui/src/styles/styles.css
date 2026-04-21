@@ -246,6 +246,7 @@ html, body {
 #statusbar .status-dot.loading { background: var(--wrn); }
 #statusbar .status-dot.error   { background: var(--err); }
 #statusbar .status-spacer { flex: 1; }
+#statusbar .status-copyright { color: var(--t3); font-size: 10px; }
 
 /* ============================================================
    Dashboard Page

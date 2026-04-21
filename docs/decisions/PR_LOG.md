@@ -2,6 +2,14 @@
 
 ---
 
+## [2026-04-21] fix/webview2-no-cache-headers
+- **목적**: WebView2 임베딩 리소스 캐시 방지 및 CRLF 파싱 버그로 인한 메뉴/카드 전체 숨김 수정
+- **변경 내용**: `WebViewHost.cpp` WebResource 응답에 `Cache-Control: no-store` 헤더 추가. `SolutionProfile.cpp`의 `ParseProfileJson`에서 CRLF 파일의 `\r`을 제거하지 않아 `"true\r" == "true"` 비교가 false로 평가되던 버그 수정 → 모든 `show*` 메뉴가 FALSE 파싱되어 사이드바·대시보드 카드 전체 숨김되던 문제 해결
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/62
+- **결과**: pending
+
+---
+
 ## [2026-04-21] feature/dashboard-redesign
 - **목적**: 대시보드를 stat 4종 카드 구조에서 히어로 영역(프로필명/타이틀/마지막 실행) + 메뉴 네비게이션 카드 구조로 재편
 - **변경 내용**: `dashboard-hero` 추가(프로필명 22px, 타이틀 보조, 마지막 실행 한 줄), `dashboard-cards` 그리드에 7개 카드(데이터 뷰어/변환/내보내기/워크플로우/웹 추출/실행 이력/설정) 추가. `applyMenuVisibility`에서 nav-item과 대시보드 카드를 동일 기준으로 토글. `loadDashboardStats`를 마지막 실행 시각만 갱신하도록 단순화. i18n에서 `dashboard.stat.totalRuns/todayRuns/successRate/empty.*` 제거, `dashboard.lastRun.never` 추가

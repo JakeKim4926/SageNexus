@@ -6,7 +6,7 @@
 - **목적**: WebView2 임베딩 리소스 캐시 방지 및 CRLF 파싱 버그로 인한 메뉴/카드 전체 숨김 수정
 - **변경 내용**: `WebViewHost.cpp` WebResource 응답에 `Cache-Control: no-store` 헤더 추가. `SolutionProfile.cpp`의 `ParseProfileJson`에서 CRLF 파일의 `\r`을 제거하지 않아 `"true\r" == "true"` 비교가 false로 평가되던 버그 수정 → 모든 `show*` 메뉴가 FALSE 파싱되어 사이드바·대시보드 카드 전체 숨김되던 문제 해결
 - **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/62
-- **결과**: pending
+- **결과**: merged ✅
 
 ---
 

@@ -93,12 +93,8 @@
 
   "state.loading": "Loading...",
 
-  "dashboard.stat.totalRuns": "Total Runs",
-  "dashboard.stat.todayRuns": "Today",
-  "dashboard.stat.successRate": "Success Rate",
   "dashboard.stat.lastRun": "Last Run",
-  "dashboard.empty.title": "No executions yet",
-  "dashboard.empty.desc": "Start by loading a file in the Data Viewer.",
+  "dashboard.lastRun.never": "No executions yet",
 
   "dv.btn.openFile": "Open File",
   "dv.empty.title": "No file loaded",

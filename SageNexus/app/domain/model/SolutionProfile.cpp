@@ -110,14 +110,14 @@ void SolutionProfile::ParseProfileJson(
         std::string strCleanKey;
         for (char c : strKey)
         {
-            if (c != ' ' && c != '"' && c != '{' && c != '\t')
+            if (c != ' ' && c != '"' && c != '{' && c != '\t' && c != '\r')
                 strCleanKey += c;
         }
 
         std::string strCleanVal;
         for (char c : strVal)
         {
-            if (c != ' ' && c != '"' && c != '}' && c != ',' && c != '\t')
+            if (c != ' ' && c != '"' && c != '}' && c != ',' && c != '\t' && c != '\r')
                 strCleanVal += c;
         }
 

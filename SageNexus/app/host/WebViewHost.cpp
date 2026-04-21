@@ -255,8 +255,11 @@ void WebViewHost::RegisterWebResourceHandler()
                 LARGE_INTEGER liZero = {};
                 pStream->Seek(liZero, STREAM_SEEK_SET, nullptr);
 
+                // no-store: 임베딩된 리소스가 재빌드 시 즉시 반영되도록 브라우저 캐시 비활성화.
                 CString strHeaders;
-                strHeaders.Format(L"Content-Type: %s", pszMime);
+                strHeaders.Format(
+                    L"Content-Type: %s\r\nCache-Control: no-store, no-cache, must-revalidate",
+                    pszMime);
 
                 ICoreWebView2WebResourceResponse* pResponse = nullptr;
                 pEnv->CreateWebResourceResponse(pStream, 200, L"OK", strHeaders, &pResponse);

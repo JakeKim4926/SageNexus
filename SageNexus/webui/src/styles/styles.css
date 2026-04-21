@@ -38,11 +38,11 @@
     --font: 'Pretendard Variable', Pretendard, system-ui, -apple-system, sans-serif;
     --font-mono: 'SF Mono', Consolas, monospace;
 
-    --fs-xs:   12px;
-    --fs-sm:   13.5px;
-    --fs-base: 13.5px;
-    --fs-md:   14px;
-    --fs-lg:   16px;
+    --fs-xs:   13px;
+    --fs-sm:   14.5px;
+    --fs-base: 14.5px;
+    --fs-md:   15px;
+    --fs-lg:   18px;
 
     /* Layout */
     --sidebar-w:   220px;
@@ -195,7 +195,7 @@ html, body {
 }
 
 .nav-item .nav-icon {
-    font-size: 17px;
+    font-size: 18px;
     width: 18px;
     text-align: center;
     flex-shrink: 0;
@@ -340,13 +340,13 @@ html, body {
 }
 
 .dashboard-card-icon {
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
     flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 22px;
+    font-size: 24px;
     color: var(--acT);
     background: var(--acBg);
     border-radius: var(--radius);

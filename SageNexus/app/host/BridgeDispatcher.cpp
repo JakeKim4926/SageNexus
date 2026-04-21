@@ -60,7 +60,34 @@ void BridgeDispatcher::PostMessageToWeb(const CString& strJson, ICoreWebView2* p
     if (!pWebView)
         return;
 
-    pWebView->PostWebMessageAsString(strJson);
+    // virtual host(https://app.sagenexus) 하에서 PostWebMessageAsString 경로가
+    // JS message 리스너로 전달되지 않아 ExecuteScript로 CustomEvent를 직접 dispatch한다.
+    CString strEscaped = strJson;
+    strEscaped.Replace(L"\\", L"\\\\");
+    strEscaped.Replace(L"\"", L"\\\"");
+    strEscaped.Replace(L"\r", L"");
+    strEscaped.Replace(L"\n", L"\\n");
+
+    CString strScript;
+    strScript.Format(
+        L"(function(){"
+        L"try{"
+        L"var m=JSON.parse(\"%s\");"
+        L"if(m&&m.type==='event'&&m.name){"
+        L"window.dispatchEvent(new CustomEvent('bridge:'+m.name,{detail:m.payload||{}}));"
+        L"}"
+        L"if(window.__bridgeReceive){window.__bridgeReceive(m);}"
+        L"}catch(e){}"
+        L"})();",
+        (LPCWSTR)strEscaped);
+
+    HRESULT hr = pWebView->ExecuteScript(strScript, nullptr);
+    if (FAILED(hr))
+    {
+        CString strErr;
+        strErr.Format(L"ExecuteScript failed hr=0x%08X", (unsigned int)hr);
+        sageMgr.GetLogger().LogError(strErr);
+    }
 }
 
 void BridgeDispatcher::SendEvent(

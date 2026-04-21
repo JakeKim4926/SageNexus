@@ -87,6 +87,7 @@
                     <span class="nav-label" data-i18n="nav.settings">설정</span>
                 </div>
             </div>
+
         </nav>
 
         <!-- Main Content -->
@@ -682,7 +683,7 @@
             <span id="status-text">초기화 중</span>
         </div>
         <div class="status-spacer"></div>
-        <div class="status-item" id="status-profile" data-i18n="status.profile.default">프로필: 기본</div>
+        <div class="status-item status-copyright">© 2026 J크. All rights reserved.</div>
     </div>
 
 </div>
@@ -1283,8 +1284,6 @@ function getColDisplayName(col) {
 
         var detail = e.detail || {};
         if (detail.profileName) {
-            var el = document.getElementById('status-profile');
-            if (el) el.textContent = t('status.profile.prefix') + ': ' + detail.profileName;
             var sidebarProfileEl = document.getElementById('sidebar-profile-name');
             if (sidebarProfileEl) {
                 sidebarProfileEl.removeAttribute('data-i18n');

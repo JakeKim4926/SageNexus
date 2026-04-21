@@ -2,6 +2,14 @@
 
 ---
 
+## [2026-04-22] feature/statusbar-copyright
+- **목적**: 하단 상태바에 copyright 문구 추가 및 프로필 항목 제거로 레이아웃 정리
+- **변경 내용**: 상태바 우측에 © 2026 J크. All rights reserved. 배치, 프로필 표시 항목 및 관련 JS 제거, CSS 스타일 추가
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/64
+- **결과**: merged ✅
+
+---
+
 ## [2026-04-21] feature/sidebar-profile-display
 - **목적**: 대시보드 히어로의 프로필명을 사이드바 상단으로 이동하여 레이아웃 정리, 전체 UI 가독성 개선을 위한 폰트/아이콘 크기 상향
 - **변경 내용**: 사이드바 상단 `#sidebar-profile` 영역 추가 및 JS 연결. 대시보드 히어로에서 `.dashboard-profile-name` 제거. 폰트 토큰 상향(xs: 10→13px, sm: 11→14.5px, lg: 14→18px), 사이드바 아이콘 14→18px, 카드 아이콘 18→24px

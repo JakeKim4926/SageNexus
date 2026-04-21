@@ -67,7 +67,26 @@ const bridgeClient = (function () {
         }));
     }
 
-    // Native -> UI 메시지 수신
+    function _dispatch(message) {
+        if (!message || typeof message !== 'object') return;
+        if (message.type === 'response') {
+            _handleResponse(message);
+        } else if (message.type === 'event') {
+            _handleEvent(message);
+        }
+    }
+
+    // Native -> UI: ExecuteScript 기반 진입점.
+    // 네이티브는 window.__bridgeReceive({...}) 형태로 JSON 리터럴을 직접 전달한다.
+    window.__bridgeReceive = function (message) {
+        try {
+            _dispatch(typeof message === 'string' ? JSON.parse(message) : message);
+        } catch (err) {
+            console.error('[Bridge] __bridgeReceive error:', err);
+        }
+    };
+
+    // 레거시 호환: PostWebMessageAsString 방식도 유지한다.
     window.chrome.webview.addEventListener('message', function (e) {
         let message;
         try {
@@ -76,12 +95,7 @@ const bridgeClient = (function () {
             console.error('[Bridge] Message parse error:', err, e.data);
             return;
         }
-
-        if (message.type === 'response') {
-            _handleResponse(message);
-        } else if (message.type === 'event') {
-            _handleEvent(message);
-        }
+        _dispatch(message);
     });
 
     return {

@@ -163,9 +163,26 @@ void WebViewHost::OnControllerCreated(HRESULT hrResult, ICoreWebView2Controller*
 
 void WebViewHost::RegisterWebResourceHandler()
 {
-    m_pWebView->AddWebResourceRequestedFilter(
-        L"https://app.sagenexus/*",
-        COREWEBVIEW2_WEB_RESOURCE_CONTEXT_ALL);
+    // Newer WebView2 runtimes deprecate the 2-arg filter for script/stylesheet
+    // subresources. Use _22 with explicit RequestSourceKinds when available.
+    ICoreWebView2_22* pWv22 = nullptr;
+    HRESULT hrQI = m_pWebView->QueryInterface(
+        IID_ICoreWebView2_22, reinterpret_cast<void**>(&pWv22));
+    if (SUCCEEDED(hrQI) && pWv22)
+    {
+        pWv22->AddWebResourceRequestedFilterWithRequestSourceKinds(
+            L"https://app.sagenexus/*",
+            COREWEBVIEW2_WEB_RESOURCE_CONTEXT_ALL,
+            COREWEBVIEW2_WEB_RESOURCE_REQUEST_SOURCE_KINDS_ALL);
+        pWv22->Release();
+        pWv22 = nullptr;
+    }
+    else
+    {
+        m_pWebView->AddWebResourceRequestedFilter(
+            L"https://app.sagenexus/*",
+            COREWEBVIEW2_WEB_RESOURCE_CONTEXT_ALL);
+    }
 
     ICoreWebView2Environment* pEnv = m_pEnvironment;
 

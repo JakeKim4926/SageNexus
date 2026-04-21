@@ -141,6 +141,21 @@ html, body {
     overflow-y: auto;
 }
 
+#sidebar-profile {
+    padding: var(--sp4) var(--sp4) var(--sp3);
+    border-bottom: 0.5px solid var(--bdL);
+    flex-shrink: 0;
+}
+
+#sidebar-profile-name {
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--t2);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .nav-section {
     padding: var(--sp3) 0 var(--sp2);
 }
@@ -279,18 +294,10 @@ html, body {
     border-bottom: 0.5px solid var(--bdL);
 }
 
-.dashboard-profile-name {
-    font-size: 22px;
-    font-weight: 600;
-    color: var(--t1);
-    letter-spacing: -0.01em;
-    margin-bottom: var(--sp3);
-}
-
 .dashboard-title {
     font-size: var(--fs-lg);
-    font-weight: 500;
-    color: var(--t2);
+    font-weight: 600;
+    color: var(--t1);
     margin-bottom: var(--sp3);
 }
 

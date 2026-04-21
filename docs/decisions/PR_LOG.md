@@ -2,6 +2,22 @@
 
 ---
 
+## [2026-04-21] feature/dashboard-redesign
+- **목적**: 대시보드를 stat 4종 카드 구조에서 히어로 영역(프로필명/타이틀/마지막 실행) + 메뉴 네비게이션 카드 구조로 재편
+- **변경 내용**: `dashboard-hero` 추가(프로필명 22px, 타이틀 보조, 마지막 실행 한 줄), `dashboard-cards` 그리드에 7개 카드(데이터 뷰어/변환/내보내기/워크플로우/웹 추출/실행 이력/설정) 추가. `applyMenuVisibility`에서 nav-item과 대시보드 카드를 동일 기준으로 토글. `loadDashboardStats`를 마지막 실행 시각만 갱신하도록 단순화. i18n에서 `dashboard.stat.totalRuns/todayRuns/successRate/empty.*` 제거, `dashboard.lastRun.never` 추가
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/60
+- **결과**: merged ✅
+
+---
+
+## [2026-04-21] fix/webview2-filter-source-kinds
+- **목적**: 가상호스트 `https://app.sagenexus/` 로드 후 `초기화 중...` 오버레이에서 무한 대기하던 회귀 수정
+- **변경 내용**: `AddWebResourceRequestedFilter`를 `ICoreWebView2_22::AddWebResourceRequestedFilterWithRequestSourceKinds`로 마이그레이션(최신 WebView2 런타임에서 script/stylesheet 서브리소스 커버). `PostMessageToWeb`를 `PostWebMessageAsString` → `ExecuteScript` + `CustomEvent` dispatch로 전환(가상호스트 하 JS message 이벤트 전달 불안정 회피). `bridge.js`에 `_dispatch` 헬퍼 및 `window.__bridgeReceive` 진입점 추가, 기존 postMessage 경로도 유지
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/59
+- **결과**: merged ✅
+
+---
+
 ## [2026-04-20] feature/login-dialog-polish
 - **목적**: 최초 비밀번호 설정 화면에서 사용자가 설정 목적을 직관적으로 인지할 수 있도록 안내 문구 추가, 비밀번호 입력/설정 다이얼로그의 여백·버튼 크기 정리
 - **변경 내용**: SageNexus.rc의 IDD_SET_PASSWORD에 보조 설명 2줄(사용 목적 / 분실 시 복구 불가) 추가, 다이얼로그 크기 220x110 → 280x180 확장, 라벨 폭/입력창 정리. IDD_LOGIN도 동일 톤으로 여백·버튼 크기 정리. 코드 로직 변경 없음

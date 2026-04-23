@@ -2,6 +2,14 @@
 
 ---
 
+## [2026-04-23] fix/profile-json-sync
+- **목적**: `profile.json` 실제 동작과 문서 설명을 일치시키고, Settings 플러그인 토글이 디스크에 반영되도록 정리
+- **변경 내용**: `SolutionProfile`에 `profile.json` 파일 로드/저장 추가 / `SageApp` 시작 시 설치 폴더 `profile.json` 우선 로드, 없으면 임베딩 리소스로 bootstrap / Settings 플러그인 토글 시 `profile.json` 저장 및 실패 시 디스크 상태로 복구 / `ADR-001`, `SolutionProfile-packaging`, `README` 상태 문서 정합성 업데이트
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/75
+- **결과**: merged ✅
+
+---
+
 ## [2026-04-23] feature/phase7-step2-packaging
 - **목적**: Phase 7 Step 2 완료 — 고객사별 패키징 구조 (profile 기반 빌드 구성 + 패키징 스크립트 + ADR)
 - **변경 내용**: `SageNexus.vcxproj` Debug-Taechang|x64 / Release-Taechang|x64 구성 추가 (PreBuildEvent: profile 자동 선택, PostBuildEvent: plugins\ 생성) / `profiles/taechang.json` 신규 / `scripts/package.ps1` 신규 / `ADR-003-packaging-structure.md` 신규 (빌드 구성 체계, 배포 폴더 구조, 설치/UserData 폴더 검증, DLL 배포 정책) / `SageNexus.slnx` Taechang 플랫폼 구성 추가

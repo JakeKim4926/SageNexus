@@ -36,6 +36,7 @@ constexpr const wchar_t* WEB_VIRTUAL_HOST         = L"https://app.sagenexus/inde
 // ============================================================
 // Config / Log
 // ============================================================
+constexpr const wchar_t* PROFILE_FILE_NAME   = L"profile.json";
 constexpr const wchar_t* CONFIG_FILE_NAME    = L"settings.json";
 constexpr const wchar_t* DATA_DIR_NAME       = L"Data";
 constexpr const wchar_t* LOG_DIR_NAME        = L"Logs";
@@ -43,7 +44,8 @@ constexpr const wchar_t* LOG_DIR_NAME        = L"Logs";
 // ============================================================
 // User Data (AppData)
 // ============================================================
-// 설치 폴더: exe + WebView2Loader.dll만 존재. 모든 리소스는 exe에 임베딩됨.
+// 설치 폴더: exe, WebView2Loader.dll, profile.json, plugins.
+// WebView2 UI 리소스는 exe에 임베딩된다.
 // 사용자 데이터 폴더: settings.json, credentials.dat, Logs, Data, WebViewData
 constexpr const wchar_t* USER_DATA_APP_NAME  = L"SageNexus";
 

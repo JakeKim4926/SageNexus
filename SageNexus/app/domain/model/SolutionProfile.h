@@ -33,7 +33,9 @@ class SolutionProfile
 public:
     SolutionProfile();
 
+    BOOL LoadFromFile(const CString& strPath, CString& strError);
     BOOL LoadFromResource(int nResourceId, CString& strError);
+    BOOL SaveToFile(const CString& strPath, CString& strError) const;
 
     const CString&         GetProfileId() const;
     const CString&         GetProfileName() const;
@@ -47,6 +49,7 @@ public:
     void SetDefault();
 
 private:
+    std::string BuildJsonString() const;
     BOOL LoadFromJsonString(const std::string& strJson, CString& strError);
     void ParseProfileJson(
         const std::string& strJson,

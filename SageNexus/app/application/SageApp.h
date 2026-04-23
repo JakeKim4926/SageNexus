@@ -21,12 +21,15 @@ public:
     const CString&  GetUserDataDir() const; // 사용자 데이터 폴더 (%APPDATA%/SageNexus)
     const CString&  GetDataDir() const;     // 데이터 폴더 (UserDataDir/Data)
     const CString&  GetLogDir() const;      // 로그 폴더 (UserDataDir/Logs)
+    const CString&  GetProfilePath() const; // 설치 폴더 profile.json
 
     FileLogger&       GetLogger();
     JsonConfigStore&  GetConfigStore();
     SolutionProfile&  GetProfile();
     PluginManager&    GetPluginManager();
     ProfileSecurity&  GetSecurity();
+    BOOL              ReloadProfile(CString& strError);
+    BOOL              SaveProfile(CString& strError);
 
 private:
     SageApp();
@@ -35,6 +38,7 @@ private:
     SageApp& operator=(const SageApp&) = delete;
 
     BOOL InitializePaths();
+    BOOL LoadProfile(CString& strError);
     void ReleaseResources();
 
     HINSTANCE        m_hInstance;
@@ -42,6 +46,7 @@ private:
     CString          m_strUserDataDir;
     CString          m_strDataDir;
     CString          m_strLogDir;
+    CString          m_strProfilePath;
     BOOL             m_bInitialized;
 
     FileLogger*      m_pLogger;

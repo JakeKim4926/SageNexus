@@ -46,12 +46,10 @@ BOOL SageApp::Initialize(HINSTANCE hInstance)
     m_pConfigStore = new JsonConfigStore(m_strUserDataDir);
     m_pConfigStore->Load();
 
-    m_profile.SetDefault();
-
     CString strProfileError;
-    if (!m_profile.LoadFromResource(IDR_PROFILE_JSON, strProfileError))
+    if (!LoadProfile(strProfileError))
     {
-        m_pLogger->LogError(L"Embedded profile load failed: " + strProfileError);
+        m_pLogger->LogError(L"Profile load failed: " + strProfileError);
         ReleaseResources();
         return FALSE;
     }
@@ -130,6 +128,7 @@ BOOL SageApp::InitializePaths()
     m_strUserDataDir = CString(szAppData) + L"\\" + USER_DATA_APP_NAME;
     m_strDataDir     = m_strUserDataDir + L"\\" + DATA_DIR_NAME;
     m_strLogDir      = m_strUserDataDir + L"\\" + LOG_DIR_NAME;
+    m_strProfilePath = m_strAppDir + L"\\" + PROFILE_FILE_NAME;
 
     CreateDirectoryW(m_strUserDataDir, nullptr);
     CreateDirectoryW(m_strDataDir, nullptr);
@@ -162,6 +161,11 @@ const CString& SageApp::GetLogDir() const
     return m_strLogDir;
 }
 
+const CString& SageApp::GetProfilePath() const
+{
+    return m_strProfilePath;
+}
+
 FileLogger& SageApp::GetLogger()
 {
     assert(m_pLogger != nullptr);
@@ -187,4 +191,34 @@ PluginManager& SageApp::GetPluginManager()
 ProfileSecurity& SageApp::GetSecurity()
 {
     return m_security;
+}
+
+BOOL SageApp::ReloadProfile(CString& strError)
+{
+    return LoadProfile(strError);
+}
+
+BOOL SageApp::SaveProfile(CString& strError)
+{
+    return m_profile.SaveToFile(m_strProfilePath, strError);
+}
+
+BOOL SageApp::LoadProfile(CString& strError)
+{
+    m_profile.SetDefault();
+
+    DWORD dwAttr = GetFileAttributesW(m_strProfilePath);
+    if (dwAttr != INVALID_FILE_ATTRIBUTES && (dwAttr & FILE_ATTRIBUTE_DIRECTORY) == 0)
+    {
+        return m_profile.LoadFromFile(m_strProfilePath, strError);
+    }
+
+    if (!m_profile.LoadFromResource(IDR_PROFILE_JSON, strError))
+        return FALSE;
+
+    CString strSaveError;
+    if (!m_profile.SaveToFile(m_strProfilePath, strSaveError) && m_pLogger != nullptr)
+        m_pLogger->LogWarning(L"profile.json bootstrap skipped: " + strSaveError);
+
+    return TRUE;
 }

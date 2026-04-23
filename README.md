@@ -165,11 +165,14 @@ CSV / XLSX 데이터 처리 MVP, Data Viewer, Transform, Export, 실행 이력
 ### Phase 4 ✅
 Workflow Builder, Web Extract 모듈, progress 브릿지
 
-### Phase 5 (진행 예정)
+### Phase 5 ✅
 Word / PDF Export, 이메일 / API 액션, i18n 고도화
 
-### Phase 6 (계획)
+### Phase 6 ✅
 운영성 강화, 배치 실행, 제품화 정리
+
+### Phase 7 (진행 중)
+플러그인 DLL 동적 로딩, 고객사별 패키징 구조, 통합 QA
 
 ---
 
@@ -219,9 +222,9 @@ SageNexus는 단순한 자동화 프로그램이 아니라,
 
 ## Status
 
-**Phase 4 완료 / Phase 5 진행 예정**
+**Phase 7 진행 중**
 
-Phase 1~4 구현 완료. CSV/XLSX 입출력, Data Transform, Web Extract, Workflow Builder, Plugin Manager, i18n 기초까지 동작하는 빌드가 존재합니다.
-현재 Word/PDF Export 및 액션 확장(Phase 5)을 준비 중입니다.
+Phase 1~6 완료. CSV/XLSX 입출력, Data Transform, Web Extract, Workflow Builder, Export 확장, 운영성 보강까지 동작하는 빌드가 존재합니다.
+현재는 DLL 플러그인 동적 로딩, 고객사별 패키징 구조, 설치 폴더/사용자 데이터 폴더 회귀를 포함한 Phase 7 마무리 작업을 진행 중입니다.
 
 ---

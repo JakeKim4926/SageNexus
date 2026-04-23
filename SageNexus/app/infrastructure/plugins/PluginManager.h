@@ -1,5 +1,6 @@
 #pragma once
 #include "pch.h"
+#include "app/infrastructure/plugins/PluginLoader.h"
 
 struct PluginEntry
 {
@@ -11,8 +12,10 @@ class PluginManager
 {
 public:
     PluginManager();
+    ~PluginManager();
 
     void RegisterBuiltIn(const CString& strPluginId, const CString& strPluginName);
+    BOOL LoadPluginsFromDirectory(const CString& strDir, CString& strErrors);
 
     BOOL IsEnabled(const CString& strPluginId) const;
 
@@ -20,5 +23,9 @@ public:
     int GetPluginCount() const;
 
 private:
-    std::vector<PluginEntry> m_arrPlugins;
+    void UnloadAllDll();
+
+    std::vector<PluginEntry>    m_arrPlugins;
+    std::vector<DllPluginEntry> m_arrDllPlugins;
+    PluginLoader                m_pluginLoader;
 };

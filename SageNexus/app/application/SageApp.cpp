@@ -65,6 +65,12 @@ BOOL SageApp::Initialize(HINSTANCE hInstance)
     m_pluginManager.RegisterBuiltIn(L"workflow",   L"워크플로우");
     m_pluginManager.RegisterBuiltIn(L"webextract", L"웹 추출");
 
+    CString strPluginsDir = m_strAppDir + L"\\" + PLUGINS_DIR_NAME;
+    CString strPluginErrors;
+    m_pluginManager.LoadPluginsFromDirectory(strPluginsDir, strPluginErrors);
+    if (!strPluginErrors.IsEmpty())
+        m_pLogger->LogWarning(L"Some plugins failed to load:\n" + strPluginErrors);
+
     m_bInitialized = TRUE;
     m_pLogger->LogInfo(L"SageApp initialized");
     return TRUE;

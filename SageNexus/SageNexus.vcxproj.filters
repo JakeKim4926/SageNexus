@@ -219,6 +219,9 @@
     <ClCompile Include="app\infrastructure\bridge\SettingsBridgeHandler.cpp">
       <Filter>소스 파일\app\infrastructure\bridge</Filter>
     </ClCompile>
+    <ClCompile Include="app\infrastructure\plugins\PluginLoader.cpp">
+      <Filter>소스 파일\app\infrastructure\plugins</Filter>
+    </ClCompile>
     <ClCompile Include="app\infrastructure\plugins\PluginManager.cpp">
       <Filter>소스 파일\app\infrastructure\plugins</Filter>
     </ClCompile>
@@ -376,6 +379,9 @@
     </ClInclude>
     <ClInclude Include="app\domain\interfaces\IPlugin.h">
       <Filter>헤더 파일\app\domain\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="app\infrastructure\plugins\PluginLoader.h">
+      <Filter>헤더 파일\app\infrastructure\plugins</Filter>
     </ClInclude>
     <ClInclude Include="app\infrastructure\plugins\PluginManager.h">
       <Filter>헤더 파일\app\infrastructure\plugins</Filter>

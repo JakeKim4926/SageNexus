@@ -73,6 +73,12 @@ constexpr int API_DEFAULT_TIMEOUT_MS = 30000;
 constexpr const wchar_t* CONNECTORS_FILE_NAME = L"connectors.json";
 
 // ============================================================
+// Plugin
+// ============================================================
+constexpr int PLUGIN_ABI_VERSION             = 1;
+constexpr const wchar_t* PLUGINS_DIR_NAME    = L"plugins";
+
+// ============================================================
 // Workflow Step Types
 // WorkflowStep::m_strStepType에 사용하는 문자열 상수
 // ============================================================

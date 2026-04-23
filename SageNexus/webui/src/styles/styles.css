@@ -148,11 +148,11 @@ html, body {
 }
 
 .sidebar-profile-label {
-    font-size: var(--fs-xs);
+    font-size: 11px;
     font-weight: 600;
     color: var(--t3);
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
     margin-bottom: var(--sp1);
 }
 
@@ -171,7 +171,7 @@ html, body {
 
 .nav-section-label {
     padding: var(--sp1) var(--sp4);
-    font-size: 9px;
+    font-size: 11px;
     color: var(--t3);
     text-transform: uppercase;
     letter-spacing: 0.08em;

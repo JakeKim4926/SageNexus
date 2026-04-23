@@ -2,6 +2,14 @@
 
 ---
 
+## [2026-04-23] feature/phase7-step2-packaging
+- **목적**: Phase 7 Step 2 완료 — 고객사별 패키징 구조 (profile 기반 빌드 구성 + 패키징 스크립트 + ADR)
+- **변경 내용**: `SageNexus.vcxproj` Debug-Taechang|x64 / Release-Taechang|x64 구성 추가 (PreBuildEvent: profile 자동 선택, PostBuildEvent: plugins\ 생성) / `profiles/taechang.json` 신규 / `scripts/package.ps1` 신규 / `ADR-003-packaging-structure.md` 신규 (빌드 구성 체계, 배포 폴더 구조, 설치/UserData 폴더 검증, DLL 배포 정책) / `SageNexus.slnx` Taechang 플랫폼 구성 추가
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/74
+- **결과**: merged ✅
+
+---
+
 ## [2026-04-23] feature/plugin-dll-sample
 - **목적**: Phase 7 Step 1 완료 — 플러그인 DLL ABI 안정화 및 빌드/배포 가이드 문서화
 - **변경 내용**: `IPlugin.h` CString → LPCWSTR 변경 / `PluginLoader.cpp` LoadLibraryExW + 보안 플래그 적용 / `ADR-002-plugin-dll-guide.md` 신규 작성 (ABI 규약, 예외·언로드·DLL 보안 규칙, 레포 구성 원칙)

@@ -725,14 +725,6 @@ html, body {
 }
 .align-btn-group.hidden { display: none; }
 
-.align-group-label {
-    font-size: 11px;
-    color: var(--t3);
-    padding: 0 var(--sp1) 0 var(--sp2);
-    white-space: nowrap;
-    user-select: none;
-}
-
 .align-btn {
     display: flex;
     align-items: center;

@@ -2,6 +2,14 @@
 
 ---
 
+## [2026-04-23] feature/plugin-dll-sample
+- **목적**: Phase 7 Step 1 완료 — 플러그인 DLL ABI 안정화 및 빌드/배포 가이드 문서화
+- **변경 내용**: `IPlugin.h` CString → LPCWSTR 변경 / `PluginLoader.cpp` LoadLibraryExW + 보안 플래그 적용 / `ADR-002-plugin-dll-guide.md` 신규 작성 (ABI 규약, 예외·언로드·DLL 보안 규칙, 레포 구성 원칙)
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/73
+- **결과**: merged ✅
+
+---
+
 ## [2026-04-23] feature/dashboard-ui-improvement
 - **목적**: 대시보드를 메뉴 복사본에서 현황판으로 개편 + 피드백 반영 5개 항목 수정
 - **변경 내용**: KPI grid 4개(총 실행·성공률·처리 파일·프로필) + 빠른 시작 3개(파일 열기·워크플로우·웹 추출) + 최근 실행 영역 / 성공률 컬러 코딩 / 사이드바 프로필 클릭 시 설정 이동 / `--fs-label` 토큰 추가로 사이드바 소제목 통일

@@ -1,0 +1,17 @@
+{
+  "profileId": "taechang",
+  "profileName": "태창",
+  "defaultInterfaceLanguage": "ko",
+  "defaultOutputLanguage": "ko",
+  "showDataViewer": true,
+  "showTransform": true,
+  "showExport": true,
+  "showHistory": true,
+  "showWorkflow": false,
+  "showWebextract": false,
+  "showSettings": true,
+  "plugin_import": true,
+  "plugin_transform": true,
+  "plugin_export": true,
+  "plugin_history": true
+}

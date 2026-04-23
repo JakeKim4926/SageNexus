@@ -334,17 +334,32 @@ html, body {
     margin-bottom: var(--sp3);
 }
 
-.dashboard-last-run {
-    font-size: var(--fs-sm);
-    color: var(--t3);
+.dashboard-stats {
+    display: flex;
+    align-items: center;
+    gap: var(--sp3);
+    flex-wrap: wrap;
+}
+
+.dashboard-stat-chip {
     display: flex;
     align-items: center;
     gap: var(--sp2);
+    font-size: var(--fs-sm);
 }
 
-.dashboard-last-run-sep {
+.stat-chip-label {
     color: var(--t3);
-    opacity: 0.6;
+}
+
+.stat-chip-value {
+    color: var(--t2);
+    font-weight: 500;
+}
+
+.dashboard-stat-sep {
+    color: var(--t3);
+    opacity: 0.4;
 }
 
 .dashboard-cards {

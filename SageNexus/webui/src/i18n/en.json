@@ -96,6 +96,8 @@
   "state.loading": "Loading...",
 
   "dashboard.stat.lastRun": "Last Run",
+  "dashboard.stat.result": "Last Result",
+  "dashboard.stat.profile": "Profile",
   "dashboard.lastRun.never": "No executions yet",
 
   "dv.btn.openFile": "Open File",

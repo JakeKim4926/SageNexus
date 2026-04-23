@@ -96,6 +96,8 @@
   "state.loading": "불러오는 중...",
 
   "dashboard.stat.lastRun": "마지막 실행",
+  "dashboard.stat.result": "마지막 결과",
+  "dashboard.stat.profile": "프로필",
   "dashboard.lastRun.never": "아직 실행 기록이 없습니다",
 
   "dv.btn.openFile": "파일 열기",

@@ -2,6 +2,14 @@
 
 ---
 
+## [2026-04-23] feature/dashboard-ui-polish
+- **목적**: 사용자 피드백 기반 대시보드 UI 개선 5단계 — 기능 메뉴판을 실제 대시보드로 격상
+- **변경 내용**: 설정 카드 제거(6개 3×2 균형), 웹 추출 아이콘 유니코드 통일(🌐→⊕), 상단 상태 요약 3개 추가(마지막 실행·결과·프로필), 사이드바 활성 상태 강화(3px 테두리/600), 카드 hover Sage 톤 통일(ac 테두리+그림자)
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/70
+- **결과**: merged ✅
+
+---
+
 ## [2026-04-23] feature/gmarketsans-font
 - **목적**: GmarketSans TTF 3종(Light/Medium/Bold) 로컬 폰트 적용, Pretendard CDN 의존성 제거
 - **변경 내용**: WebViewHost에 TTF 파일 서빙 핸들러 추가, @font-face 선언, --font 토큰 변경, CDN 링크 제거

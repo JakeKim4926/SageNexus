@@ -12,7 +12,7 @@ PluginLoader::PluginLoader()
 
 BOOL PluginLoader::LoadFromFile(const CString& strDllPath, DllPluginEntry& outEntry, CString& strError)
 {
-    HMODULE hModule = LoadLibraryW(strDllPath);
+    HMODULE hModule = LoadLibraryExW(strDllPath, NULL, LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR | LOAD_LIBRARY_SEARCH_DEFAULT_DIRS);
     if (hModule == NULL)
     {
         strError.Format(L"LoadLibrary failed: %s (error %u)", strDllPath.GetString(), GetLastError());

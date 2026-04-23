@@ -2,6 +2,14 @@
 
 ---
 
+## [2026-04-23] feature/plugin-dll-loader
+- **목적**: Phase 7 Step 1 — 고객사 전용 플러그인을 DLL 드랍 방식으로 동적 로딩하는 구조 구현
+- **변경 내용**: IPlugin에 GetAbiVersion() 추가, PluginLoader(LoadLibrary 기반 DLL 로드/언로드/ABI 버전 체크) 신규, PluginManager에 LoadPluginsFromDirectory 추가, SageApp 시작 시 plugins/ 디렉터리 자동 스캔
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/65
+- **결과**: merged ✅
+
+---
+
 ## [2026-04-22] feature/statusbar-copyright
 - **목적**: 하단 상태바에 copyright 문구 추가 및 프로필 항목 제거로 레이아웃 정리
 - **변경 내용**: 상태바 우측에 © 2026 J크. All rights reserved. 배치, 프로필 표시 항목 및 관련 JS 제거, CSS 스타일 추가

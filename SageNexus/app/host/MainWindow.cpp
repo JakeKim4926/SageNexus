@@ -240,6 +240,7 @@ void MainWindow::RegisterBridgeHandlers()
     m_apiCallBridgeHandler.RegisterHandlers(dispatcher);
     m_schedulerBridgeHandler.RegisterHandlers(dispatcher);
     m_apiConnectorBridgeHandler.RegisterHandlers(dispatcher);
+    sageMgr.GetPluginManager().RegisterPluginBridgeHandlers(dispatcher);
 }
 
 void MainWindow::NavigateToShell()

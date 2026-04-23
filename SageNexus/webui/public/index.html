@@ -79,6 +79,11 @@
                 </div>
             </div>
 
+            <div class="nav-section hidden" id="plugin-nav-section">
+                <div class="nav-section-label" id="plugin-nav-label">Plugins</div>
+                <div id="plugin-nav-items"></div>
+            </div>
+
             <div class="nav-spacer"></div>
 
             <div class="nav-section">
@@ -663,6 +668,7 @@
                 </div>
             </div>
 
+            <div id="plugin-page-hosts"></div>
         </main>
     </div>
 
@@ -1237,6 +1243,8 @@ var LOCALES = {
 
 var _interfaceLanguage = 'ko';
 var _currentPage = 'dashboard';
+var _pluginPages = [];
+var _dynamicPageLabels = {};
 
 var PAGE_I18N_KEYS = {
     'dashboard':   'nav.dashboard',
@@ -1262,14 +1270,24 @@ function resolveErrorMessage(err) {
     return err.message || t('wf.error.unknown');
 }
 
+function getPageLabel(pageId) {
+    if (_dynamicPageLabels[pageId]) {
+        return _dynamicPageLabels[pageId];
+    }
+    if (PAGE_I18N_KEYS[pageId]) {
+        return t(PAGE_I18N_KEYS[pageId]);
+    }
+    return pageId;
+}
+
 function applyLocale() {
     document.querySelectorAll('[data-i18n]').forEach(function (el) {
         var key = el.getAttribute('data-i18n');
         el.textContent = t(key);
     });
     var breadcrumb = document.getElementById('breadcrumb');
-    if (breadcrumb && PAGE_I18N_KEYS[_currentPage]) {
-        breadcrumb.textContent = t(PAGE_I18N_KEYS[_currentPage]);
+    if (breadcrumb) {
+        breadcrumb.textContent = getPageLabel(_currentPage);
     }
 }
 
@@ -1289,6 +1307,12 @@ function getColDisplayName(col) {
     // =========================================================
     // Navigation
     // =========================================================
+    function bindNavItem(navItem) {
+        navItem.addEventListener('click', function () {
+            navigateTo(navItem.dataset.page);
+        });
+    }
+
     function navigateTo(pageId) {
         _currentPage = pageId;
         document.querySelectorAll('.nav-item').forEach(function (el) {
@@ -1298,14 +1322,80 @@ function getColDisplayName(col) {
             el.classList.toggle('active', el.id === 'page-' + pageId);
         });
         var breadcrumb = document.getElementById('breadcrumb');
-        if (breadcrumb) breadcrumb.textContent = PAGE_I18N_KEYS[pageId] ? t(PAGE_I18N_KEYS[pageId]) : pageId;
+        if (breadcrumb) breadcrumb.textContent = getPageLabel(pageId);
         if (pageId === 'export') { loadArtifacts(); }
     }
 
-    document.querySelectorAll('.nav-item[data-page]').forEach(function (el) {
-        el.addEventListener('click', function () {
-            navigateTo(el.dataset.page);
+    function renderPluginPages(pluginPages) {
+        var section = document.getElementById('plugin-nav-section');
+        var items = document.getElementById('plugin-nav-items');
+        var hosts = document.getElementById('plugin-page-hosts');
+        if (!section || !items || !hosts) {
+            return;
+        }
+
+        _pluginPages = Array.isArray(pluginPages) ? pluginPages : [];
+        _dynamicPageLabels = {};
+        items.innerHTML = '';
+        hosts.innerHTML = '';
+
+        if (_pluginPages.length === 0) {
+            section.classList.add('hidden');
+            return;
+        }
+
+        section.classList.remove('hidden');
+
+        _pluginPages.forEach(function (page) {
+            if (!page || !page.pageId || !page.entryUrl) {
+                return;
+            }
+
+            _dynamicPageLabels[page.pageId] = page.pageName || page.pageId;
+
+            var navItem = document.createElement('div');
+            navItem.className = 'nav-item plugin-nav-item';
+            navItem.dataset.page = page.pageId;
+            navItem.dataset.pluginId = page.pluginId || '';
+            navItem.innerHTML =
+                '<span class="nav-icon">□</span>' +
+                '<span class="nav-label"></span>';
+
+            var navLabel = navItem.querySelector('.nav-label');
+            if (navLabel) {
+                navLabel.textContent = page.pageName || page.pageId;
+            }
+
+            bindNavItem(navItem);
+            items.appendChild(navItem);
+
+            var pageEl = document.createElement('div');
+            pageEl.className = 'page plugin-page-dynamic';
+            pageEl.id = 'page-' + page.pageId;
+            pageEl.dataset.pluginId = page.pluginId || '';
+            pageEl.innerHTML =
+                '<div class="page-header">' +
+                    '<div class="page-title"></div>' +
+                    '<div class="page-subtitle">Plugin page</div>' +
+                '</div>' +
+                '<div style="height:calc(100vh - 180px);min-height:560px;">' +
+                    '<iframe style="width:100%;height:100%;border:1px solid var(--bd);border-radius:12px;background:#fff;" src="' + page.entryUrl + '" loading="lazy"></iframe>' +
+                '</div>';
+
+            var titleEl = pageEl.querySelector('.page-title');
+            if (titleEl) {
+                titleEl.textContent = page.pageName || page.pageId;
+            }
+
+            hosts.appendChild(pageEl);
         });
+    }
+
+    window.navigateTo = navigateTo;
+    window.renderPluginPages = renderPluginPages;
+
+    document.querySelectorAll('.nav-item[data-page]').forEach(function (el) {
+        bindNavItem(el);
     });
 
     // =========================================================
@@ -1333,6 +1423,10 @@ function getColDisplayName(col) {
                 sidebarProfileEl.removeAttribute('data-i18n');
                 sidebarProfileEl.textContent = detail.profileName;
             }
+        }
+
+        if (detail.pluginPages) {
+            renderPluginPages(detail.pluginPages);
         }
 
         if (detail.menuVisibility) {
@@ -2199,10 +2293,26 @@ function getColDisplayName(col) {
 
     function applySidebarVisibility(plugins) {
         plugins.forEach(function (plugin) {
-            var pageId = PLUGIN_PAGE_MAP[plugin.pluginId];
-            if (!pageId) return;
-            var navItem = document.querySelector('.nav-item[data-page="' + pageId + '"]');
-            if (navItem) navItem.classList.toggle('hidden', !plugin.enabled);
+            var pageIds = [];
+            var builtInPageId = PLUGIN_PAGE_MAP[plugin.pluginId];
+            if (builtInPageId) {
+                pageIds.push(builtInPageId);
+            }
+            _pluginPages.forEach(function (page) {
+                if (page.pluginId === plugin.pluginId) {
+                    pageIds.push(page.pageId);
+                }
+            });
+
+            pageIds.forEach(function (pageId) {
+                var navItem = document.querySelector('.nav-item[data-page="' + pageId + '"]');
+                if (navItem) navItem.classList.toggle('hidden', !plugin.enabled);
+                var pageEl = document.getElementById('page-' + pageId);
+                if (pageEl) pageEl.classList.toggle('hidden', !plugin.enabled);
+                if (!plugin.enabled && _currentPage === pageId && window.navigateTo) {
+                    window.navigateTo('dashboard');
+                }
+            });
         });
     }
 
@@ -2227,7 +2337,11 @@ function getColDisplayName(col) {
 
             var label = document.createElement('div');
             label.className = 'settings-label';
-            label.textContent = t('plugin.name.' + plugin.pluginId) || plugin.pluginName || plugin.pluginId;
+            var labelText = t('plugin.name.' + plugin.pluginId);
+            if (labelText === 'plugin.name.' + plugin.pluginId) {
+                labelText = plugin.pluginName || plugin.pluginId;
+            }
+            label.textContent = labelText;
 
             var toggle = document.createElement('label');
             toggle.className = 'plugin-toggle';

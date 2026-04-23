@@ -95,69 +95,66 @@
 
             <!-- Dashboard Page -->
             <div class="page active" id="page-dashboard">
-                <div class="dashboard-hero">
-                    <div class="dashboard-title" data-i18n="page.dashboard.title">대시보드</div>
-                    <div class="dashboard-stats">
-                        <div class="dashboard-stat-chip">
-                            <span class="stat-chip-label" data-i18n="dashboard.stat.lastRun">마지막 실행</span>
-                            <span class="stat-chip-value" id="stat-last-run">—</span>
-                        </div>
-                        <span class="dashboard-stat-sep">·</span>
-                        <div class="dashboard-stat-chip">
-                            <span class="stat-chip-label" data-i18n="dashboard.stat.result">마지막 결과</span>
-                            <span class="stat-chip-value" id="stat-last-result">—</span>
-                        </div>
-                        <span class="dashboard-stat-sep">·</span>
-                        <div class="dashboard-stat-chip">
-                            <span class="stat-chip-label" data-i18n="dashboard.stat.profile">프로필</span>
-                            <span class="stat-chip-value" id="stat-current-profile">—</span>
-                        </div>
+
+                <!-- KPI Grid -->
+                <div class="dash-kpi-grid">
+                    <div class="dash-kpi-card">
+                        <div class="dash-kpi-label" data-i18n="dash.kpi.totalRuns">총 실행</div>
+                        <div class="dash-kpi-value" id="dash-kpi-total">—</div>
+                    </div>
+                    <div class="dash-kpi-card">
+                        <div class="dash-kpi-label" data-i18n="dash.kpi.successRate">성공률</div>
+                        <div class="dash-kpi-value" id="dash-kpi-success-rate">—</div>
+                    </div>
+                    <div class="dash-kpi-card">
+                        <div class="dash-kpi-label" data-i18n="dash.kpi.files">처리 파일</div>
+                        <div class="dash-kpi-value" id="dash-kpi-files">—</div>
+                    </div>
+                    <div class="dash-kpi-card">
+                        <div class="dash-kpi-label" data-i18n="dash.kpi.profile">현재 프로필</div>
+                        <div class="dash-kpi-value dash-kpi-value--sm" id="dash-kpi-profile">—</div>
                     </div>
                 </div>
-                <div class="dashboard-cards">
-                    <div class="dashboard-card" data-page="data-viewer">
-                        <div class="dashboard-card-icon">⊟</div>
-                        <div class="dashboard-card-body">
-                            <div class="dashboard-card-label" data-i18n="nav.dataViewer">데이터 뷰어</div>
-                            <div class="dashboard-card-desc" data-i18n="page.dataViewer.subtitle">파일을 불러와 데이터를 확인합니다.</div>
+
+                <!-- Quick Actions -->
+                <div class="dash-section-label" data-i18n="dash.section.quickActions">빠른 시작</div>
+                <div class="dash-quick-grid">
+                    <div class="dash-action-card" id="dash-action-open-file">
+                        <div class="dash-action-icon">⊟</div>
+                        <div class="dash-action-body">
+                            <div class="dash-action-title" data-i18n="dash.action.openFile">파일 열기</div>
+                            <div class="dash-action-desc" data-i18n="dash.action.openFile.desc">CSV 파일을 불러와 데이터를 확인합니다.</div>
                         </div>
+                        <div class="dash-action-arrow">→</div>
                     </div>
-                    <div class="dashboard-card" data-page="transform">
-                        <div class="dashboard-card-icon">⇌</div>
-                        <div class="dashboard-card-body">
-                            <div class="dashboard-card-label" data-i18n="nav.transform">변환</div>
-                            <div class="dashboard-card-desc" data-i18n="page.transform.subtitle">데이터를 정리하고 변환합니다.</div>
+                    <div class="dash-action-card" data-page="workflow">
+                        <div class="dash-action-icon">▶</div>
+                        <div class="dash-action-body">
+                            <div class="dash-action-title" data-i18n="dash.action.workflow">워크플로우 실행</div>
+                            <div class="dash-action-desc" data-i18n="dash.action.workflow.desc">저장된 자동화 작업을 실행합니다.</div>
                         </div>
+                        <div class="dash-action-arrow">→</div>
                     </div>
-                    <div class="dashboard-card" data-page="export">
-                        <div class="dashboard-card-icon">↑</div>
-                        <div class="dashboard-card-body">
-                            <div class="dashboard-card-label" data-i18n="nav.export">내보내기</div>
-                            <div class="dashboard-card-desc" data-i18n="page.export.subtitle">처리된 데이터를 파일로 내보냅니다.</div>
+                    <div class="dash-action-card" data-page="webextract">
+                        <div class="dash-action-icon">⊕</div>
+                        <div class="dash-action-body">
+                            <div class="dash-action-title" data-i18n="dash.action.webExtract">웹 추출 시작</div>
+                            <div class="dash-action-desc" data-i18n="dash.action.webExtract.desc">URL에서 테이블 데이터를 직접 추출합니다.</div>
                         </div>
-                    </div>
-                    <div class="dashboard-card" data-page="workflow">
-                        <div class="dashboard-card-icon">▶</div>
-                        <div class="dashboard-card-body">
-                            <div class="dashboard-card-label" data-i18n="nav.workflow">워크플로우</div>
-                            <div class="dashboard-card-desc" data-i18n="page.workflow.subtitle">자동화 워크플로우를 관리하고 실행합니다.</div>
-                        </div>
-                    </div>
-                    <div class="dashboard-card" data-page="webextract">
-                        <div class="dashboard-card-icon">⊕</div>
-                        <div class="dashboard-card-body">
-                            <div class="dashboard-card-label" data-i18n="nav.webextract">웹 추출</div>
-                            <div class="dashboard-card-desc" data-i18n="page.webextract.subtitle">웹 페이지에서 테이블 데이터를 추출합니다.</div>
-                        </div>
-                    </div>
-                    <div class="dashboard-card" data-page="history">
-                        <div class="dashboard-card-icon">◷</div>
-                        <div class="dashboard-card-body">
-                            <div class="dashboard-card-label" data-i18n="nav.history">실행 이력</div>
-                            <div class="dashboard-card-desc" data-i18n="page.history.subtitle">이전 실행 결과를 확인합니다.</div>
-                        </div>
+                        <div class="dash-action-arrow">→</div>
                     </div>
                 </div>
+
+                <!-- Recent Activity -->
+                <div class="dash-section-label" data-i18n="dash.section.recent">최근 실행</div>
+                <div class="dash-recent" id="dash-recent-area">
+                    <div class="empty-state" id="dash-recent-empty">
+                        <div class="empty-icon">◷</div>
+                        <div class="empty-title" data-i18n="dash.recent.empty.title">실행 이력이 없습니다</div>
+                        <div class="empty-desc" data-i18n="dash.recent.empty.desc">작업을 실행하면 여기에 최근 이력이 표시됩니다.</div>
+                    </div>
+                </div>
+
             </div>
 
             <!-- Data Viewer Page -->
@@ -174,7 +171,7 @@
                     </div>
                     <div class="toolbar-right">
                         <div class="align-btn-group hidden" id="dv-align-group">
-                            <button class="align-btn active" data-align="left" title="Left align">
+                            <button class="align-btn active" data-align="left" title="왼쪽 정렬">
                                 <svg width="13" height="11" viewBox="0 0 13 11" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <rect x="0" y="0"    width="13" height="1.5" rx="0.75" fill="currentColor"/>
                                     <rect x="0" y="3.25" width="9"  height="1.5" rx="0.75" fill="currentColor"/>
@@ -182,7 +179,7 @@
                                     <rect x="0" y="9.75" width="7"  height="1.5" rx="0.75" fill="currentColor"/>
                                 </svg>
                             </button>
-                            <button class="align-btn" data-align="center" title="Center align">
+                            <button class="align-btn" data-align="center" title="가운데 정렬">
                                 <svg width="13" height="11" viewBox="0 0 13 11" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <rect x="0"   y="0"    width="13" height="1.5" rx="0.75" fill="currentColor"/>
                                     <rect x="2"   y="3.25" width="9"  height="1.5" rx="0.75" fill="currentColor"/>
@@ -190,7 +187,7 @@
                                     <rect x="3"   y="9.75" width="7"  height="1.5" rx="0.75" fill="currentColor"/>
                                 </svg>
                             </button>
-                            <button class="align-btn" data-align="right" title="Right align">
+                            <button class="align-btn" data-align="right" title="오른쪽 정렬">
                                 <svg width="13" height="11" viewBox="0 0 13 11" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <rect x="0"   y="0"    width="13" height="1.5" rx="0.75" fill="currentColor"/>
                                     <rect x="4"   y="3.25" width="9"  height="1.5" rx="0.75" fill="currentColor"/>
@@ -787,6 +784,24 @@ var LOCALES = {
         'dashboard.stat.result':         '마지막 결과',
         'dashboard.stat.profile':        '프로필',
         'dashboard.lastRun.never':       '아직 실행 기록이 없습니다',
+        'dash.kpi.totalRuns':            '총 실행',
+        'dash.kpi.successRate':          '성공률',
+        'dash.kpi.files':                '처리 파일',
+        'dash.kpi.profile':              '현재 프로필',
+        'dash.section.quickActions':     '빠른 시작',
+        'dash.action.openFile':          '파일 열기',
+        'dash.action.openFile.desc':     'CSV 파일을 불러와 데이터를 확인합니다.',
+        'dash.action.workflow':          '워크플로우 실행',
+        'dash.action.workflow.desc':     '저장된 자동화 작업을 실행합니다.',
+        'dash.action.webExtract':        '웹 추출 시작',
+        'dash.action.webExtract.desc':   'URL에서 테이블 데이터를 직접 추출합니다.',
+        'dash.section.recent':           '최근 실행',
+        'dash.recent.empty.title':       '실행 이력이 없습니다',
+        'dash.recent.empty.desc':        '작업을 실행하면 여기에 최근 이력이 표시됩니다.',
+        'dash.recent.col.time':          '시간',
+        'dash.recent.col.type':          '유형',
+        'dash.recent.col.source':        '소스',
+        'dash.recent.col.result':        '결과',
         'dv.btn.openFile':               '파일 열기',
         'dv.empty.title':                '불러온 파일이 없습니다',
         'dv.empty.desc':                 '파일 열기 버튼을 눌러 CSV 파일을 선택하세요.',
@@ -1039,6 +1054,25 @@ var LOCALES = {
         'dashboard.stat.result':         'Last Result',
         'dashboard.stat.profile':        'Profile',
         'dashboard.lastRun.never':       'No executions yet',
+        'dash.kpi.totalRuns':            'Total Runs',
+        'dash.kpi.successRate':          'Success Rate',
+        'dash.kpi.files':                'Files Processed',
+        'dash.kpi.profile':              'Current Profile',
+        'dash.section.quickActions':     'Quick Start',
+        'dash.action.openFile':          'Open File',
+        'dash.action.openFile.desc':     'Load a CSV file to view your data.',
+        'dash.action.workflow':          'Run Workflow',
+        'dash.action.workflow.desc':     'Run a saved automation workflow.',
+        'dash.action.webExtract':        'Web Extract',
+        'dash.action.webExtract.desc':   'Extract table data directly from a URL.',
+        'dash.section.recent':           'Recent Activity',
+        'dash.recent.empty.title':       'No activity yet',
+        'dash.recent.empty.desc':        'Run a task and recent activity will appear here.',
+        'dash.recent.col.time':          'Time',
+        'dash.recent.col.type':          'Type',
+        'dash.recent.col.source':        'Source',
+        'dash.recent.col.result':        'Result',
+        'dv.align.label':                'Text Align',
         'dv.btn.openFile':               'Open File',
         'dv.empty.title':                'No file loaded',
         'dv.empty.desc':                 'Click Open File to select a CSV or Excel file.',
@@ -1324,7 +1358,7 @@ function getColDisplayName(col) {
             if (navItem) {
                 navItem.style.display = hidden ? 'none' : '';
             }
-            var dashCard = document.querySelector('.dashboard-card[data-page="' + page + '"]');
+            var dashCard = document.querySelector('.dash-action-card[data-page="' + page + '"]');
             if (dashCard) {
                 dashCard.style.display = hidden ? 'none' : '';
             }
@@ -1368,50 +1402,127 @@ function getColDisplayName(col) {
 })();
 
 (function () {
-    function loadDashboardStats() {
-        var elTime    = document.getElementById('stat-last-run');
-        var elResult  = document.getElementById('stat-last-result');
-        var elProfile = document.getElementById('stat-current-profile');
+    var profileArea = document.getElementById('sidebar-profile');
+    if (profileArea) {
+        profileArea.addEventListener('click', function () {
+            var navItem = document.querySelector('.nav-item[data-page="settings"]');
+            if (navItem) navItem.click();
+        });
+    }
+})();
 
-        if (elProfile) {
-            var profileEl = document.getElementById('sidebar-profile-name');
-            elProfile.textContent = profileEl ? profileEl.textContent : '—';
+(function () {
+    function renderRecentActivity(records) {
+        var area = document.getElementById('dash-recent-area');
+        var emptyEl = document.getElementById('dash-recent-empty');
+        if (!area) return;
+
+        var existingWrapper = document.getElementById('dash-recent-table-wrapper');
+        if (existingWrapper) existingWrapper.remove();
+
+        if (!records || records.length === 0) {
+            if (emptyEl) emptyEl.classList.remove('hidden');
+            return;
+        }
+
+        if (emptyEl) emptyEl.classList.add('hidden');
+
+        var recent = records.slice().reverse().slice(0, 5);
+        var table = document.createElement('table');
+        table.className = 'data-table';
+
+        var thead = document.createElement('thead');
+        thead.innerHTML = '<tr>' +
+            '<th>' + t('dash.recent.col.time') + '</th>' +
+            '<th>' + t('dash.recent.col.result') + '</th>' +
+            '</tr>';
+        table.appendChild(thead);
+
+        var tbody = document.createElement('tbody');
+        recent.forEach(function (r) {
+            var tr = document.createElement('tr');
+            var resultColor = r.success ? 'var(--ok)' : 'var(--err)';
+            var resultLabel = r.success ? t('hs.result.success') : t('hs.result.fail');
+            tr.innerHTML = '<td>' + (r.timestamp || '—') + '</td>' +
+                '<td style="color:' + resultColor + '">' + resultLabel + '</td>';
+            tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+
+        var wrapper = document.createElement('div');
+        wrapper.id = 'dash-recent-table-wrapper';
+        wrapper.className = 'table-wrapper';
+        wrapper.appendChild(table);
+        area.appendChild(wrapper);
+    }
+
+    function loadDashboardStats() {
+        var profileEl = document.getElementById('sidebar-profile-name');
+        var kpiProfile = document.getElementById('dash-kpi-profile');
+        if (kpiProfile && profileEl) {
+            kpiProfile.textContent = profileEl.textContent || '—';
         }
 
         bridgeClient.sendCommand('history.query', 'getHistory', {})
             .then(function (result) {
                 var records = result.records || [];
-                if (!elTime || !elResult) return;
-                if (records.length === 0) {
-                    elTime.textContent   = '—';
-                    elResult.textContent = '—';
-                    elResult.style.color = '';
-                    return;
+
+                var kpiTotal = document.getElementById('dash-kpi-total');
+                if (kpiTotal) kpiTotal.textContent = records.length > 0 ? String(records.length) : '0';
+
+                var kpiRate = document.getElementById('dash-kpi-success-rate');
+                if (kpiRate) {
+                    if (records.length === 0) {
+                        kpiRate.textContent = '—';
+                        kpiRate.style.color = '';
+                    } else {
+                        var successes = records.filter(function (r) { return r.success; }).length;
+                        var rate = Math.round(successes / records.length * 100);
+                        kpiRate.textContent = rate + '%';
+                        kpiRate.style.color = rate >= 80 ? 'var(--ok)' : rate >= 50 ? 'var(--wrn)' : 'var(--err)';
+                    }
                 }
-                var last = records[records.length - 1];
-                elTime.textContent = last.timestamp || '—';
-                if (last.success) {
-                    elResult.textContent = t('hs.result.success');
-                    elResult.style.color = 'var(--ok)';
-                } else {
-                    elResult.textContent = t('hs.result.fail');
-                    elResult.style.color = 'var(--err)';
+
+                var kpiFiles = document.getElementById('dash-kpi-files');
+                if (kpiFiles) {
+                    var sources = {};
+                    records.forEach(function (r) { if (r.source) sources[r.source] = true; });
+                    var fileCount = Object.keys(sources).length;
+                    kpiFiles.textContent = fileCount > 0 ? String(fileCount) : '0';
                 }
+
+                renderRecentActivity(records);
             })
             .catch(function () {
-                if (elTime)   elTime.textContent   = '—';
-                if (elResult) elResult.textContent = '—';
+                ['dash-kpi-total', 'dash-kpi-success-rate', 'dash-kpi-files'].forEach(function (id) {
+                    var el = document.getElementById(id);
+                    if (el) el.textContent = '—';
+                });
             });
     }
 
     window.loadDashboardStats = loadDashboardStats;
 
-    document.querySelectorAll('.dashboard-card[data-page]').forEach(function (card) {
+    document.querySelectorAll('.dash-action-card[data-page]').forEach(function (card) {
         card.addEventListener('click', function () {
             var target = document.querySelector('.nav-item[data-page="' + card.dataset.page + '"]');
             if (target) target.click();
         });
     });
+
+    var btnOpenFile = document.getElementById('dash-action-open-file');
+    if (btnOpenFile) {
+        btnOpenFile.addEventListener('click', function () {
+            var navItem = document.querySelector('.nav-item[data-page="data-viewer"]');
+            if (navItem) {
+                navItem.click();
+                setTimeout(function () {
+                    var btn = document.getElementById('btn-open-file');
+                    if (btn) btn.click();
+                }, 50);
+            }
+        });
+    }
 
     document.querySelectorAll('.nav-item[data-page]').forEach(function (el) {
         el.addEventListener('click', function () {

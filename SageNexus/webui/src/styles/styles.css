@@ -60,6 +60,7 @@
     --font: 'GmarketSans', system-ui, -apple-system, sans-serif;
     --font-mono: 'SF Mono', Consolas, monospace;
 
+    --fs-label: 11px;
     --fs-xs:   13px;
     --fs-sm:   14.5px;
     --fs-base: 14.5px;
@@ -176,11 +177,11 @@ html, body {
 }
 
 .sidebar-profile-label {
-    font-size: 10px;
-    font-weight: 500;
+    font-size: var(--fs-label);
+    font-weight: 600;
     color: var(--t3);
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     margin-bottom: var(--sp1);
 }
 
@@ -199,7 +200,7 @@ html, body {
 
 .nav-section-label {
     padding: var(--sp1) var(--sp4);
-    font-size: 11px;
+    font-size: var(--fs-label);
     color: var(--t3);
     text-transform: uppercase;
     letter-spacing: 0.08em;

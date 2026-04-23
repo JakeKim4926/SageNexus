@@ -1,4 +1,6 @@
 {
+  "sidebar.profile.label": "Profile",
+
   "nav.section.main": "Main",
   "nav.section.manage": "Manage",
   "nav.dashboard": "Dashboard",

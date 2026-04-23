@@ -1,4 +1,6 @@
 {
+  "sidebar.profile.label": "프로필",
+
   "nav.section.main": "메인",
   "nav.section.manage": "관리",
   "nav.dashboard": "대시보드",

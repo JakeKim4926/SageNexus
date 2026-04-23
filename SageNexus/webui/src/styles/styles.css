@@ -147,6 +147,15 @@ html, body {
     flex-shrink: 0;
 }
 
+.sidebar-profile-label {
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--t3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: var(--sp1);
+}
+
 #sidebar-profile-name {
     font-size: var(--fs-xs);
     font-weight: 600;

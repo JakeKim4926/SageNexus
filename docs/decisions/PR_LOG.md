@@ -6,7 +6,7 @@
 - **목적**: private 고객사 플러그인이 shared host 안에서 bridge command와 WebView2 전용 페이지를 등록할 수 있는 최소 경계 추가
 - **변경 내용**: `IPlugin` ABI에 command/page metadata 확장 / `PluginManager`에서 plugin bridge handler 등록 및 plugin page metadata 수집 / `WebViewHost`에 plugin web asset 서빙 경로와 `appReady` pluginPages payload 추가 / shared Web UI shell에 plugin nav/page host 추가
 - **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/76
-- **결과**: pending
+- **결과**: merged ✅
 
 ---
 

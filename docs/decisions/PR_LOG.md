@@ -2,6 +2,14 @@
 
 ---
 
+## [2026-04-23] feature/gmarketsans-font
+- **목적**: GmarketSans TTF 3종(Light/Medium/Bold) 로컬 폰트 적용, Pretendard CDN 의존성 제거
+- **변경 내용**: WebViewHost에 TTF 파일 서빙 핸들러 추가, @font-face 선언, --font 토큰 변경, CDN 링크 제거
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/69
+- **결과**: merged ✅
+
+---
+
 ## [2026-04-23] fix/sidebar-label-fixes
 - **목적**: 프로필 레이블 i18n 누락 버그 수정(SIDEBAR.PROFILE.LABEL 표시 문제) + 섹션 레이블 가독성 개선
 - **변경 내용**: LOCALES 객체에 sidebar.profile.label 키 추가, nav-section-label / sidebar-profile-label font-size 9px→11px 통일

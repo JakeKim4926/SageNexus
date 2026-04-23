@@ -134,6 +134,17 @@ CString SettingsBridgeHandler::HandleTogglePlugin(const BridgeMessage& msg)
 
     sageMgr.GetProfile().SetPluginEnabled(strPluginId, bEnabled);
 
+    CString strSaveError;
+    if (!sageMgr.SaveProfile(strSaveError))
+    {
+        CString strReloadError;
+        sageMgr.ReloadProfile(strReloadError);
+
+        return L"{\"type\":\"response\",\"requestId\":\"" + msg.m_strRequestId +
+               L"\",\"success\":false,\"error\":{\"code\":\"PROFILE_SAVE_FAILED\",\"message\":\"" +
+               JsonEscapeString(strSaveError) + L"\"}}";
+    }
+
     CString strResult;
     strResult.Format(L"{\"pluginId\":\"%s\",\"enabled\":%s}",
         (LPCWSTR)strPluginId,

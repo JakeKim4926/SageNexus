@@ -117,6 +117,9 @@ Desktop.ini
 #claude
 .claude/
 
+#codex
+.codex/
+
 # Solution format: .slnx only (VS 2022 17.x+)
 *.sln
 

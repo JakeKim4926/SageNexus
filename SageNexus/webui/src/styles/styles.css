@@ -252,6 +252,7 @@ html, body {
    Dashboard Page
    ============================================================ */
 .page-header {
+    padding-top: var(--sp6);
     margin-bottom: var(--sp5);
 }
 

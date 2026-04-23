@@ -230,7 +230,59 @@ void WebViewHost::RegisterWebResourceHandler()
                 }
 
                 if (nResId == 0)
+                {
+                    if (strUri == L"https://app.sagenexus/resources/GmarketSansTTFLight.ttf"  ||
+                        strUri == L"https://app.sagenexus/resources/GmarketSansTTFMedium.ttf" ||
+                        strUri == L"https://app.sagenexus/resources/GmarketSansTTFBold.ttf")
+                    {
+                        int nSlash = strUri.ReverseFind(L'/');
+                        CString strFileName = strUri.Mid(nSlash + 1);
+                        CString strFilePath = sageMgr.GetAppDir() + L"\\resources\\" + strFileName;
+
+                        HANDLE hFile = CreateFileW(strFilePath, GENERIC_READ, FILE_SHARE_READ,
+                                                   nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+                        if (hFile == INVALID_HANDLE_VALUE)
+                            return S_OK;
+
+                        DWORD dwSize = GetFileSize(hFile, nullptr);
+                        if (dwSize == 0 || dwSize == INVALID_FILE_SIZE)
+                        {
+                            CloseHandle(hFile);
+                            return S_OK;
+                        }
+
+                        IStream* pFontStream = nullptr;
+                        if (FAILED(CreateStreamOnHGlobal(nullptr, TRUE, &pFontStream)))
+                        {
+                            CloseHandle(hFile);
+                            return S_OK;
+                        }
+
+                        BYTE* pBuf = new BYTE[dwSize];
+                        DWORD dwRead = 0;
+                        ReadFile(hFile, pBuf, dwSize, &dwRead, nullptr);
+                        CloseHandle(hFile);
+
+                        pFontStream->Write(pBuf, dwRead, nullptr);
+                        delete[] pBuf;
+
+                        LARGE_INTEGER liZero = {};
+                        pFontStream->Seek(liZero, STREAM_SEEK_SET, nullptr);
+
+                        CString strFontHeaders = L"Content-Type: font/truetype\r\nCache-Control: no-store, no-cache, must-revalidate";
+
+                        ICoreWebView2WebResourceResponse* pFontResponse = nullptr;
+                        pEnv->CreateWebResourceResponse(pFontStream, 200, L"OK", strFontHeaders, &pFontResponse);
+                        pFontStream->Release();
+
+                        if (pFontResponse)
+                        {
+                            pArgs->put_Response(pFontResponse);
+                            pFontResponse->Release();
+                        }
+                    }
                     return S_OK;
+                }
 
                 HMODULE hMod    = GetModuleHandleW(nullptr);
                 HRSRC   hRes    = FindResourceW(hMod, MAKEINTRESOURCEW(nResId), RT_RCDATA);

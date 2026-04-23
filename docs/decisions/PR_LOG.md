@@ -5,7 +5,7 @@
 ## [2026-04-23] fix/profile-json-sync
 - **목적**: `profile.json` 실제 동작과 문서 설명을 일치시키고, Settings 플러그인 토글이 디스크에 반영되도록 정리
 - **변경 내용**: `SolutionProfile`에 `profile.json` 파일 로드/저장 추가 / `SageApp` 시작 시 설치 폴더 `profile.json` 우선 로드, 없으면 임베딩 리소스로 bootstrap / Settings 플러그인 토글 시 `profile.json` 저장 및 실패 시 디스크 상태로 복구 / `ADR-001`, `SolutionProfile-packaging`, `README` 상태 문서 정합성 업데이트
-- **PR 링크**: pending
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/75
 - **결과**: pending
 
 ---

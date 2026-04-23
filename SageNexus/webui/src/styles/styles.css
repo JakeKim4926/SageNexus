@@ -1,4 +1,26 @@
 /* ============================================================
+   GmarketSans Font
+   ============================================================ */
+@font-face {
+    font-family: 'GmarketSans';
+    src: url('https://app.sagenexus/resources/GmarketSansTTFLight.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'GmarketSans';
+    src: url('https://app.sagenexus/resources/GmarketSansTTFMedium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'GmarketSans';
+    src: url('https://app.sagenexus/resources/GmarketSansTTFBold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+/* ============================================================
    SageNexus Design Tokens
    ============================================================ */
 :root {
@@ -35,7 +57,7 @@
     --sp6: 24px;
 
     /* Typography */
-    --font: 'Pretendard Variable', Pretendard, system-ui, -apple-system, sans-serif;
+    --font: 'GmarketSans', system-ui, -apple-system, sans-serif;
     --font-mono: 'SF Mono', Consolas, monospace;
 
     --fs-xs:   13px;

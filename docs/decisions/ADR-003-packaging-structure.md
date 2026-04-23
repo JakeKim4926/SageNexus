@@ -98,12 +98,71 @@ deploy/<profile>/
 
 ---
 
-## 고객사 DLL 배포 방식
+## 설치 폴더 / 사용자 데이터 폴더 최종 검증 (2026-04-23)
 
-1. 고객사 private 레포에서 플러그인 DLL 빌드
-2. 빌드 출력 DLL을 `<BuildOutput>/plugins/` 에 복사
-3. `scripts/package.ps1` 실행 → `deploy/<profile>/plugins/` 에 포함됨
+### 설치 폴더 (AppDir) 검증
+
+| ADR-001 항목 | 실제 빌드 출력 | 결과 |
+|---|---|---|
+| `SageNexus.exe` | ✅ 있음 | 일치 |
+| `WebView2Loader.dll` | ✅ 있음 | 일치 |
+| `webui\` | ✅ 있음 | 일치 |
+| `profile.json` | ✅ 있음 | 일치 |
+| `templates\` | ❌ 없음 | **불일치** |
+
+`templates\`는 ADR-001에 명시됐으나 현재 미구현 상태다.
+Workflow 템플릿 번들 기능이 실제로 사용될 때 추가한다. 현재 배포에서는 해당 폴더 없이 동작한다.
+
+### 사용자 데이터 폴더 (UserDataDir) 검증
+
+| ADR-001 항목 | 코드 구현 | 결과 |
+|---|---|---|
+| `%APPDATA%\SageNexus\` | `SHGetFolderPathW(CSIDL_APPDATA)` + `USER_DATA_APP_NAME` | ✅ 일치 |
+| `settings.json` | `JsonConfigStore` → `GetUserDataDir()` | ✅ 일치 |
+| `Data\` | `m_strDataDir` = `UserDataDir + DATA_DIR_NAME` | ✅ 일치 |
+| `Logs\` | `m_strLogDir` = `UserDataDir + LOG_DIR_NAME` | ✅ 일치 |
+| `WebViewData\` | `GetUserDataDir() + WEBVIEW_USER_DATA_FOLDER` | ✅ 일치 |
+
+사용자 데이터 폴더 구조는 ADR-001 정책과 완전히 일치한다.
+
+---
+
+## 고객사 DLL 배포 정책
+
+### 배포 방식
+
+1. 고객사 private 레포에서 플러그인 DLL 빌드 (`Release-<Company>|x64`)
+2. 빌드 출력 DLL → `<BuildOutput>/plugins/` 에 복사
+3. `scripts/package.ps1` 실행 → `deploy/<profile>/plugins/` 에 자동 포함
 4. `deploy/<profile>/` 전체를 고객사 머신에 설치
+
+### DLL 파일명 규칙
+
+```
+SageNexus-Plugin-<CompanyName>.dll
+```
+
+예: `SageNexus-Plugin-Taechang.dll`
+
+### DLL 서명 정책
+
+현재 단계에서는 코드 서명(Code Signing)을 적용하지 않는다.
+운영 환경 배포 시 아래 조건이 충족되면 서명을 도입한다.
+
+- 고객사 머신에 SmartScreen 또는 UAC 경고가 문제가 되는 경우
+- 배포 DLL의 무결성 검증이 계약상 요구되는 경우
+
+도입 시 MSVC Code Signing (Authenticode)을 사용한다.
+
+### 업데이트 방식
+
+DLL 단독 교체:
+1. 신규 버전 DLL을 고객사 `plugins\` 폴더에 덮어씀
+2. 앱 재시작 시 신규 DLL이 자동 로드됨
+3. ABI 버전이 다르면 로드 실패 → 해당 플러그인만 비활성화, 앱은 계속 실행
+
+전체 패키지 교체:
+- `scripts/package.ps1` 재실행 → `deploy/<profile>/` 폴더 재생성 → 배포
 
 ---
 

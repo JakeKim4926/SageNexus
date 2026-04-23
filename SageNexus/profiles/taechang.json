@@ -1,5 +1,5 @@
 {
-  "profileId": "taechang",
+  "profileId": "Taechang",
   "profileName": "태창",
   "defaultInterfaceLanguage": "ko",
   "defaultOutputLanguage": "ko",
@@ -13,5 +13,6 @@
   "plugin_import": true,
   "plugin_transform": true,
   "plugin_export": true,
-  "plugin_history": true
+  "plugin_history": true,
+  "plugin_taechang": true
 }

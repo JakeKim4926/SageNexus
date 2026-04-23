@@ -7,6 +7,43 @@
 
 using namespace Microsoft::WRL;
 
+namespace
+{
+CString GetMimeTypeFromFilePath(const CString& strFilePath)
+{
+    CString strExt;
+    int nDot = strFilePath.ReverseFind(L'.');
+    if (nDot >= 0)
+        strExt = strFilePath.Mid(nDot + 1);
+    strExt.MakeLower();
+
+    if (strExt == L"html")
+        return L"text/html; charset=utf-8";
+    if (strExt == L"css")
+        return L"text/css; charset=utf-8";
+    if (strExt == L"js")
+        return L"application/javascript; charset=utf-8";
+    if (strExt == L"json")
+        return L"application/json; charset=utf-8";
+    if (strExt == L"svg")
+        return L"image/svg+xml";
+    if (strExt == L"png")
+        return L"image/png";
+    if (strExt == L"jpg" || strExt == L"jpeg")
+        return L"image/jpeg";
+    if (strExt == L"ico")
+        return L"image/x-icon";
+    if (strExt == L"woff2")
+        return L"font/woff2";
+    if (strExt == L"woff")
+        return L"font/woff";
+    if (strExt == L"ttf")
+        return L"font/truetype";
+
+    return L"application/octet-stream";
+}
+}
+
 WebViewHost::WebViewHost(HWND hParentWnd)
     : m_hParentWnd(hParentWnd)
     , m_eState(WebViewState::NotCreated)
@@ -231,6 +268,81 @@ void WebViewHost::RegisterWebResourceHandler()
 
                 if (nResId == 0)
                 {
+                    if (strUri.Left(31).CompareNoCase(L"https://app.sagenexus/plugins/") == 0)
+                    {
+                        CString strPluginRoute = strUri.Mid(31);
+                        int nSlash = strPluginRoute.Find(L'/');
+                        if (nSlash > 0)
+                        {
+                            CString strPluginId     = strPluginRoute.Left(nSlash);
+                            CString strRelativePath = strPluginRoute.Mid(nSlash + 1);
+                            CString strFilePath;
+                            CString strResolveError;
+
+                            if (sageMgr.GetPluginManager().ResolvePluginWebFile(
+                                    strPluginId,
+                                    strRelativePath,
+                                    strFilePath,
+                                    strResolveError))
+                            {
+                                HANDLE hFile = CreateFileW(
+                                    strFilePath,
+                                    GENERIC_READ,
+                                    FILE_SHARE_READ,
+                                    nullptr,
+                                    OPEN_EXISTING,
+                                    FILE_ATTRIBUTE_NORMAL,
+                                    nullptr);
+                                if (hFile != INVALID_HANDLE_VALUE)
+                                {
+                                    DWORD dwSize = GetFileSize(hFile, nullptr);
+                                    if (dwSize != 0 && dwSize != INVALID_FILE_SIZE)
+                                    {
+                                        IStream* pFileStream = nullptr;
+                                        if (SUCCEEDED(CreateStreamOnHGlobal(nullptr, TRUE, &pFileStream)))
+                                        {
+                                            BYTE* pBuf = new BYTE[dwSize];
+                                            DWORD dwRead = 0;
+                                            ReadFile(hFile, pBuf, dwSize, &dwRead, nullptr);
+                                            CloseHandle(hFile);
+
+                                            pFileStream->Write(pBuf, dwRead, nullptr);
+                                            delete[] pBuf;
+
+                                            LARGE_INTEGER liZero = {};
+                                            pFileStream->Seek(liZero, STREAM_SEEK_SET, nullptr);
+
+                                            CString strHeaders;
+                                            strHeaders.Format(
+                                                L"Content-Type: %s\r\nCache-Control: no-store, no-cache, must-revalidate",
+                                                (LPCWSTR)GetMimeTypeFromFilePath(strFilePath));
+
+                                            ICoreWebView2WebResourceResponse* pFileResponse = nullptr;
+                                            pEnv->CreateWebResourceResponse(
+                                                pFileStream,
+                                                200,
+                                                L"OK",
+                                                strHeaders,
+                                                &pFileResponse);
+                                            pFileStream->Release();
+
+                                            if (pFileResponse)
+                                            {
+                                                pArgs->put_Response(pFileResponse);
+                                                pFileResponse->Release();
+                                            }
+                                            return S_OK;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        CloseHandle(hFile);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     if (strUri == L"https://app.sagenexus/resources/GmarketSansTTFLight.ttf"  ||
                         strUri == L"https://app.sagenexus/resources/GmarketSansTTFMedium.ttf" ||
                         strUri == L"https://app.sagenexus/resources/GmarketSansTTFBold.ttf")
@@ -371,12 +483,35 @@ void WebViewHost::Navigate(const CString& strUrl)
 
                 const SolutionProfile& profile = sageMgr.GetProfile();
                 const MenuVisibility&  vis     = profile.GetMenuVisibility();
+                const std::vector<PluginPageEntry>& arrPluginPages = sageMgr.GetPluginManager().GetPluginPages();
+                CString strPluginPagesJson = L"[";
+                for (int i = 0; i < static_cast<int>(arrPluginPages.size()); ++i)
+                {
+                    if (i > 0)
+                        strPluginPagesJson += L",";
+
+                    CString strEntryUrl = L"https://app.sagenexus/plugins/" +
+                        arrPluginPages[i].m_strPluginId + L"/" + arrPluginPages[i].m_strEntryPath;
+                    strEntryUrl.Replace(L"\\", L"/");
+
+                    CString strItem;
+                    strItem.Format(
+                        L"{\"pluginId\":\"%s\",\"pageId\":\"%s\",\"pageName\":\"%s\",\"entryUrl\":\"%s\"}",
+                        (LPCWSTR)JsonEscapeString(arrPluginPages[i].m_strPluginId),
+                        (LPCWSTR)JsonEscapeString(arrPluginPages[i].m_strPageId),
+                        (LPCWSTR)JsonEscapeString(arrPluginPages[i].m_strPageName),
+                        (LPCWSTR)JsonEscapeString(strEntryUrl));
+                    strPluginPagesJson += strItem;
+                }
+                strPluginPagesJson += L"]";
+
                 CString strPayload;
                 strPayload.Format(
                     L"{"
                     L"\"profileName\":\"%s\","
                     L"\"interfaceLanguage\":\"%s\","
                     L"\"outputLanguage\":\"%s\","
+                    L"\"pluginPages\":%s,"
                     L"\"menuVisibility\":{"
                     L"\"showDataViewer\":%s,"
                     L"\"showTransform\":%s,"
@@ -389,6 +524,7 @@ void WebViewHost::Navigate(const CString& strUrl)
                     (LPCWSTR)profile.GetProfileName(),
                     (LPCWSTR)profile.GetDefaultInterfaceLanguage(),
                     (LPCWSTR)profile.GetDefaultOutputLanguage(),
+                    (LPCWSTR)strPluginPagesJson,
                     vis.m_bShowDataViewer  ? L"true" : L"false",
                     vis.m_bShowTransform   ? L"true" : L"false",
                     vis.m_bShowExport      ? L"true" : L"false",

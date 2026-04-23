@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "app/infrastructure/plugins/PluginManager.h"
 #include "app/application/SageApp.h"
+#include "app/host/BridgeDispatcher.h"
 
 PluginManager::PluginManager()
 {
@@ -21,6 +22,8 @@ void PluginManager::RegisterBuiltIn(const CString& strPluginId, const CString& s
 
 BOOL PluginManager::LoadPluginsFromDirectory(const CString& strDir, CString& strErrors)
 {
+    m_arrPluginPages.clear();
+
     CString strPattern = strDir + L"\\*.dll";
     WIN32_FIND_DATAW findData = {};
     HANDLE hFind = FindFirstFileW(strPattern, &findData);
@@ -50,6 +53,32 @@ BOOL PluginManager::LoadPluginsFromDirectory(const CString& strDir, CString& str
 
         m_arrDllPlugins.push_back(dllEntry);
         m_arrPlugins.push_back(entry);
+
+        int nPageCount = dllEntry.m_pPlugin->GetPageCount();
+        for (int i = 0; i < nPageCount; ++i)
+        {
+            PluginPageInfo pageInfo;
+            if (!dllEntry.m_pPlugin->GetPageInfo(i, pageInfo))
+                continue;
+
+            CString strPageId    = pageInfo.m_pszPageId;
+            CString strPageName  = pageInfo.m_pszPageName;
+            CString strEntryPath = pageInfo.m_pszEntryPath;
+            if (strPageId.IsEmpty() || strEntryPath.IsEmpty())
+                continue;
+
+            PluginPageEntry pageEntry;
+            pageEntry.m_strPluginId  = entry.m_strPluginId;
+            pageEntry.m_strPageId    = strPageId;
+            pageEntry.m_strPageName  = strPageName.IsEmpty() ? entry.m_strPluginName : strPageName;
+            pageEntry.m_strEntryPath = strEntryPath;
+
+            int nSlash = dllEntry.m_strDllPath.ReverseFind(L'\\');
+            if (nSlash >= 0)
+                pageEntry.m_strBaseDir = dllEntry.m_strDllPath.Left(nSlash);
+
+            m_arrPluginPages.push_back(pageEntry);
+        }
     }
     while (FindNextFileW(hFind, &findData));
 
@@ -60,6 +89,137 @@ BOOL PluginManager::LoadPluginsFromDirectory(const CString& strDir, CString& str
 BOOL PluginManager::IsEnabled(const CString& strPluginId) const
 {
     return sageMgr.GetProfile().IsPluginEnabled(strPluginId);
+}
+
+void PluginManager::RegisterPluginBridgeHandlers(BridgeDispatcher& dispatcher)
+{
+    for (int i = 0; i < static_cast<int>(m_arrDllPlugins.size()); ++i)
+    {
+        IPlugin* pPlugin = m_arrDllPlugins[i].m_pPlugin;
+        if (pPlugin == nullptr)
+            continue;
+
+        int nCommandCount = pPlugin->GetCommandCount();
+        for (int j = 0; j < nCommandCount; ++j)
+        {
+            PluginCommandInfo commandInfo;
+            if (!pPlugin->GetCommandInfo(j, commandInfo))
+                continue;
+
+            CString strTarget = commandInfo.m_pszTarget;
+            CString strAction = commandInfo.m_pszAction;
+            if (strTarget.IsEmpty() || strAction.IsEmpty())
+                continue;
+
+            dispatcher.RegisterHandler(
+                strTarget,
+                strAction,
+                [pPlugin, strTarget, strAction](const BridgeMessage& msg) -> CString
+                {
+                    CString strResponseJson;
+                    CString strError;
+
+                    if (!pPlugin->HandleCommand(
+                            strTarget,
+                            strAction,
+                            msg.m_strRequestId,
+                            msg.m_strPayloadJson,
+                            strResponseJson,
+                            strError))
+                    {
+                        CString strPluginError = strError.IsEmpty() ? CString(L"Plugin command failed.") : strError;
+                        CString strJson;
+                        strJson.Format(
+                            L"{\"type\":\"response\",\"requestId\":\"%s\",\"success\":false,"
+                            L"\"error\":{\"code\":\"SNX_PLUGIN_001\",\"message\":\"%s\"}}",
+                            (LPCWSTR)msg.m_strRequestId,
+                            (LPCWSTR)JsonEscapeString(strPluginError));
+                        return strJson;
+                    }
+
+                    if (strResponseJson.IsEmpty())
+                    {
+                        strResponseJson.Format(
+                            L"{\"type\":\"response\",\"requestId\":\"%s\",\"success\":true,\"payload\":{}}",
+                            (LPCWSTR)msg.m_strRequestId);
+                    }
+
+                    return strResponseJson;
+                });
+        }
+    }
+}
+
+const std::vector<PluginPageEntry>& PluginManager::GetPluginPages() const
+{
+    return m_arrPluginPages;
+}
+
+BOOL PluginManager::ResolvePluginWebFile(
+    const CString& strPluginId,
+    const CString& strRelativePath,
+    CString& outFilePath,
+    CString& strError) const
+{
+    CString strBaseDir;
+    for (int i = 0; i < static_cast<int>(m_arrPluginPages.size()); ++i)
+    {
+        if (m_arrPluginPages[i].m_strPluginId == strPluginId)
+        {
+            strBaseDir = m_arrPluginPages[i].m_strBaseDir;
+            break;
+        }
+    }
+
+    if (strBaseDir.IsEmpty())
+    {
+        strError = L"Plugin web root not found.";
+        return FALSE;
+    }
+
+    CString strRelative = strRelativePath;
+    strRelative.Replace(L"/", L"\\");
+    while (!strRelative.IsEmpty() && strRelative[0] == L'\\')
+        strRelative = strRelative.Mid(1);
+
+    if (strRelative.Find(L"..") >= 0)
+    {
+        strError = L"Invalid plugin web path.";
+        return FALSE;
+    }
+
+    CString strCandidate = strBaseDir + L"\\" + strRelative;
+    wchar_t szResolvedBase[MAX_PATH] = {};
+    wchar_t szResolvedPath[MAX_PATH] = {};
+
+    if (GetFullPathNameW(strBaseDir, MAX_PATH, szResolvedBase, nullptr) == 0 ||
+        GetFullPathNameW(strCandidate, MAX_PATH, szResolvedPath, nullptr) == 0)
+    {
+        strError = L"Failed to resolve plugin web path.";
+        return FALSE;
+    }
+
+    CString strResolvedBase = szResolvedBase;
+    CString strResolvedPath = szResolvedPath;
+    CString strBasePrefix = strResolvedBase;
+    if (strBasePrefix.Right(1) != L"\\")
+        strBasePrefix += L"\\";
+
+    if (strResolvedPath.Left(strBasePrefix.GetLength()).CompareNoCase(strBasePrefix) != 0)
+    {
+        strError = L"Plugin web path escaped base directory.";
+        return FALSE;
+    }
+
+    DWORD dwAttr = GetFileAttributesW(strResolvedPath);
+    if (dwAttr == INVALID_FILE_ATTRIBUTES || (dwAttr & FILE_ATTRIBUTE_DIRECTORY) != 0)
+    {
+        strError = L"Plugin web file not found.";
+        return FALSE;
+    }
+
+    outFilePath = strResolvedPath;
+    return TRUE;
 }
 
 const std::vector<PluginEntry>& PluginManager::GetAllPlugins() const
@@ -78,4 +238,5 @@ void PluginManager::UnloadAllDll()
         m_pluginLoader.Unload(entry);
 
     m_arrDllPlugins.clear();
+    m_arrPluginPages.clear();
 }

@@ -2,6 +2,22 @@
 
 ---
 
+## [2026-04-23] fix/sidebar-profile-label
+- **목적**: 사이드바 프로필명 위에 "프로필" 레이블 추가 — 맥락 없이 텍스트만 노출되던 어색함 개선
+- **변경 내용**: index.html에 `.sidebar-profile-label` 추가, CSS 스타일 추가 (nav-section-label 동일 톤), ko/en i18n 키 추가
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/66
+- **결과**: merged ✅
+
+---
+
+## [2026-04-23] fix/page-header-top-padding
+- **목적**: 대시보드 대비 다른 페이지의 상단 여백이 달라 UI 일관성이 없던 문제 수정
+- **변경 내용**: `.page-header`에 `padding-top: var(--sp6)` 추가
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/67
+- **결과**: merged ✅
+
+---
+
 ## [2026-04-23] feature/plugin-dll-loader
 - **목적**: Phase 7 Step 1 — 고객사 전용 플러그인을 DLL 드랍 방식으로 동적 로딩하는 구조 구현
 - **변경 내용**: IPlugin에 GetAbiVersion() 추가, PluginLoader(LoadLibrary 기반 DLL 로드/언로드/ABI 버전 체크) 신규, PluginManager에 LoadPluginsFromDirectory 추가, SageApp 시작 시 plugins/ 디렉터리 자동 스캔

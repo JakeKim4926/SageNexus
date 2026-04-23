@@ -70,7 +70,7 @@
                     <span class="nav-label" data-i18n="nav.workflow">워크플로우</span>
                 </div>
                 <div class="nav-item" data-page="webextract">
-                    <span class="nav-icon">🌐</span>
+                    <span class="nav-icon">⊕</span>
                     <span class="nav-label" data-i18n="nav.webextract">웹 추출</span>
                 </div>
                 <div class="nav-item" data-page="history">
@@ -97,10 +97,21 @@
             <div class="page active" id="page-dashboard">
                 <div class="dashboard-hero">
                     <div class="dashboard-title" data-i18n="page.dashboard.title">대시보드</div>
-                    <div class="dashboard-last-run">
-                        <span data-i18n="dashboard.stat.lastRun">마지막 실행</span>
-                        <span class="dashboard-last-run-sep">·</span>
-                        <span id="stat-last-run" data-i18n="dashboard.lastRun.never">아직 실행 기록이 없습니다</span>
+                    <div class="dashboard-stats">
+                        <div class="dashboard-stat-chip">
+                            <span class="stat-chip-label" data-i18n="dashboard.stat.lastRun">마지막 실행</span>
+                            <span class="stat-chip-value" id="stat-last-run">—</span>
+                        </div>
+                        <span class="dashboard-stat-sep">·</span>
+                        <div class="dashboard-stat-chip">
+                            <span class="stat-chip-label" data-i18n="dashboard.stat.result">마지막 결과</span>
+                            <span class="stat-chip-value" id="stat-last-result">—</span>
+                        </div>
+                        <span class="dashboard-stat-sep">·</span>
+                        <div class="dashboard-stat-chip">
+                            <span class="stat-chip-label" data-i18n="dashboard.stat.profile">프로필</span>
+                            <span class="stat-chip-value" id="stat-current-profile">—</span>
+                        </div>
                     </div>
                 </div>
                 <div class="dashboard-cards">
@@ -133,7 +144,7 @@
                         </div>
                     </div>
                     <div class="dashboard-card" data-page="webextract">
-                        <div class="dashboard-card-icon">🌐</div>
+                        <div class="dashboard-card-icon">⊕</div>
                         <div class="dashboard-card-body">
                             <div class="dashboard-card-label" data-i18n="nav.webextract">웹 추출</div>
                             <div class="dashboard-card-desc" data-i18n="page.webextract.subtitle">웹 페이지에서 테이블 데이터를 추출합니다.</div>
@@ -144,13 +155,6 @@
                         <div class="dashboard-card-body">
                             <div class="dashboard-card-label" data-i18n="nav.history">실행 이력</div>
                             <div class="dashboard-card-desc" data-i18n="page.history.subtitle">이전 실행 결과를 확인합니다.</div>
-                        </div>
-                    </div>
-                    <div class="dashboard-card" data-page="settings">
-                        <div class="dashboard-card-icon">⚙</div>
-                        <div class="dashboard-card-body">
-                            <div class="dashboard-card-label" data-i18n="nav.settings">설정</div>
-                            <div class="dashboard-card-desc" data-i18n="page.settings.subtitle">앱 설정을 관리합니다.</div>
                         </div>
                     </div>
                 </div>
@@ -780,6 +784,8 @@ var LOCALES = {
         'status.profile.default': '프로필: 기본',
         'state.loading':                 '불러오는 중...',
         'dashboard.stat.lastRun':        '마지막 실행',
+        'dashboard.stat.result':         '마지막 결과',
+        'dashboard.stat.profile':        '프로필',
         'dashboard.lastRun.never':       '아직 실행 기록이 없습니다',
         'dv.btn.openFile':               '파일 열기',
         'dv.empty.title':                '불러온 파일이 없습니다',
@@ -1030,6 +1036,8 @@ var LOCALES = {
         'status.profile.default': 'Profile: Default',
         'state.loading':                 'Loading...',
         'dashboard.stat.lastRun':        'Last Run',
+        'dashboard.stat.result':         'Last Result',
+        'dashboard.stat.profile':        'Profile',
         'dashboard.lastRun.never':       'No executions yet',
         'dv.btn.openFile':               'Open File',
         'dv.empty.title':                'No file loaded',
@@ -1361,22 +1369,39 @@ function getColDisplayName(col) {
 
 (function () {
     function loadDashboardStats() {
+        var elTime    = document.getElementById('stat-last-run');
+        var elResult  = document.getElementById('stat-last-result');
+        var elProfile = document.getElementById('stat-current-profile');
+
+        if (elProfile) {
+            var profileEl = document.getElementById('sidebar-profile-name');
+            elProfile.textContent = profileEl ? profileEl.textContent : '—';
+        }
+
         bridgeClient.sendCommand('history.query', 'getHistory', {})
             .then(function (result) {
                 var records = result.records || [];
-                var el = document.getElementById('stat-last-run');
-                if (!el) return;
+                if (!elTime || !elResult) return;
                 if (records.length === 0) {
-                    el.removeAttribute('data-i18n-resolved');
-                    el.setAttribute('data-i18n', 'dashboard.lastRun.never');
-                    el.textContent = t('dashboard.lastRun.never');
+                    elTime.textContent   = '—';
+                    elResult.textContent = '—';
+                    elResult.style.color = '';
                     return;
                 }
-                var lastRun = records[records.length - 1].timestamp || '—';
-                el.removeAttribute('data-i18n');
-                el.textContent = lastRun;
+                var last = records[records.length - 1];
+                elTime.textContent = last.timestamp || '—';
+                if (last.success) {
+                    elResult.textContent = t('hs.result.success');
+                    elResult.style.color = 'var(--ok)';
+                } else {
+                    elResult.textContent = t('hs.result.fail');
+                    elResult.style.color = 'var(--err)';
+                }
             })
-            .catch(function () {});
+            .catch(function () {
+                if (elTime)   elTime.textContent   = '—';
+                if (elResult) elResult.textContent = '—';
+            });
     }
 
     window.loadDashboardStats = loadDashboardStats;

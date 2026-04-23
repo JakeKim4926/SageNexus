@@ -220,9 +220,13 @@ html, body {
 .nav-item.active {
     background: var(--acBg);
     color: var(--acT);
-    border-left: 2px solid var(--ac);
-    padding-left: calc(var(--sp4) - 2px);
-    font-weight: 500;
+    border-left: 3px solid var(--ac);
+    padding-left: calc(var(--sp4) - 3px);
+    font-weight: 600;
+}
+
+.nav-item.active .nav-icon {
+    color: var(--ac);
 }
 
 .nav-item .nav-icon {
@@ -334,17 +338,32 @@ html, body {
     margin-bottom: var(--sp3);
 }
 
-.dashboard-last-run {
-    font-size: var(--fs-sm);
-    color: var(--t3);
+.dashboard-stats {
+    display: flex;
+    align-items: center;
+    gap: var(--sp3);
+    flex-wrap: wrap;
+}
+
+.dashboard-stat-chip {
     display: flex;
     align-items: center;
     gap: var(--sp2);
+    font-size: var(--fs-sm);
 }
 
-.dashboard-last-run-sep {
+.stat-chip-label {
     color: var(--t3);
-    opacity: 0.6;
+}
+
+.stat-chip-value {
+    color: var(--t2);
+    font-weight: 500;
+}
+
+.dashboard-stat-sep {
+    color: var(--t3);
+    opacity: 0.4;
 }
 
 .dashboard-cards {
@@ -368,8 +387,9 @@ html, body {
 
 .dashboard-card:hover {
     background: var(--bgH);
-    border-color: var(--bd);
+    border-color: var(--ac);
     transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(139, 105, 20, 0.08);
 }
 
 .dashboard-card-icon {

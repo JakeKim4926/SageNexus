@@ -2,6 +2,14 @@
 
 ---
 
+## [2026-04-23] fix/sidebar-label-fixes
+- **목적**: 프로필 레이블 i18n 누락 버그 수정(SIDEBAR.PROFILE.LABEL 표시 문제) + 섹션 레이블 가독성 개선
+- **변경 내용**: LOCALES 객체에 sidebar.profile.label 키 추가, nav-section-label / sidebar-profile-label font-size 9px→11px 통일
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/68
+- **결과**: merged ✅
+
+---
+
 ## [2026-04-23] fix/sidebar-profile-label
 - **목적**: 사이드바 프로필명 위에 "프로필" 레이블 추가 — 맥락 없이 텍스트만 노출되던 어색함 개선
 - **변경 내용**: index.html에 `.sidebar-profile-label` 추가, CSS 스타일 추가 (nav-section-label 동일 톤), ko/en i18n 키 추가

@@ -398,9 +398,8 @@
       <Message>Selecting profile: $(CompanyProfile)</Message>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>copy /Y "$(ProjectDir)profiles\$(CompanyProfile).json" "$(OutDir)profile.json"
-if not exist "$(OutDir)plugins\" mkdir "$(OutDir)plugins\"</Command>
-      <Message>Preparing Taechang output profile and plugins directory</Message>
+      <Command>if not exist "$(OutDir)plugins\" mkdir "$(OutDir)plugins\"</Command>
+      <Message>Creating plugins directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release-Taechang|x64'">
@@ -427,9 +426,8 @@ if not exist "$(OutDir)plugins\" mkdir "$(OutDir)plugins\"</Command>
       <Message>Selecting profile: $(CompanyProfile)</Message>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>copy /Y "$(ProjectDir)profiles\$(CompanyProfile).json" "$(OutDir)profile.json"
-if not exist "$(OutDir)plugins\" mkdir "$(OutDir)plugins\"</Command>
-      <Message>Preparing Taechang output profile and plugins directory</Message>
+      <Command>if not exist "$(OutDir)plugins\" mkdir "$(OutDir)plugins\"</Command>
+      <Message>Creating plugins directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

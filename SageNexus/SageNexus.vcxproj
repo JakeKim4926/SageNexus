@@ -256,8 +256,8 @@
       <AdditionalDependencies>ole32.lib;oleaut32.lib;Bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>if not exist "$(ProjectDir)profile.json" copy /Y "$(ProjectDir)profiles\default.json" "$(ProjectDir)profile.json"</Command>
-      <Message>Bootstrapping default profile when missing</Message>
+      <Command>copy /Y "$(ProjectDir)profiles\$(CompanyProfile).json" "$(ProjectDir)profile.json"</Command>
+      <Message>Selecting profile: $(CompanyProfile)</Message>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -280,8 +280,8 @@
       <AdditionalDependencies>ole32.lib;oleaut32.lib;Bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>if not exist "$(ProjectDir)profile.json" copy /Y "$(ProjectDir)profiles\default.json" "$(ProjectDir)profile.json"</Command>
-      <Message>Bootstrapping default profile when missing</Message>
+      <Command>copy /Y "$(ProjectDir)profiles\$(CompanyProfile).json" "$(ProjectDir)profile.json"</Command>
+      <Message>Selecting profile: $(CompanyProfile)</Message>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug-Acme|x64'">

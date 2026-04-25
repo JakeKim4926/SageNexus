@@ -13,16 +13,10 @@ $ProjectDir = Join-Path $SolutionDir "SageNexus"
 $BuildConfig = "${BuildType}_x64"
 $SourceDir = Join-Path $ProjectDir $BuildConfig
 $DeployDir = Join-Path $SolutionDir "deploy\${Profile}"
-$ProfilePath = Join-Path $ProjectDir "profiles\${Profile}.json"
 
 if (-not (Test-Path $SourceDir)) {
     Write-Error "Build output directory not found: $SourceDir"
     Write-Error "Build '$BuildConfig' first."
-    exit 1
-}
-
-if (-not (Test-Path $ProfilePath)) {
-    Write-Error "Profile source file not found: $ProfilePath"
     exit 1
 }
 
@@ -44,8 +38,6 @@ foreach ($Item in $Items) {
         Write-Warning "Missing file: $Item"
     }
 }
-
-Copy-Item $ProfilePath (Join-Path $DeployDir "profile.json")
 
 foreach ($Folder in @("webui", "resources")) {
     $Src = Join-Path $SourceDir $Folder

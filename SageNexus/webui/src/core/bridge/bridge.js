@@ -6,14 +6,33 @@
  *  command  : UI -> Native (requestId 필수)
  *  response : Native -> UI (requestId 대응)
  *  event    : Native -> UI (단방향 알림)
+ *
+ * iframe 지원:
+ *  플러그인 페이지는 iframe 안에서 로드된다. WebView2에서 iframe의
+ *  window.chrome.webview.postMessage는 메인 프레임의 WebMessageReceived에 도달하지 않는다.
+ *  따라서 iframe에서는 window.parent.postMessage로 메인 프레임에 relay하고,
+ *  메인 프레임이 window.chrome.webview.postMessage로 네이티브에 전달한다.
  */
-const bridgeClient = (function () {
-    let _requestCounter = 0;
-    const _pending = {}; // requestId -> { resolve, reject, timeoutId }
+window.bridgeClient = (function () {
+    var _requestCounter = 0;
+    var _pending = {}; // requestId -> { resolve, reject, timeoutId }
 
     function _generateRequestId() {
         _requestCounter += 1;
         return 'req_' + _requestCounter + '_' + Date.now();
+    }
+
+    function _isInIframe() {
+        try { return window !== window.top; } catch (e) { return true; }
+    }
+
+    function _postToNative(message) {
+        if (_isInIframe()) {
+            // iframe 컨텍스트: 메인 프레임에 relay 요청
+            window.parent.postMessage({ __bridgeRelay: true, data: message }, '*');
+        } else {
+            window.chrome.webview.postMessage(message);
+        }
     }
 
     /**
@@ -25,8 +44,8 @@ const bridgeClient = (function () {
      */
     function sendCommand(target, action, payload) {
         return new Promise(function (resolve, reject) {
-            const requestId = _generateRequestId();
-            const message = JSON.stringify({
+            var requestId = _generateRequestId();
+            var message = JSON.stringify({
                 type: 'command',
                 requestId: requestId,
                 target: target,
@@ -34,7 +53,7 @@ const bridgeClient = (function () {
                 payload: payload || {}
             });
 
-            const timeoutId = setTimeout(function () {
+            var timeoutId = setTimeout(function () {
                 if (_pending[requestId]) {
                     delete _pending[requestId];
                     reject(new Error('Bridge timeout: ' + target + '::' + action + ' (' + requestId + ')'));
@@ -42,12 +61,12 @@ const bridgeClient = (function () {
             }, 30000);
 
             _pending[requestId] = { resolve: resolve, reject: reject, timeoutId: timeoutId };
-            window.chrome.webview.postMessage(message);
+            _postToNative(message);
         });
     }
 
     function _handleResponse(message) {
-        const entry = _pending[message.requestId];
+        var entry = _pending[message.requestId];
         if (!entry) return;
 
         clearTimeout(entry.timeoutId);
@@ -56,7 +75,7 @@ const bridgeClient = (function () {
         if (message.success) {
             entry.resolve(message.payload || {});
         } else {
-            const err = message.error || {};
+            var err = message.error || {};
             entry.reject(new Error('[' + (err.code || 'ERR') + '] ' + (err.message || 'Unknown error')));
         }
     }
@@ -86,17 +105,26 @@ const bridgeClient = (function () {
         }
     };
 
-    // 레거시 호환: PostWebMessageAsString 방식도 유지한다.
-    window.chrome.webview.addEventListener('message', function (e) {
-        let message;
-        try {
-            message = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
-        } catch (err) {
-            console.error('[Bridge] Message parse error:', err, e.data);
-            return;
-        }
-        _dispatch(message);
-    });
+    if (!_isInIframe()) {
+        // 메인 프레임 전용: 레거시 PostWebMessageAsString 수신
+        window.chrome.webview.addEventListener('message', function (e) {
+            var message;
+            try {
+                message = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
+            } catch (err) {
+                console.error('[Bridge] Message parse error:', err, e.data);
+                return;
+            }
+            _dispatch(message);
+        });
+
+        // 메인 프레임 전용: iframe relay 수신 후 네이티브로 전달
+        window.addEventListener('message', function (e) {
+            if (e.data && e.data.__bridgeRelay) {
+                window.chrome.webview.postMessage(e.data.data);
+            }
+        });
+    }
 
     return {
         sendCommand: sendCommand

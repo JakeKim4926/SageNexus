@@ -571,7 +571,7 @@
                     <div class="error-desc" id="st-error-message"></div>
                 </div>
                 <div class="hidden" id="st-profile-section">
-                    <div class="settings-section-title" data-i18n="settings.section.profile">솔루션 프로필</div>
+                    <div class="settings-section-title" data-i18n="settings.section.profile">프로필</div>
                     <div class="settings-card">
                         <div class="settings-row">
                             <div class="settings-label" data-i18n="settings.label.profileId">프로필 ID</div>
@@ -602,51 +602,6 @@
                                     <option value="en">English (en)</option>
                                 </select>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="settings-section-title" style="margin-top:24px;" data-i18n="settings.section.plugins">플러그인</div>
-                    <div class="settings-card" id="st-plugins-list"></div>
-
-                    <div class="settings-section-title" style="margin-top:24px;" data-i18n="settings.section.scheduler">스케줄러</div>
-                    <div class="settings-card">
-                        <div class="settings-row" style="align-items:flex-start;flex-wrap:wrap;gap:8px;">
-                            <div class="settings-label" data-i18n="settings.scheduler.addJob">작업 추가</div>
-                            <div class="settings-value" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-                                <select id="st-scheduler-workflow-select" class="format-select" style="min-width:160px;"></select>
-                                <input type="time" id="st-scheduler-time" class="tf-input" style="width:110px;" value="09:00" />
-                                <button class="btn btn-primary" id="st-scheduler-btn-add" data-i18n="settings.scheduler.btn.add">추가</button>
-                            </div>
-                        </div>
-                        <div id="st-scheduler-jobs-list" style="margin-top:8px;"></div>
-                        <div class="empty-state hidden" id="st-scheduler-empty" style="padding:16px 0;">
-                            <div class="empty-title" style="font-size:13px;" data-i18n="settings.scheduler.empty">등록된 스케줄이 없습니다</div>
-                        </div>
-                    </div>
-
-                    <div class="settings-section-title" style="margin-top:24px;" data-i18n="settings.section.connectors">API 커넥터</div>
-                    <div class="settings-card">
-                        <div class="settings-row" style="align-items:flex-start;flex-wrap:wrap;gap:8px;">
-                            <div class="settings-label" data-i18n="settings.connector.addConnector">커넥터 추가</div>
-                            <div class="settings-value" style="display:flex;flex-direction:column;gap:6px;width:100%;max-width:480px;">
-                                <input type="text" id="st-connector-name" class="tf-input" data-i18n-placeholder="settings.connector.ph.name" placeholder="커넥터 이름" />
-                                <input type="text" id="st-connector-url" class="tf-input" data-i18n-placeholder="settings.connector.ph.url" placeholder="기본 URL (예: https://api.example.com)" />
-                                <div style="display:flex;gap:8px;align-items:center;">
-                                    <select id="st-connector-auth-type" class="format-select" style="width:140px;">
-                                        <option value="none" data-i18n="settings.connector.auth.none">인증 없음</option>
-                                        <option value="bearer" data-i18n="settings.connector.auth.bearer">Bearer 토큰</option>
-                                        <option value="apikey" data-i18n="settings.connector.auth.apikey">API Key</option>
-                                    </select>
-                                    <input type="text" id="st-connector-auth-value" class="tf-input" data-i18n-placeholder="settings.connector.ph.authValue" placeholder="토큰/키 값" style="flex:1;" />
-                                </div>
-                                <div>
-                                    <button class="btn btn-primary" id="st-connector-btn-add" data-i18n="settings.connector.btn.add">추가</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="st-connector-list" style="margin-top:8px;"></div>
-                        <div class="empty-state hidden" id="st-connector-empty" style="padding:16px 0;">
-                            <div class="empty-title" style="font-size:13px;" data-i18n="settings.connector.empty">등록된 커넥터가 없습니다</div>
                         </div>
                     </div>
 
@@ -735,39 +690,12 @@ var LOCALES = {
         'webextract.fetch':         '추출',
         'page.settings.title':      '설정',
         'page.settings.subtitle':   '앱 설정을 관리합니다.',
-        'settings.section.profile':  '솔루션 프로필',
+        'settings.section.profile':  '프로필',
         'settings.section.language': '언어',
-        'settings.section.plugins':  '플러그인',
-        'settings.section.scheduler': '스케줄러',
-        'settings.section.connectors': 'API 커넥터',
         'settings.label.profileId':   '프로필 ID',
         'settings.label.profileName': '프로필 이름',
         'settings.label.interfaceLang': '인터페이스 언어',
         'settings.label.outputLang':    '결과물 언어',
-        'settings.scheduler.addJob':    '작업 추가',
-        'settings.scheduler.btn.add':   '추가',
-        'settings.scheduler.empty':     '등록된 스케줄이 없습니다',
-        'settings.scheduler.col.workflow': '워크플로우',
-        'settings.scheduler.col.time':     '실행 시각',
-        'settings.scheduler.col.next':     '다음 실행',
-        'settings.scheduler.col.enabled':  '활성',
-        'settings.scheduler.btn.remove':   '삭제',
-        'settings.connector.addConnector': '커넥터 추가',
-        'settings.connector.ph.name':      '커넥터 이름',
-        'settings.connector.ph.url':       '기본 URL (예: https://api.example.com)',
-        'settings.connector.ph.authValue': '토큰/키 값',
-        'settings.connector.auth.none':    '인증 없음',
-        'settings.connector.auth.bearer':  'Bearer 토큰',
-        'settings.connector.auth.apikey':  'API Key',
-        'settings.connector.btn.add':      '추가',
-        'settings.connector.empty':        '등록된 커넥터가 없습니다',
-        'settings.connector.col.name':     '이름',
-        'settings.connector.col.url':      'URL',
-        'settings.connector.col.auth':     '인증',
-        'settings.connector.btn.test':     '테스트',
-        'settings.connector.btn.remove':   '삭제',
-        'settings.connector.test.ok':      '연결 성공',
-        'settings.connector.test.fail':    '연결 실패',
         'settings.section.security':             '보안',
         'settings.security.changePassword':      '비밀번호 변경',
         'settings.security.ph.old':              '현재 비밀번호',
@@ -1005,37 +933,10 @@ var LOCALES = {
         'webextract.fetch':         'Extract',
         'page.settings.title':      'Settings',
         'page.settings.subtitle':   'Manage application settings.',
-        'settings.section.profile':  'Solution Profile',
+        'settings.section.profile':  'Profile',
         'settings.section.language': 'Language',
-        'settings.section.plugins':  'Plugins',
-        'settings.section.scheduler': 'Scheduler',
-        'settings.section.connectors': 'API Connectors',
         'settings.label.profileId':   'Profile ID',
         'settings.label.profileName': 'Profile Name',
-        'settings.scheduler.addJob':    'Add Job',
-        'settings.scheduler.btn.add':   'Add',
-        'settings.scheduler.empty':     'No scheduled jobs',
-        'settings.scheduler.col.workflow': 'Workflow',
-        'settings.scheduler.col.time':     'Time',
-        'settings.scheduler.col.next':     'Next Run',
-        'settings.scheduler.col.enabled':  'Enabled',
-        'settings.scheduler.btn.remove':   'Remove',
-        'settings.connector.addConnector': 'Add Connector',
-        'settings.connector.ph.name':      'Connector name',
-        'settings.connector.ph.url':       'Base URL (e.g. https://api.example.com)',
-        'settings.connector.ph.authValue': 'Token / key value',
-        'settings.connector.auth.none':    'No auth',
-        'settings.connector.auth.bearer':  'Bearer token',
-        'settings.connector.auth.apikey':  'API Key',
-        'settings.connector.btn.add':      'Add',
-        'settings.connector.empty':        'No connectors registered',
-        'settings.connector.col.name':     'Name',
-        'settings.connector.col.url':      'URL',
-        'settings.connector.col.auth':     'Auth',
-        'settings.connector.btn.test':     'Test',
-        'settings.connector.btn.remove':   'Remove',
-        'settings.connector.test.ok':      'Connection OK',
-        'settings.connector.test.fail':    'Connection failed',
         'settings.section.security':             'Security',
         'settings.security.changePassword':      'Change Password',
         'settings.security.ph.old':              'Current password',
@@ -2338,68 +2239,17 @@ function getColDisplayName(col) {
         }
     }
 
-    function renderPlugins(plugins) {
-        var list = document.getElementById('st-plugins-list');
-        list.innerHTML = '';
-        plugins.forEach(function (plugin) {
-            var row = document.createElement('div');
-            row.className = 'settings-row';
-
-            var label = document.createElement('div');
-            label.className = 'settings-label';
-            var labelText = t('plugin.name.' + plugin.pluginId);
-            if (labelText === 'plugin.name.' + plugin.pluginId) {
-                labelText = plugin.pluginName || plugin.pluginId;
-            }
-            label.textContent = labelText;
-
-            var toggle = document.createElement('label');
-            toggle.className = 'plugin-toggle';
-
-            var input = document.createElement('input');
-            input.type = 'checkbox';
-            input.checked = plugin.enabled;
-            input.dataset.pluginId = plugin.pluginId;
-            input.addEventListener('change', function () {
-                var enabled = input.checked;
-                bridgeClient.sendCommand('settings.plugins', 'togglePlugin', {
-                    pluginId: plugin.pluginId,
-                    enabled: enabled
-                })
-                .then(function () {
-                    plugin.enabled = enabled;
-                    applySidebarVisibility(plugins);
-                })
-                .catch(function () {
-                    input.checked = !enabled;
-                });
-            });
-
-            var slider = document.createElement('span');
-            slider.className = 'plugin-toggle-slider';
-
-            toggle.appendChild(input);
-            toggle.appendChild(slider);
-
-            row.appendChild(label);
-            row.appendChild(toggle);
-            list.appendChild(row);
-        });
-    }
-
     function loadSettings() {
         setSettingsState('loading');
         Promise.all([
             bridgeClient.sendCommand('settings.profile', 'getProfile', {}),
-            bridgeClient.sendCommand('settings.plugins', 'getPlugins', {}),
             bridgeClient.sendCommand('settings.language', 'getOutputLanguage', {}),
             bridgeClient.sendCommand('settings.language', 'getInterfaceLanguage', {})
         ])
         .then(function (results) {
             var profile       = results[0];
-            var plugins       = results[1];
-            var outputLang    = results[2];
-            var interfaceLang = results[3];
+            var outputLang    = results[1];
+            var interfaceLang = results[2];
 
             document.getElementById('st-profile-id').textContent   = profile.profileId || '—';
             document.getElementById('st-profile-name').textContent = profile.profileName || '—';
@@ -2415,240 +2265,12 @@ function getColDisplayName(col) {
             if (interfaceSel) interfaceSel.value = currentInterfaceLang;
             applyLocale();
 
-            renderPlugins(plugins);
-            loadSchedulerJobs();
-            loadConnectors();
             setSettingsState('data');
         })
         .catch(function (err) {
             setSettingsState('error', { message: err.message });
         });
     }
-
-    function loadSchedulerJobs() {
-        Promise.all([
-            bridgeClient.sendCommand('scheduler', 'getJobs', {}),
-            bridgeClient.sendCommand('workflow', 'getWorkflows', {})
-        ])
-        .then(function (results) {
-            var jobs      = (results[0] && results[0].jobs) ? results[0].jobs : [];
-            var workflows = results[1] ? results[1] : [];
-            renderSchedulerWorkflowSelect(workflows);
-            renderSchedulerJobs(jobs);
-        })
-        .catch(function () {
-            renderSchedulerJobs([]);
-        });
-    }
-
-    function renderSchedulerWorkflowSelect(workflows) {
-        var sel = document.getElementById('st-scheduler-workflow-select');
-        if (!sel) return;
-        sel.innerHTML = '';
-        if (!workflows || workflows.length === 0) {
-            var opt = document.createElement('option');
-            opt.value = '';
-            opt.textContent = t('settings.scheduler.noWorkflow') || '(워크플로우 없음)';
-            sel.appendChild(opt);
-            return;
-        }
-        workflows.forEach(function (wf) {
-            var opt = document.createElement('option');
-            opt.value = wf.workflowId || wf.id || '';
-            opt.textContent = wf.name || wf.workflowId || wf.id || '';
-            opt.dataset.name = wf.name || '';
-            sel.appendChild(opt);
-        });
-    }
-
-    function renderSchedulerJobs(jobs) {
-        var list  = document.getElementById('st-scheduler-jobs-list');
-        var empty = document.getElementById('st-scheduler-empty');
-        if (!list) return;
-        list.innerHTML = '';
-
-        if (!jobs || jobs.length === 0) {
-            if (empty) empty.classList.remove('hidden');
-            return;
-        }
-        if (empty) empty.classList.add('hidden');
-
-        jobs.forEach(function (job) {
-            var row = document.createElement('div');
-            row.className = 'settings-row';
-            row.style.cssText = 'flex-wrap:wrap;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);';
-
-            var nameSpan = document.createElement('span');
-            nameSpan.style.cssText = 'flex:1;min-width:120px;font-size:13px;font-weight:500;';
-            nameSpan.textContent = job.workflowName || job.workflowId;
-
-            var timeSpan = document.createElement('span');
-            timeSpan.style.cssText = 'font-size:13px;color:var(--text-secondary);min-width:50px;';
-            timeSpan.textContent = job.time || '—';
-
-            var nextSpan = document.createElement('span');
-            nextSpan.style.cssText = 'font-size:12px;color:var(--text-secondary);min-width:130px;';
-            nextSpan.textContent = job.nextRunAt || '—';
-
-            var toggle = document.createElement('label');
-            toggle.className = 'plugin-toggle';
-            var chk = document.createElement('input');
-            chk.type = 'checkbox';
-            chk.checked = job.enabled;
-            chk.addEventListener('change', function () {
-                bridgeClient.sendCommand('scheduler', 'toggleJob', { jobId: job.jobId, enabled: chk.checked })
-                    .catch(function () { chk.checked = !chk.checked; });
-            });
-            var slider = document.createElement('span');
-            slider.className = 'plugin-toggle-slider';
-            toggle.appendChild(chk);
-            toggle.appendChild(slider);
-
-            var btnRemove = document.createElement('button');
-            btnRemove.className = 'btn';
-            btnRemove.setAttribute('data-i18n', 'settings.scheduler.btn.remove');
-            btnRemove.textContent = t('settings.scheduler.btn.remove') || '삭제';
-            btnRemove.style.cssText = 'font-size:12px;padding:3px 10px;';
-            btnRemove.addEventListener('click', function () {
-                bridgeClient.sendCommand('scheduler', 'removeJob', { jobId: job.jobId })
-                    .then(function () { loadSchedulerJobs(); })
-                    .catch(function () {});
-            });
-
-            row.appendChild(nameSpan);
-            row.appendChild(timeSpan);
-            row.appendChild(nextSpan);
-            row.appendChild(toggle);
-            row.appendChild(btnRemove);
-            list.appendChild(row);
-        });
-    }
-
-    function loadConnectors() {
-        bridgeClient.sendCommand('connector', 'getConnectors', {})
-            .then(function (res) {
-                var connectors = (res && res.connectors) ? res.connectors : [];
-                renderConnectors(connectors);
-            })
-            .catch(function () {});
-    }
-
-    function renderConnectors(connectors) {
-        var list  = document.getElementById('st-connector-list');
-        var empty = document.getElementById('st-connector-empty');
-        if (!list) return;
-        list.innerHTML = '';
-        if (connectors.length === 0) {
-            if (empty) empty.classList.remove('hidden');
-            return;
-        }
-        if (empty) empty.classList.add('hidden');
-
-        connectors.forEach(function (conn) {
-            var row = document.createElement('div');
-            row.style.cssText = 'display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);flex-wrap:wrap;';
-
-            var nameSpan = document.createElement('span');
-            nameSpan.style.cssText = 'font-size:13px;font-weight:500;min-width:120px;';
-            nameSpan.textContent = conn.name;
-
-            var urlSpan = document.createElement('span');
-            urlSpan.style.cssText = 'font-size:12px;color:var(--text-secondary);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;';
-            urlSpan.textContent = conn.baseUrl;
-
-            var authSpan = document.createElement('span');
-            authSpan.style.cssText = 'font-size:12px;color:var(--text-secondary);min-width:80px;';
-            authSpan.textContent = conn.authType || 'none';
-
-            var btnTest = document.createElement('button');
-            btnTest.className = 'btn';
-            btnTest.setAttribute('data-i18n', 'settings.connector.btn.test');
-            btnTest.textContent = t('settings.connector.btn.test') || '테스트';
-            btnTest.style.cssText = 'font-size:12px;padding:3px 10px;';
-            btnTest.addEventListener('click', function () {
-                btnTest.disabled = true;
-                bridgeClient.sendCommand('connector', 'testConnector', { connectorId: conn.connectorId })
-                    .then(function () {
-                        btnTest.disabled = false;
-                        btnTest.textContent = t('settings.connector.test.ok') || '연결 성공';
-                        setTimeout(function () { btnTest.textContent = t('settings.connector.btn.test') || '테스트'; }, 3000);
-                    })
-                    .catch(function () {
-                        btnTest.disabled = false;
-                        btnTest.textContent = t('settings.connector.test.fail') || '연결 실패';
-                        setTimeout(function () { btnTest.textContent = t('settings.connector.btn.test') || '테스트'; }, 3000);
-                    });
-            });
-
-            var btnRemove = document.createElement('button');
-            btnRemove.className = 'btn';
-            btnRemove.setAttribute('data-i18n', 'settings.connector.btn.remove');
-            btnRemove.textContent = t('settings.connector.btn.remove') || '삭제';
-            btnRemove.style.cssText = 'font-size:12px;padding:3px 10px;';
-            btnRemove.addEventListener('click', function () {
-                bridgeClient.sendCommand('connector', 'removeConnector', { connectorId: conn.connectorId })
-                    .then(function () { loadConnectors(); })
-                    .catch(function () {});
-            });
-
-            row.appendChild(nameSpan);
-            row.appendChild(urlSpan);
-            row.appendChild(authSpan);
-            row.appendChild(btnTest);
-            row.appendChild(btnRemove);
-            list.appendChild(row);
-        });
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-        var btnAddConn = document.getElementById('st-connector-btn-add');
-        if (btnAddConn) {
-            btnAddConn.addEventListener('click', function () {
-                var nameEl     = document.getElementById('st-connector-name');
-                var urlEl      = document.getElementById('st-connector-url');
-                var authTypeEl = document.getElementById('st-connector-auth-type');
-                var authValEl  = document.getElementById('st-connector-auth-value');
-                if (!nameEl || !urlEl || !nameEl.value.trim() || !urlEl.value.trim()) return;
-
-                bridgeClient.sendCommand('connector', 'addConnector', {
-                    name:        nameEl.value.trim(),
-                    baseUrl:     urlEl.value.trim(),
-                    headersJson: '',
-                    authType:    authTypeEl ? authTypeEl.value : 'none',
-                    authValue:   authValEl ? authValEl.value.trim() : ''
-                })
-                .then(function () {
-                    nameEl.value = '';
-                    urlEl.value  = '';
-                    if (authValEl) authValEl.value = '';
-                    loadConnectors();
-                })
-                .catch(function () {});
-            });
-        }
-    });
-
-    document.addEventListener('DOMContentLoaded', function () {
-        var btnAdd = document.getElementById('st-scheduler-btn-add');
-        if (btnAdd) {
-            btnAdd.addEventListener('click', function () {
-                var sel  = document.getElementById('st-scheduler-workflow-select');
-                var time = document.getElementById('st-scheduler-time');
-                if (!sel || !time || !sel.value) return;
-
-                var selectedOpt  = sel.options[sel.selectedIndex];
-                var workflowName = selectedOpt ? (selectedOpt.dataset.name || selectedOpt.textContent) : '';
-
-                bridgeClient.sendCommand('scheduler', 'addJob', {
-                    workflowId:   sel.value,
-                    workflowName: workflowName,
-                    time:         time.value
-                })
-                .then(function () { loadSchedulerJobs(); })
-                .catch(function () {});
-            });
-        }
-    });
 
     document.addEventListener('DOMContentLoaded', function () {
         var outputSel = document.getElementById('st-output-lang-select');

@@ -268,9 +268,9 @@ void WebViewHost::RegisterWebResourceHandler()
 
                 if (nResId == 0)
                 {
-                    if (strUri.Left(31).CompareNoCase(L"https://app.sagenexus/plugins/") == 0)
+                    if (strUri.Left(30).CompareNoCase(L"https://app.sagenexus/plugins/") == 0)
                     {
-                        CString strPluginRoute = strUri.Mid(31);
+                        CString strPluginRoute = strUri.Mid(30);
                         int nSlash = strPluginRoute.Find(L'/');
                         if (nSlash > 0)
                         {

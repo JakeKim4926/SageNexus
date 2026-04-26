@@ -43,7 +43,7 @@
                 <div class="sidebar-profile-label" data-i18n="sidebar.profile.label">프로필</div>
                 <div id="sidebar-profile-name" data-i18n="status.profile.default">기본 프로필</div>
             </div>
-            <div class="nav-section">
+            <div class="nav-section" id="main-nav-section">
                 <div class="nav-section-label" data-i18n="nav.section.main">메인</div>
                 <div class="nav-item active" data-page="dashboard">
                     <span class="nav-icon">⊞</span>
@@ -1330,8 +1330,15 @@ function getColDisplayName(col) {
         var section = document.getElementById('plugin-nav-section');
         var items = document.getElementById('plugin-nav-items');
         var hosts = document.getElementById('plugin-page-hosts');
+        var mainSection = document.getElementById('main-nav-section');
         if (!section || !items || !hosts) {
             return;
+        }
+
+        if (mainSection) {
+            mainSection.querySelectorAll('.plugin-nav-item').forEach(function (el) {
+                mainSection.removeChild(el);
+            });
         }
 
         _pluginPages = Array.isArray(pluginPages) ? pluginPages : [];
@@ -1339,12 +1346,11 @@ function getColDisplayName(col) {
         items.innerHTML = '';
         hosts.innerHTML = '';
 
+        section.classList.add('hidden');
+
         if (_pluginPages.length === 0) {
-            section.classList.add('hidden');
             return;
         }
-
-        section.classList.remove('hidden');
 
         _pluginPages.forEach(function (page) {
             if (!page || !page.pageId || !page.entryUrl) {
@@ -1367,7 +1373,11 @@ function getColDisplayName(col) {
             }
 
             bindNavItem(navItem);
-            items.appendChild(navItem);
+            if (mainSection) {
+                mainSection.appendChild(navItem);
+            } else {
+                items.appendChild(navItem);
+            }
 
             var pageEl = document.createElement('div');
             pageEl.className = 'page plugin-page-dynamic';

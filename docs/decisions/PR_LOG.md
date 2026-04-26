@@ -2,6 +2,14 @@
 
 ---
 
+## [2026-04-27] fix: simplify settings sections (#80)
+- **목적**: 설정 화면에서 현재 필요한 프로필, 언어, 보안 항목만 노출하고 프로필 섹션명을 간결하게 정리
+- **변경 내용**: 설정 화면 `솔루션 프로필` → `프로필` 문구 변경, 플러그인/스케줄러/API 커넥터 섹션 제거, 설정 로드 요청을 프로필/언어로 축소, ko/en i18n 키 정리
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/80
+- **결과**: open
+
+---
+
 ## [2026-04-23] feature/plugin-page-hosting
 - **목적**: private 고객사 플러그인이 shared host 안에서 bridge command와 WebView2 전용 페이지를 등록할 수 있는 최소 경계 추가
 - **변경 내용**: `IPlugin` ABI에 command/page metadata 확장 / `PluginManager`에서 plugin bridge handler 등록 및 plugin page metadata 수집 / `WebViewHost`에 plugin web asset 서빙 경로와 `appReady` pluginPages payload 추가 / shared Web UI shell에 plugin nav/page host 추가

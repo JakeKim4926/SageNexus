@@ -77,6 +77,10 @@ void BridgeDispatcher::PostMessageToWeb(const CString& strJson, ICoreWebView2* p
         L"window.dispatchEvent(new CustomEvent('bridge:'+m.name,{detail:m.payload||{}}));"
         L"}"
         L"if(window.__bridgeReceive){window.__bridgeReceive(m);}"
+        L"var fs=document.getElementsByTagName('iframe');"
+        L"for(var i=0;i<fs.length;i++){"
+        L"try{var cw=fs[i].contentWindow;if(cw&&cw.__bridgeReceive){cw.__bridgeReceive(m);}}catch(e){}"
+        L"}"
         L"}catch(e){}"
         L"})();",
         (LPCWSTR)strEscaped);

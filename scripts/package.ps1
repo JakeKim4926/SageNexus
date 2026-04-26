@@ -8,14 +8,15 @@ param(
     [string]$BuildType = "Release"
 )
 
-$SolutionDir  = Split-Path $PSScriptRoot -Parent
-$BuildConfig  = if ($Profile -eq "default") { "${BuildType}_x64" } else { "${BuildType}-${Profile}_x64" }
-$SourceDir    = Join-Path $SolutionDir $BuildConfig
-$DeployDir    = Join-Path $SolutionDir "deploy\${Profile}"
+$SolutionDir = Split-Path $PSScriptRoot -Parent
+$ProjectDir = Join-Path $SolutionDir "SageNexus"
+$BuildConfig = "${BuildType}_x64"
+$SourceDir = Join-Path $ProjectDir $BuildConfig
+$DeployDir = Join-Path $SolutionDir "deploy\${Profile}"
 
 if (-not (Test-Path $SourceDir)) {
-    Write-Error "빌드 출력 폴더가 없습니다: $SourceDir"
-    Write-Error "'$BuildConfig' 구성으로 먼저 빌드하세요."
+    Write-Error "Build output directory not found: $SourceDir"
+    Write-Error "Build '$BuildConfig' first."
     exit 1
 }
 
@@ -26,8 +27,7 @@ New-Item $DeployDir -ItemType Directory | Out-Null
 
 $Items = @(
     "SageNexus.exe",
-    "WebView2Loader.dll",
-    "profile.json"
+    "WebView2Loader.dll"
 )
 
 foreach ($Item in $Items) {
@@ -35,7 +35,7 @@ foreach ($Item in $Items) {
     if (Test-Path $Src) {
         Copy-Item $Src $DeployDir
     } else {
-        Write-Warning "누락된 파일: $Item"
+        Write-Warning "Missing file: $Item"
     }
 }
 
@@ -53,12 +53,12 @@ $SrcPlugins = Join-Path $SourceDir "plugins"
 if (Test-Path $SrcPlugins) {
     Get-ChildItem $SrcPlugins -Filter "*.dll" | ForEach-Object {
         Copy-Item $_.FullName $PluginsDir
-        Write-Host "  플러그인 복사: $($_.Name)"
+        Write-Host "  Plugin copied: $($_.Name)"
     }
 }
 
 Write-Host ""
-Write-Host "패키징 완료: $DeployDir"
-Write-Host "  프로필  : $Profile"
-Write-Host "  빌드    : $BuildType"
-Write-Host "  플러그인: $(( Get-ChildItem $PluginsDir -Filter '*.dll' ).Count)개"
+Write-Host "Package ready: $DeployDir"
+Write-Host "  Profile : $Profile"
+Write-Host "  Build   : $BuildType"
+Write-Host "  Plugins : $((Get-ChildItem $PluginsDir -Filter '*.dll').Count)"

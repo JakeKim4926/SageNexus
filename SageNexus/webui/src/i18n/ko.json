@@ -140,6 +140,10 @@
   "hs.op.import": "가져오기",
   "hs.op.transform": "변환",
   "hs.op.export": "내보내기",
+  "hs.op.taechang.coverCorrection": "표지 교정",
+  "hs.op.taechang.delivery": "납품서 생성",
+  "hs.op.taechang.estimate": "견적서 작성",
+  "hs.op.taechang.receivables": "미수금 내역서 작성",
   "hs.result.success": "✓ 성공",
   "hs.result.fail": "✕ 실패",
 

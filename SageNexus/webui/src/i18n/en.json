@@ -140,6 +140,10 @@
   "hs.op.import": "Import",
   "hs.op.transform": "Transform",
   "hs.op.export": "Export",
+  "hs.op.taechang.coverCorrection": "Cover Correction",
+  "hs.op.taechang.delivery": "Delivery Form",
+  "hs.op.taechang.estimate": "Estimate Form",
+  "hs.op.taechang.receivables": "Receivables Statement",
   "hs.result.success": "✓ Success",
   "hs.result.fail": "✕ Failed",
 

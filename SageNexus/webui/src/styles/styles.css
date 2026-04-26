@@ -411,6 +411,17 @@ html, body {
     box-shadow: 0 2px 8px rgba(139, 105, 20, 0.1);
 }
 
+.dash-action-card.disabled {
+    cursor: default;
+    opacity: 0.55;
+}
+
+.dash-action-card.disabled:hover {
+    background: var(--bg2);
+    border-color: var(--bdL);
+    box-shadow: none;
+}
+
 .dash-action-icon {
     width: 36px;
     height: 36px;

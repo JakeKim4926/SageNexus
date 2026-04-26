@@ -2,6 +2,14 @@
 
 ---
 
+## [2026-04-27] fix/plugin-history-records
+- **목적**: Taechang 플러그인 실행 결과를 대시보드/실행 이력에 연결하고 대시보드 빠른 시작을 최근 메뉴 기반으로 정리
+- **변경 내용**: PluginManager 실행 이력 저장 훅 추가, Taechang 작업 유형 i18n 라벨 추가, 대시보드 최근 메뉴 카드 및 sourceName 기반 파일 수 계산 수정
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/81
+- **결과**: open
+
+---
+
 ## [2026-04-27] fix: simplify settings sections (#80)
 - **목적**: 설정 화면에서 현재 필요한 프로필, 언어, 보안 항목만 노출하고 프로필 섹션명을 간결하게 정리
 - **변경 내용**: 설정 화면 `솔루션 프로필` → `프로필` 문구 변경, 플러그인/스케줄러/API 커넥터 섹션 제거, 설정 로드 요청을 프로필/언어로 축소, ko/en i18n 키 정리

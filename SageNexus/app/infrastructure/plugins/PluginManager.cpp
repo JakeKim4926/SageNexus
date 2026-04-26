@@ -2,6 +2,93 @@
 #include "app/infrastructure/plugins/PluginManager.h"
 #include "app/application/SageApp.h"
 #include "app/host/BridgeDispatcher.h"
+#include "app/infrastructure/history/ExecutionHistoryStore.h"
+
+namespace
+{
+    constexpr LPCWSTR TAECHANG_HISTORY_TARGET_PDF = L"taechang.pdf";
+    constexpr LPCWSTR TAECHANG_HISTORY_TARGET_DELIVERY = L"taechang.delivery";
+    constexpr LPCWSTR TAECHANG_HISTORY_TARGET_ESTIMATE = L"taechang.estimate";
+    constexpr LPCWSTR TAECHANG_HISTORY_TARGET_RECEIVABLES = L"taechang.receivables";
+    constexpr LPCWSTR TAECHANG_HISTORY_ACTION_RUN_COMPARE = L"runCompare";
+    constexpr LPCWSTR TAECHANG_HISTORY_ACTION_GENERATE_DELIVERY = L"generateDeliveryForms";
+    constexpr LPCWSTR TAECHANG_HISTORY_ACTION_GENERATE_ESTIMATE = L"generateEstimateForms";
+    constexpr LPCWSTR TAECHANG_HISTORY_ACTION_GENERATE_RECEIVABLES = L"generateReceivablesForm";
+    constexpr LPCWSTR TAECHANG_HISTORY_OP_COVER_CORRECTION = L"taechang.coverCorrection";
+    constexpr LPCWSTR TAECHANG_HISTORY_OP_DELIVERY = L"taechang.delivery";
+    constexpr LPCWSTR TAECHANG_HISTORY_OP_ESTIMATE = L"taechang.estimate";
+    constexpr LPCWSTR TAECHANG_HISTORY_OP_RECEIVABLES = L"taechang.receivables";
+    constexpr int PLUGIN_HISTORY_EMPTY_COUNT = 0;
+
+    int JsonExtractIntValue(const CString& strJson, const CString& strKey)
+    {
+        std::string json = WideToUtf8(strJson);
+        std::string key = WideToUtf8(strKey);
+        std::string token = "\"" + key + "\"";
+
+        size_t nKeyPos = json.find(token);
+        if (nKeyPos == std::string::npos)
+            return PLUGIN_HISTORY_EMPTY_COUNT;
+
+        size_t nColon = json.find(':', nKeyPos + token.size());
+        if (nColon == std::string::npos)
+            return PLUGIN_HISTORY_EMPTY_COUNT;
+
+        size_t nStart = nColon + 1;
+        while (nStart < json.size() && json[nStart] == ' ')
+            ++nStart;
+
+        int nSign = 1;
+        if (nStart < json.size() && json[nStart] == '-')
+        {
+            nSign = -1;
+            ++nStart;
+        }
+
+        int nValue = 0;
+        BOOL bHasDigit = FALSE;
+        while (nStart < json.size() && json[nStart] >= '0' && json[nStart] <= '9')
+        {
+            nValue = (nValue * 10) + (json[nStart] - '0');
+            bHasDigit = TRUE;
+            ++nStart;
+        }
+
+        return bHasDigit ? nValue * nSign : PLUGIN_HISTORY_EMPTY_COUNT;
+    }
+
+    BOOL ResolveTaechangHistoryOperation(
+        const CString& strTarget,
+        const CString& strAction,
+        CString& outOperationType)
+    {
+        if (strTarget == TAECHANG_HISTORY_TARGET_PDF && strAction == TAECHANG_HISTORY_ACTION_RUN_COMPARE)
+        {
+            outOperationType = TAECHANG_HISTORY_OP_COVER_CORRECTION;
+            return TRUE;
+        }
+
+        if (strTarget == TAECHANG_HISTORY_TARGET_DELIVERY && strAction == TAECHANG_HISTORY_ACTION_GENERATE_DELIVERY)
+        {
+            outOperationType = TAECHANG_HISTORY_OP_DELIVERY;
+            return TRUE;
+        }
+
+        if (strTarget == TAECHANG_HISTORY_TARGET_ESTIMATE && strAction == TAECHANG_HISTORY_ACTION_GENERATE_ESTIMATE)
+        {
+            outOperationType = TAECHANG_HISTORY_OP_ESTIMATE;
+            return TRUE;
+        }
+
+        if (strTarget == TAECHANG_HISTORY_TARGET_RECEIVABLES && strAction == TAECHANG_HISTORY_ACTION_GENERATE_RECEIVABLES)
+        {
+            outOperationType = TAECHANG_HISTORY_OP_RECEIVABLES;
+            return TRUE;
+        }
+
+        return FALSE;
+    }
+}
 
 PluginManager::PluginManager()
 {
@@ -114,7 +201,7 @@ void PluginManager::RegisterPluginBridgeHandlers(BridgeDispatcher& dispatcher)
             dispatcher.RegisterHandler(
                 strTarget,
                 strAction,
-                [pPlugin, strTarget, strAction](const BridgeMessage& msg) -> CString
+                [this, pPlugin, strTarget, strAction](const BridgeMessage& msg) -> CString
                 {
                     CString strResponseJson;
                     CString strError;
@@ -134,6 +221,7 @@ void PluginManager::RegisterPluginBridgeHandlers(BridgeDispatcher& dispatcher)
                             L"\"error\":{\"code\":\"SNX_PLUGIN_001\",\"message\":\"%s\"}}",
                             (LPCWSTR)msg.m_strRequestId,
                             (LPCWSTR)JsonEscapeString(strPluginError));
+                        SavePluginExecutionRecord(strTarget, strAction, msg.m_strPayloadJson, strJson);
                         return strJson;
                     }
 
@@ -144,6 +232,7 @@ void PluginManager::RegisterPluginBridgeHandlers(BridgeDispatcher& dispatcher)
                             (LPCWSTR)msg.m_strRequestId);
                     }
 
+                    SavePluginExecutionRecord(strTarget, strAction, msg.m_strPayloadJson, strResponseJson);
                     return strResponseJson;
                 });
         }
@@ -239,4 +328,36 @@ void PluginManager::UnloadAllDll()
 
     m_arrDllPlugins.clear();
     m_arrPluginPages.clear();
+}
+
+void PluginManager::SavePluginExecutionRecord(
+    const CString& strTarget,
+    const CString& strAction,
+    const CString& strPayloadJson,
+    const CString& strResponseJson) const
+{
+    CString strOperationType;
+    if (!ResolveTaechangHistoryOperation(strTarget, strAction, strOperationType))
+        return;
+
+    ExecutionRecord record;
+    record.m_strOperationType = strOperationType;
+    record.m_strSourceName = JsonExtractString(strPayloadJson, L"inputPath");
+    if (record.m_strSourceName.IsEmpty())
+        record.m_strSourceName = JsonExtractString(strPayloadJson, L"filePath");
+    if (record.m_strSourceName.IsEmpty())
+        record.m_strSourceName = strOperationType;
+
+    record.m_nRowCount = JsonExtractIntValue(strResponseJson, L"rowCount");
+    if (record.m_nRowCount <= PLUGIN_HISTORY_EMPTY_COUNT)
+        record.m_nRowCount = JsonExtractIntValue(strResponseJson, L"generatedCount");
+    record.m_nColumnCount = PLUGIN_HISTORY_EMPTY_COUNT;
+    record.m_strOutputPath = JsonExtractString(strResponseJson, L"filePath");
+    record.m_bSuccess = JsonExtractBool(strResponseJson, L"success");
+    if (!record.m_bSuccess)
+        record.m_strErrorMessage = JsonExtractString(strResponseJson, L"message");
+
+    ExecutionHistoryStore historyStore;
+    CString strHistoryError;
+    historyStore.SaveRecord(record, strHistoryError);
 }

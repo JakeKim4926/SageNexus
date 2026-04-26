@@ -124,11 +124,11 @@
                 <!-- Quick Actions -->
                 <div class="dash-section-label" data-i18n="dash.section.quickActions">빠른 시작</div>
                 <div class="dash-quick-grid">
-                    <div class="dash-action-card" id="dash-action-open-file">
+                    <div class="dash-action-card" id="dash-action-last-menu">
                         <div class="dash-action-icon">⊟</div>
                         <div class="dash-action-body">
-                            <div class="dash-action-title" data-i18n="dash.action.openFile">파일 열기</div>
-                            <div class="dash-action-desc" data-i18n="dash.action.openFile.desc">CSV 파일을 불러와 데이터를 확인합니다.</div>
+                            <div class="dash-action-title" id="dash-last-menu-title" data-i18n="dash.action.lastMenu">최근 메뉴</div>
+                            <div class="dash-action-desc" id="dash-last-menu-desc" data-i18n="dash.action.lastMenu.desc">마지막으로 사용한 화면으로 이동합니다.</div>
                         </div>
                         <div class="dash-action-arrow">→</div>
                     </div>
@@ -723,8 +723,8 @@ var LOCALES = {
         'dash.kpi.files':                '처리 파일',
         'dash.kpi.profile':              '현재 프로필',
         'dash.section.quickActions':     '빠른 시작',
-        'dash.action.openFile':          '파일 열기',
-        'dash.action.openFile.desc':     'CSV 파일을 불러와 데이터를 확인합니다.',
+        'dash.action.lastMenu':          '최근 메뉴',
+        'dash.action.lastMenu.desc':     '마지막으로 사용한 화면으로 이동합니다.',
         'dash.action.workflow':          '워크플로우 실행',
         'dash.action.workflow.desc':     '저장된 자동화 작업을 실행합니다.',
         'dash.action.webExtract':        '웹 추출 시작',
@@ -801,6 +801,10 @@ var LOCALES = {
         'hs.op.import':                  '가져오기',
         'hs.op.transform':               '변환',
         'hs.op.export':                  '내보내기',
+        'hs.op.taechang.coverCorrection':'표지 교정',
+        'hs.op.taechang.delivery':       '납품서 생성',
+        'hs.op.taechang.estimate':       '견적서 작성',
+        'hs.op.taechang.receivables':    '미수금 내역서 작성',
         'hs.result.success':             '✓ 성공',
         'hs.result.fail':                '✕ 실패',
         'st.loading.text':               '설정을 불러오는 중...',
@@ -966,8 +970,8 @@ var LOCALES = {
         'dash.kpi.files':                'Files Processed',
         'dash.kpi.profile':              'Current Profile',
         'dash.section.quickActions':     'Quick Start',
-        'dash.action.openFile':          'Open File',
-        'dash.action.openFile.desc':     'Load a CSV file to view your data.',
+        'dash.action.lastMenu':          'Recent Menu',
+        'dash.action.lastMenu.desc':     'Go to the last menu you used.',
         'dash.action.workflow':          'Run Workflow',
         'dash.action.workflow.desc':     'Run a saved automation workflow.',
         'dash.action.webExtract':        'Web Extract',
@@ -1045,6 +1049,10 @@ var LOCALES = {
         'hs.op.import':                  'Import',
         'hs.op.transform':               'Transform',
         'hs.op.export':                  'Export',
+        'hs.op.taechang.coverCorrection':'Cover Correction',
+        'hs.op.taechang.delivery':       'Delivery Form',
+        'hs.op.taechang.estimate':       'Estimate Form',
+        'hs.op.taechang.receivables':    'Receivables Statement',
         'hs.result.success':             '✓ Success',
         'hs.result.fail':                '✕ Failed',
         'st.loading.text':               'Loading settings...',
@@ -1146,6 +1154,8 @@ var _interfaceLanguage = 'ko';
 var _currentPage = 'dashboard';
 var _pluginPages = [];
 var _dynamicPageLabels = {};
+var _lastMenuPage = '';
+var LAST_MENU_KEY = 'sn-dashboard-last-menu';
 
 var PAGE_I18N_KEYS = {
     'dashboard':   'nav.dashboard',
@@ -1181,6 +1191,59 @@ function getPageLabel(pageId) {
     return pageId;
 }
 
+function isPageAvailable(pageId) {
+    if (!pageId || pageId === 'dashboard') return false;
+    var navItem = document.querySelector('.nav-item[data-page="' + pageId + '"]');
+    if (!navItem) return false;
+    if (navItem.classList.contains('hidden')) return false;
+    return navItem.style.display !== 'none';
+}
+
+function getFirstAvailableMenuPage() {
+    var navItems = document.querySelectorAll('.nav-item[data-page]');
+    for (var i = 0; i < navItems.length; i += 1) {
+        var pageId = navItems[i].dataset.page;
+        if (isPageAvailable(pageId)) return pageId;
+    }
+    return '';
+}
+
+function getDashboardLastMenuPage() {
+    if (isPageAvailable(_lastMenuPage)) return _lastMenuPage;
+    var savedPage = localStorage.getItem(LAST_MENU_KEY) || '';
+    if (isPageAvailable(savedPage)) {
+        _lastMenuPage = savedPage;
+        return savedPage;
+    }
+    return getFirstAvailableMenuPage();
+}
+
+function updateDashboardLastMenuCard() {
+    var card = document.getElementById('dash-action-last-menu');
+    if (!card) return;
+
+    var pageId = getDashboardLastMenuPage();
+    card.dataset.page = pageId;
+    card.classList.toggle('disabled', !pageId);
+
+    var titleEl = document.getElementById('dash-last-menu-title');
+    var descEl = document.getElementById('dash-last-menu-desc');
+    if (titleEl) {
+        titleEl.removeAttribute('data-i18n');
+        titleEl.textContent = pageId ? getPageLabel(pageId) : t('dash.action.lastMenu');
+    }
+    if (descEl) {
+        descEl.textContent = t('dash.action.lastMenu.desc');
+    }
+}
+
+function rememberDashboardMenu(pageId) {
+    if (!isPageAvailable(pageId)) return;
+    _lastMenuPage = pageId;
+    localStorage.setItem(LAST_MENU_KEY, pageId);
+    updateDashboardLastMenuCard();
+}
+
 function applyLocale() {
     document.querySelectorAll('[data-i18n]').forEach(function (el) {
         var key = el.getAttribute('data-i18n');
@@ -1190,6 +1253,7 @@ function applyLocale() {
     if (breadcrumb) {
         breadcrumb.textContent = getPageLabel(_currentPage);
     }
+    updateDashboardLastMenuCard();
 }
 
 // =========================================================
@@ -1215,6 +1279,9 @@ function getColDisplayName(col) {
     }
 
     function navigateTo(pageId) {
+        if (pageId !== 'dashboard') {
+            rememberDashboardMenu(pageId);
+        }
         _currentPage = pageId;
         document.querySelectorAll('.nav-item').forEach(function (el) {
             el.classList.toggle('active', el.dataset.page === pageId);
@@ -1225,6 +1292,7 @@ function getColDisplayName(col) {
         var breadcrumb = document.getElementById('breadcrumb');
         if (breadcrumb) breadcrumb.textContent = getPageLabel(pageId);
         if (pageId === 'export') { loadArtifacts(); }
+        updateDashboardLastMenuCard();
     }
 
     function renderPluginPages(pluginPages) {
@@ -1300,6 +1368,7 @@ function getColDisplayName(col) {
 
             hosts.appendChild(pageEl);
         });
+        updateDashboardLastMenuCard();
     }
 
     window.navigateTo = navigateTo;
@@ -1368,6 +1437,7 @@ function getColDisplayName(col) {
                 dashCard.style.display = hidden ? 'none' : '';
             }
         });
+        updateDashboardLastMenuCard();
     }
 
     setStatus('loading', t('status.initializing'));
@@ -1491,7 +1561,7 @@ function getColDisplayName(col) {
                 var kpiFiles = document.getElementById('dash-kpi-files');
                 if (kpiFiles) {
                     var sources = {};
-                    records.forEach(function (r) { if (r.source) sources[r.source] = true; });
+                    records.forEach(function (r) { if (r.sourceName) sources[r.sourceName] = true; });
                     var fileCount = Object.keys(sources).length;
                     kpiFiles.textContent = fileCount > 0 ? String(fileCount) : '0';
                 }
@@ -1515,17 +1585,13 @@ function getColDisplayName(col) {
         });
     });
 
-    var btnOpenFile = document.getElementById('dash-action-open-file');
-    if (btnOpenFile) {
-        btnOpenFile.addEventListener('click', function () {
-            var navItem = document.querySelector('.nav-item[data-page="data-viewer"]');
-            if (navItem) {
-                navItem.click();
-                setTimeout(function () {
-                    var btn = document.getElementById('btn-open-file');
-                    if (btn) btn.click();
-                }, 50);
-            }
+    var lastMenuCard = document.getElementById('dash-action-last-menu');
+    if (lastMenuCard) {
+        lastMenuCard.addEventListener('click', function () {
+            var pageId = getDashboardLastMenuPage();
+            if (!pageId) return;
+            var navItem = document.querySelector('.nav-item[data-page="' + pageId + '"]');
+            if (navItem) navItem.click();
         });
     }
 
@@ -1985,7 +2051,11 @@ function getColDisplayName(col) {
     var OP_LABELS = {
         'import':    function() { return t('hs.op.import'); },
         'transform': function() { return t('hs.op.transform'); },
-        'export':    function() { return t('hs.op.export'); }
+        'export':    function() { return t('hs.op.export'); },
+        'taechang.coverCorrection': function() { return t('hs.op.taechang.coverCorrection'); },
+        'taechang.delivery': function() { return t('hs.op.taechang.delivery'); },
+        'taechang.estimate': function() { return t('hs.op.taechang.estimate'); },
+        'taechang.receivables': function() { return t('hs.op.taechang.receivables'); }
     };
 
     function setHistoryState(state, info) {

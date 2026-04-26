@@ -1,5 +1,13 @@
 <Solution>
   <Configurations>
+    <BuildType Name="Debug" />
+    <BuildType Name="Debug-Acme" />
+    <BuildType Name="Debug-Beta" />
+    <BuildType Name="Debug-Taechang" />
+    <BuildType Name="Release" />
+    <BuildType Name="Release-Acme" />
+    <BuildType Name="Release-Beta" />
+    <BuildType Name="Release-Taechang" />
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>

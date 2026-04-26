@@ -42,6 +42,11 @@ public:
 
 private:
     void UnloadAllDll();
+    void SavePluginExecutionRecord(
+        const CString& strTarget,
+        const CString& strAction,
+        const CString& strPayloadJson,
+        const CString& strResponseJson) const;
 
     std::vector<PluginEntry>    m_arrPlugins;
     std::vector<DllPluginEntry> m_arrDllPlugins;

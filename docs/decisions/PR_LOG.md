@@ -2,6 +2,20 @@
 
 ---
 
+## [2026-04-28] fix/bridge-file-dialog-reentrancy
+- **목적**: 파일 다이얼로그를 WebView2 이벤트 핸들러 안에서 직접 호출할 때 발생하는 reentrancy 경고 및 디버그 중단점 수정
+- **변경 내용**:
+  - `BridgeDispatcher` — `RegisterDeferredHandler`, `SetMainHwnd`, `SetWebView`, `PostResponse` 추가
+  - `WM_BRIDGE_DEFERRED_CMD` — 파일 다이얼로그 커맨드를 WebView2 콜백 외부(WndProc)에서 실행하는 메커니즘
+  - `MainWindow` — `OnBridgeDeferredCmd` 핸들러 추가
+  - `ImportBridgeHandler`, `ExportBridgeHandler` — `RegisterDeferredHandler`로 전환
+  - `PluginManager` — action명에 Dialog/Folder 포함 시 자동으로 deferred 등록
+  - `pch.h` — `<set>` 추가
+- **PR 링크**: pending
+- **결과**: pending
+
+---
+
 ## [2026-04-27] fix/plugin-history-records
 - **목적**: Taechang 플러그인 실행 결과를 대시보드/실행 이력에 연결하고 대시보드 빠른 시작을 최근 메뉴 기반으로 정리
 - **변경 내용**: PluginManager 실행 이력 저장 훅 추가, Taechang 작업 유형 i18n 라벨 추가, 대시보드 최근 메뉴 카드 및 sourceName 기반 파일 수 계산 수정

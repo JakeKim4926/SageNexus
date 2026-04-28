@@ -11,7 +11,7 @@
   - `ImportBridgeHandler`, `ExportBridgeHandler` — `RegisterDeferredHandler`로 전환
   - `PluginManager` — action명에 Dialog/Folder 포함 시 자동으로 deferred 등록
   - `pch.h` — `<set>` 추가
-- **PR 링크**: pending
+- **PR 링크**: https://github.com/JakeKim4926/SageNexus/pull/82
 - **결과**: pending
 
 ---

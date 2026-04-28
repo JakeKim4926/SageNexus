@@ -108,10 +108,6 @@
                         <div class="dash-kpi-value" id="dash-kpi-total">—</div>
                     </div>
                     <div class="dash-kpi-card">
-                        <div class="dash-kpi-label" data-i18n="dash.kpi.successRate">성공률</div>
-                        <div class="dash-kpi-value" id="dash-kpi-success-rate">—</div>
-                    </div>
-                    <div class="dash-kpi-card">
                         <div class="dash-kpi-label" data-i18n="dash.kpi.files">처리 파일</div>
                         <div class="dash-kpi-value" id="dash-kpi-files">—</div>
                     </div>
@@ -719,7 +715,6 @@ var LOCALES = {
         'dashboard.stat.profile':        '프로필',
         'dashboard.lastRun.never':       '아직 실행 기록이 없습니다',
         'dash.kpi.totalRuns':            '총 실행',
-        'dash.kpi.successRate':          '성공률',
         'dash.kpi.files':                '처리 파일',
         'dash.kpi.profile':              '현재 프로필',
         'dash.section.quickActions':     '빠른 시작',
@@ -966,7 +961,6 @@ var LOCALES = {
         'dashboard.stat.profile':        'Profile',
         'dashboard.lastRun.never':       'No executions yet',
         'dash.kpi.totalRuns':            'Total Runs',
-        'dash.kpi.successRate':          'Success Rate',
         'dash.kpi.files':                'Files Processed',
         'dash.kpi.profile':              'Current Profile',
         'dash.section.quickActions':     'Quick Start',
@@ -1545,19 +1539,6 @@ function getColDisplayName(col) {
                 var kpiTotal = document.getElementById('dash-kpi-total');
                 if (kpiTotal) kpiTotal.textContent = records.length > 0 ? String(records.length) : '0';
 
-                var kpiRate = document.getElementById('dash-kpi-success-rate');
-                if (kpiRate) {
-                    if (records.length === 0) {
-                        kpiRate.textContent = '—';
-                        kpiRate.style.color = '';
-                    } else {
-                        var successes = records.filter(function (r) { return r.success; }).length;
-                        var rate = Math.round(successes / records.length * 100);
-                        kpiRate.textContent = rate + '%';
-                        kpiRate.style.color = rate >= 80 ? 'var(--ok)' : rate >= 50 ? 'var(--wrn)' : 'var(--err)';
-                    }
-                }
-
                 var kpiFiles = document.getElementById('dash-kpi-files');
                 if (kpiFiles) {
                     var sources = {};
@@ -1569,7 +1550,7 @@ function getColDisplayName(col) {
                 renderRecentActivity(records);
             })
             .catch(function () {
-                ['dash-kpi-total', 'dash-kpi-success-rate', 'dash-kpi-files'].forEach(function (id) {
+                ['dash-kpi-total', 'dash-kpi-files'].forEach(function (id) {
                     var el = document.getElementById(id);
                     if (el) el.textContent = '—';
                 });

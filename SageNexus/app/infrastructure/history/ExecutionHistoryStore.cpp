@@ -28,7 +28,11 @@ BOOL ExecutionHistoryStore::SaveRecord(ExecutionRecord& record, CString& strErro
     arrRecords.push_back(record);
 
     CString strJson = SerializeRecords(arrRecords);
-    return WriteFileAsUtf8(strFilePath, strJson, strError);
+    if (!WriteFileAsUtf8(strFilePath, strJson, strError))
+        return FALSE;
+
+    sageMgr.GetLogger().LogExecutionRecord(record);
+    return TRUE;
 }
 
 BOOL ExecutionHistoryStore::LoadRecords(std::vector<ExecutionRecord>& arrRecords, CString& strError) const

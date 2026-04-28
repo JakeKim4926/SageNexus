@@ -8,6 +8,7 @@
 #define WM_WORKFLOW_PROGRESS    (WM_USER + 3)
 #define WM_WORKFLOW_COMPLETE    (WM_USER + 4)
 #define WM_JOB_QUEUE_CHANGED    (WM_USER + 5)
+#define WM_BRIDGE_DEFERRED_CMD  (WM_USER + 6)
 
 // ============================================================
 // Scheduler

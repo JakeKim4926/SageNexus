@@ -15,7 +15,7 @@ void ImportBridgeHandler::RegisterHandlers(BridgeDispatcher& dispatcher, HWND hP
 {
     m_pSharedTable = pSharedTable;
 
-    dispatcher.RegisterHandler(L"data.import", L"openFileDialog",
+    dispatcher.RegisterDeferredHandler(L"data.import", L"openFileDialog",
         [this, hParentWnd](const BridgeMessage& msg) -> CString
         {
             return HandleOpenFileDialog(msg, hParentWnd);

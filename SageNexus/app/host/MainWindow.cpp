@@ -120,6 +120,10 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         OnJobQueueChanged();
         return 0;
 
+    case WM_BRIDGE_DEFERRED_CMD:
+        OnBridgeDeferredCmd(lParam);
+        return 0;
+
     case WM_TIMER:
         if (wParam == SCHEDULER_TIMER_ID)
             OnSchedulerTick();
@@ -202,9 +206,37 @@ void MainWindow::OnWebViewReady(BOOL bSuccess)
     m_pWebViewHost->Resize(rcClient.right, rcClient.bottom);
 }
 
+void MainWindow::OnBridgeDeferredCmd(LPARAM lParam)
+{
+    BridgeDispatcher::DeferredCmd* pCmd =
+        reinterpret_cast<BridgeDispatcher::DeferredCmd*>(lParam);
+
+    CString strRequestId = pCmd->m_msg.m_strRequestId;
+    CString strResult    = pCmd->m_handler(pCmd->m_msg);
+    delete pCmd;
+
+    if (!m_pWebViewHost || !m_pWebViewHost->IsReady())
+        return;
+
+    BridgeDispatcher& dispatcher = m_pWebViewHost->GetDispatcher();
+    if (strResult.IsEmpty())
+    {
+        CString strDefault;
+        strDefault.Format(
+            L"{\"type\":\"response\",\"requestId\":\"%s\",\"success\":true,\"payload\":{}}",
+            (LPCWSTR)strRequestId);
+        dispatcher.PostResponse(strDefault);
+    }
+    else
+    {
+        dispatcher.PostResponse(strResult);
+    }
+}
+
 void MainWindow::RegisterBridgeHandlers()
 {
     BridgeDispatcher& dispatcher = m_pWebViewHost->GetDispatcher();
+    dispatcher.SetMainHwnd(m_hWnd);
 
     // 창 컨트롤 핸들러 (타이틀바 대체용)
     HWND hWnd = m_hWnd;

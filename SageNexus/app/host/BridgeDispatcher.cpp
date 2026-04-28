@@ -1,9 +1,22 @@
 #include "pch.h"
 #include "app/host/BridgeDispatcher.h"
 #include "app/application/SageApp.h"
+#include "Define.h"
 
 BridgeDispatcher::BridgeDispatcher()
+    : m_hMainWnd(nullptr)
+    , m_pCachedWebView(nullptr)
 {
+}
+
+void BridgeDispatcher::SetMainHwnd(HWND hMainWnd)
+{
+    m_hMainWnd = hMainWnd;
+}
+
+void BridgeDispatcher::SetWebView(ICoreWebView2* pWebView)
+{
+    m_pCachedWebView = pWebView;
 }
 
 void BridgeDispatcher::RegisterHandler(
@@ -13,6 +26,16 @@ void BridgeDispatcher::RegisterHandler(
 {
     std::string key = WideToUtf8(MakeHandlerKey(strTarget, strAction));
     m_mapHandlers[key] = handler;
+}
+
+void BridgeDispatcher::RegisterDeferredHandler(
+    const CString& strTarget,
+    const CString& strAction,
+    BridgeCommandHandler handler)
+{
+    std::string key = WideToUtf8(MakeHandlerKey(strTarget, strAction));
+    m_mapHandlers[key]        = handler;
+    m_deferredHandlerKeys.insert(key);
 }
 
 void BridgeDispatcher::DispatchMessage(const CString& strJson, ICoreWebView2* pWebView)
@@ -47,12 +70,28 @@ void BridgeDispatcher::DispatchMessage(const CString& strJson, ICoreWebView2* pW
         return;
     }
 
+    if (m_deferredHandlerKeys.count(key) > 0)
+    {
+        // 파일 다이얼로그 등 중첩 메시지 루프가 필요한 핸들러:
+        // WebView2 이벤트 콜백 밖에서 실행하도록 WndProc에 위임한다
+        DeferredCmd* pCmd   = new DeferredCmd();
+        pCmd->m_msg         = msg;
+        pCmd->m_handler     = it->second;
+        PostMessageW(m_hMainWnd, WM_BRIDGE_DEFERRED_CMD, 0, reinterpret_cast<LPARAM>(pCmd));
+        return;
+    }
+
     CString strResult = it->second(msg);
 
     if (strResult.IsEmpty())
         SendSuccessResponse(msg.m_strRequestId, L"{}", pWebView);
     else
         PostMessageToWeb(strResult, pWebView);
+}
+
+void BridgeDispatcher::PostResponse(const CString& strJson) const
+{
+    PostMessageToWeb(strJson, m_pCachedWebView);
 }
 
 void BridgeDispatcher::PostMessageToWeb(const CString& strJson, ICoreWebView2* pWebView) const

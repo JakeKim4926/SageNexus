@@ -35,6 +35,7 @@ private:
     void OnWorkflowComplete(BOOL bSuccess);
     void OnJobQueueChanged();
     void OnSchedulerTick();
+    void OnBridgeDeferredCmd(LPARAM lParam);
     void OnDestroy();
 
     void NavigateToShell();

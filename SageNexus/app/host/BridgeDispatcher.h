@@ -27,10 +27,28 @@ using BridgeCommandHandler = std::function<CString(const BridgeMessage&)>;
 class BridgeDispatcher
 {
 public:
+    // WM_BRIDGE_DEFERRED_CMD의 lParam으로 전달되는 구조체
+    struct DeferredCmd
+    {
+        BridgeMessage        m_msg;
+        BridgeCommandHandler m_handler;
+    };
+
     BridgeDispatcher();
+
+    // 초기화: WebView2 생성 직후, 핸들러 등록 전에 호출한다
+    void SetMainHwnd(HWND hMainWnd);
+    void SetWebView(ICoreWebView2* pWebView);
 
     // command 핸들러 등록 (target::action 키로 매핑)
     void RegisterHandler(
+        const CString& strTarget,
+        const CString& strAction,
+        BridgeCommandHandler handler);
+
+    // 파일 다이얼로그 등 중첩 메시지 루프를 생성하는 핸들러에 사용
+    // WebView2 이벤트 핸들러 외부(WndProc)에서 실행되도록 PostMessage로 위임한다
+    void RegisterDeferredHandler(
         const CString& strTarget,
         const CString& strAction,
         BridgeCommandHandler handler);
@@ -40,6 +58,9 @@ public:
 
     // WebView2로 JSON 메시지 전송
     void PostMessageToWeb(const CString& strJson, ICoreWebView2* pWebView) const;
+
+    // deferred 핸들러 결과를 WebView2로 전송 (m_pCachedWebView 사용)
+    void PostResponse(const CString& strJson) const;
 
     // 편의 함수: event 전송
     void SendEvent(
@@ -66,4 +87,8 @@ private:
     CString       MakeHandlerKey(const CString& strTarget, const CString& strAction) const;
 
     std::map<std::string, BridgeCommandHandler> m_mapHandlers;
+    std::set<std::string>                       m_deferredHandlerKeys;
+
+    HWND           m_hMainWnd;
+    ICoreWebView2* m_pCachedWebView;
 };

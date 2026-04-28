@@ -198,9 +198,13 @@ void PluginManager::RegisterPluginBridgeHandlers(BridgeDispatcher& dispatcher)
             if (strTarget.IsEmpty() || strAction.IsEmpty())
                 continue;
 
-            dispatcher.RegisterHandler(
-                strTarget,
-                strAction,
+            // 파일/폴더 다이얼로그를 여는 커맨드는 WebView2 이벤트 콜백 밖에서 실행해야 한다
+            CString strActionLower = strAction;
+            strActionLower.MakeLower();
+            BOOL bDeferred = (strActionLower.Find(L"dialog") >= 0 ||
+                              strActionLower.Find(L"folder") >= 0);
+
+            BridgeCommandHandler handler =
                 [this, pPlugin, strTarget, strAction](const BridgeMessage& msg) -> CString
                 {
                     CString strResponseJson;
@@ -234,7 +238,12 @@ void PluginManager::RegisterPluginBridgeHandlers(BridgeDispatcher& dispatcher)
 
                     SavePluginExecutionRecord(strTarget, strAction, msg.m_strPayloadJson, strResponseJson);
                     return strResponseJson;
-                });
+                };
+
+            if (bDeferred)
+                dispatcher.RegisterDeferredHandler(strTarget, strAction, handler);
+            else
+                dispatcher.RegisterHandler(strTarget, strAction, handler);
         }
     }
 }

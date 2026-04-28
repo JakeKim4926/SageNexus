@@ -17,31 +17,31 @@ void ExportBridgeHandler::RegisterHandlers(BridgeDispatcher& dispatcher, HWND hP
     m_hParentWnd  = hParentWnd;
     m_pSharedTable = pSharedTable;
 
-    dispatcher.RegisterHandler(L"artifact.export", L"exportCsv",
+    dispatcher.RegisterDeferredHandler(L"artifact.export", L"exportCsv",
         [this, hParentWnd](const BridgeMessage& msg) -> CString
         {
             return HandleExportCsv(msg, hParentWnd);
         });
 
-    dispatcher.RegisterHandler(L"artifact.export", L"exportXlsx",
+    dispatcher.RegisterDeferredHandler(L"artifact.export", L"exportXlsx",
         [this, hParentWnd](const BridgeMessage& msg) -> CString
         {
             return HandleExportXlsx(msg, hParentWnd);
         });
 
-    dispatcher.RegisterHandler(L"artifact.export", L"exportHtml",
+    dispatcher.RegisterDeferredHandler(L"artifact.export", L"exportHtml",
         [this, hParentWnd](const BridgeMessage& msg) -> CString
         {
             return HandleExportHtml(msg, hParentWnd);
         });
 
-    dispatcher.RegisterHandler(L"artifact.export", L"exportWord",
+    dispatcher.RegisterDeferredHandler(L"artifact.export", L"exportWord",
         [this, hParentWnd](const BridgeMessage& msg) -> CString
         {
             return HandleExportWord(msg, hParentWnd);
         });
 
-    dispatcher.RegisterHandler(L"artifact.export", L"exportPdf",
+    dispatcher.RegisterDeferredHandler(L"artifact.export", L"exportPdf",
         [this, hParentWnd](const BridgeMessage& msg) -> CString
         {
             return HandleExportPdf(msg, hParentWnd);

@@ -154,6 +154,8 @@ void WebViewHost::OnControllerCreated(HRESULT hrResult, ICoreWebView2Controller*
         return;
     }
 
+    m_dispatcher.SetWebView(m_pWebView);
+
     // CSS -webkit-app-region: drag 지원 활성화 (타이틀바 대체 드래그 영역)
     // 반드시 첫 Navigate() 전에 설정해야 적용된다
     ICoreWebView2Settings* pSettings = nullptr;

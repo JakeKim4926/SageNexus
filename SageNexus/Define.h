@@ -41,6 +41,11 @@ constexpr const wchar_t* PROFILE_FILE_NAME   = L"profile.json";
 constexpr const wchar_t* CONFIG_FILE_NAME    = L"settings.json";
 constexpr const wchar_t* DATA_DIR_NAME       = L"Data";
 constexpr const wchar_t* LOG_DIR_NAME        = L"Logs";
+constexpr const wchar_t* LOG_MOVED_DIR_NAME  = L"Moved";
+constexpr const wchar_t* LOG_ERROR_DIR_NAME  = L"Error";
+constexpr const wchar_t* LOG_VALUE_TRUE      = L"true";
+constexpr const wchar_t* LOG_VALUE_FALSE     = L"false";
+constexpr const wchar_t* LOG_EXECUTION_LINE_FORMAT = L"[%s] runId=%s operation=%s success=%s source=%s rows=%d columns=%d output=%s error=%s";
 
 // ============================================================
 // User Data (AppData)

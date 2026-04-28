@@ -2,6 +2,14 @@
 
 ---
 
+## [2026-04-28] fix/dashboard-daily-logs
+- **Purpose**: Remove Dashboard success-rate KPI and add daily execution/error log files.
+- **Changes**: Dashboard KPI grid now shows total runs, processed files, and profile only. Execution history saves an additional daily text log under Logs/Moved or Logs/Error.
+- **PR Link**: https://github.com/JakeKim4926/SageNexus/pull/83
+- **Result**: merged
+
+---
+
 ## [2026-04-28] fix/bridge-file-dialog-reentrancy
 - **목적**: 파일 다이얼로그를 WebView2 이벤트 핸들러 안에서 직접 호출할 때 발생하는 reentrancy 경고 및 디버그 중단점 수정
 - **변경 내용**:

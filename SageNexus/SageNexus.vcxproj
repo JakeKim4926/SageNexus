@@ -480,6 +480,7 @@
     <ClCompile Include="app\infrastructure\bridge\SchedulerBridgeHandler.cpp" />
     <ClCompile Include="app\infrastructure\security\ProfileSecurity.cpp" />
     <ClCompile Include="app\host\LoginDialog.cpp" />
+    <ClCompile Include="app\common\JsonUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -544,6 +545,7 @@
     <ClInclude Include="app\infrastructure\bridge\SchedulerBridgeHandler.h" />
     <ClInclude Include="app\infrastructure\security\ProfileSecurity.h" />
     <ClInclude Include="app\host\LoginDialog.h" />
+    <ClInclude Include="app\common\JsonUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resources\SageNexus.rc" />

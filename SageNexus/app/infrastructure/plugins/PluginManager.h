@@ -17,6 +17,14 @@ struct PluginPageEntry
     CString m_strBaseDir;
 };
 
+struct PluginHistoryEntry
+{
+    CString m_strPluginId;
+    CString m_strTarget;
+    CString m_strAction;
+    CString m_strOperationType;
+};
+
 class BridgeDispatcher;
 
 class PluginManager
@@ -42,6 +50,11 @@ public:
 
 private:
     void UnloadAllDll();
+    void RegisterHistoryEntries(const CString& strPluginId, IPlugin& plugin);
+    BOOL ResolveHistoryOperation(
+        const CString& strTarget,
+        const CString& strAction,
+        CString& outOperationType) const;
     void SavePluginExecutionRecord(
         const CString& strTarget,
         const CString& strAction,
@@ -51,5 +64,6 @@ private:
     std::vector<PluginEntry>    m_arrPlugins;
     std::vector<DllPluginEntry> m_arrDllPlugins;
     std::vector<PluginPageEntry> m_arrPluginPages;
+    std::vector<PluginHistoryEntry> m_arrHistoryEntries;
     PluginLoader                m_pluginLoader;
 };

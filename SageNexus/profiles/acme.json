@@ -3,15 +3,19 @@
   "profileName": "ACME Corporation",
   "defaultInterfaceLanguage": "ko",
   "defaultOutputLanguage": "ko",
-  "showDataViewer": true,
-  "showTransform": true,
-  "showExport": true,
-  "showHistory": true,
-  "showWorkflow": false,
-  "showWebextract": false,
-  "showSettings": true,
-  "plugin_import": true,
-  "plugin_transform": true,
-  "plugin_export": true,
-  "plugin_history": true
+  "menus": [
+    { "id": "data-viewer", "enabled": true },
+    { "id": "transform", "enabled": true },
+    { "id": "export", "enabled": true },
+    { "id": "history", "enabled": true },
+    { "id": "workflow", "enabled": false },
+    { "id": "webextract", "enabled": false },
+    { "id": "settings", "enabled": true }
+  ],
+  "plugins": [
+    { "id": "import", "enabled": true },
+    { "id": "transform", "enabled": true },
+    { "id": "export", "enabled": true },
+    { "id": "history", "enabled": true }
+  ]
 }

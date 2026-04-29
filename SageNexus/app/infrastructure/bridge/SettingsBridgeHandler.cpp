@@ -110,8 +110,8 @@ CString SettingsBridgeHandler::HandleGetPlugins(const BridgeMessage& msg)
         BOOL bEnabled = profile.IsPluginEnabled(arrPlugins[i].m_strPluginId);
         CString strEntry;
         strEntry.Format(L"{\"pluginId\":\"%s\",\"pluginName\":\"%s\",\"enabled\":%s}",
-            (LPCWSTR)arrPlugins[i].m_strPluginId,
-            (LPCWSTR)arrPlugins[i].m_strPluginName,
+            (LPCWSTR)JsonEscapeString(arrPlugins[i].m_strPluginId),
+            (LPCWSTR)JsonEscapeString(arrPlugins[i].m_strPluginName),
             bEnabled ? L"true" : L"false");
         strArray += strEntry;
     }

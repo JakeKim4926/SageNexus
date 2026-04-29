@@ -497,12 +497,14 @@ void WebViewHost::Navigate(const CString& strUrl)
                     strEntryUrl.Replace(L"\\", L"/");
 
                     CString strItem;
+                    BOOL bPageEnabled = profile.IsPluginEnabled(arrPluginPages[i].m_strPluginId);
                     strItem.Format(
-                        L"{\"pluginId\":\"%s\",\"pageId\":\"%s\",\"pageName\":\"%s\",\"entryUrl\":\"%s\"}",
+                        L"{\"pluginId\":\"%s\",\"pageId\":\"%s\",\"pageName\":\"%s\",\"entryUrl\":\"%s\",\"enabled\":%s}",
                         (LPCWSTR)JsonEscapeString(arrPluginPages[i].m_strPluginId),
                         (LPCWSTR)JsonEscapeString(arrPluginPages[i].m_strPageId),
                         (LPCWSTR)JsonEscapeString(arrPluginPages[i].m_strPageName),
-                        (LPCWSTR)JsonEscapeString(strEntryUrl));
+                        (LPCWSTR)JsonEscapeString(strEntryUrl),
+                        bPageEnabled ? L"true" : L"false");
                     strPluginPagesJson += strItem;
                 }
                 strPluginPagesJson += L"]";

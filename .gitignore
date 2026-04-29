@@ -27,6 +27,7 @@ ARM64/
 Win32/
 out/
 build/
+deploy/
 [Bb]in/
 [Oo]bj/
 
@@ -98,6 +99,7 @@ _ReSharper*/
 *.xls
 *.csv
 *.bak
+*.zip
 
 # SQLite / local DB / temp data
 *.db

@@ -54,6 +54,8 @@ private:
     void ParseProfileJson(
         const std::string& strJson,
         std::map<std::string, std::string>& outEntries) const;
+    void ParseMenuArray(const std::string& strJson);
+    void ParsePluginArray(const std::string& strJson);
 
     CString                   m_strProfileId;
     CString                   m_strProfileName;

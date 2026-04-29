@@ -25,6 +25,19 @@ struct PluginPageInfo
     {}
 };
 
+struct PluginHistoryInfo
+{
+    LPCWSTR m_pszTarget;
+    LPCWSTR m_pszAction;
+    LPCWSTR m_pszOperationType;
+
+    PluginHistoryInfo()
+        : m_pszTarget(L"")
+        , m_pszAction(L"")
+        , m_pszOperationType(L"")
+    {}
+};
+
 class IPlugin
 {
 public:
@@ -62,6 +75,16 @@ public:
     }
 
     virtual BOOL GetPageInfo(int /*nIndex*/, PluginPageInfo& /*outInfo*/) const
+    {
+        return FALSE;
+    }
+
+    virtual int GetHistoryInfoCount() const
+    {
+        return 0;
+    }
+
+    virtual BOOL GetHistoryInfo(int /*nIndex*/, PluginHistoryInfo& /*outInfo*/) const
     {
         return FALSE;
     }

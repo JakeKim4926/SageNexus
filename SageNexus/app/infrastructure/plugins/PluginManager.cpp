@@ -1,93 +1,15 @@
 #include "pch.h"
 #include "app/infrastructure/plugins/PluginManager.h"
 #include "app/application/SageApp.h"
+#include "app/common/JsonUtils.h"
 #include "app/host/BridgeDispatcher.h"
 #include "app/infrastructure/history/ExecutionHistoryStore.h"
 
 namespace
 {
-    constexpr LPCWSTR TAECHANG_HISTORY_TARGET_PDF = L"taechang.pdf";
-    constexpr LPCWSTR TAECHANG_HISTORY_TARGET_DELIVERY = L"taechang.delivery";
-    constexpr LPCWSTR TAECHANG_HISTORY_TARGET_ESTIMATE = L"taechang.estimate";
-    constexpr LPCWSTR TAECHANG_HISTORY_TARGET_RECEIVABLES = L"taechang.receivables";
-    constexpr LPCWSTR TAECHANG_HISTORY_ACTION_RUN_COMPARE = L"runCompare";
-    constexpr LPCWSTR TAECHANG_HISTORY_ACTION_GENERATE_DELIVERY = L"generateDeliveryForms";
-    constexpr LPCWSTR TAECHANG_HISTORY_ACTION_GENERATE_ESTIMATE = L"generateEstimateForms";
-    constexpr LPCWSTR TAECHANG_HISTORY_ACTION_GENERATE_RECEIVABLES = L"generateReceivablesForm";
-    constexpr LPCWSTR TAECHANG_HISTORY_OP_COVER_CORRECTION = L"taechang.coverCorrection";
-    constexpr LPCWSTR TAECHANG_HISTORY_OP_DELIVERY = L"taechang.delivery";
-    constexpr LPCWSTR TAECHANG_HISTORY_OP_ESTIMATE = L"taechang.estimate";
-    constexpr LPCWSTR TAECHANG_HISTORY_OP_RECEIVABLES = L"taechang.receivables";
+    constexpr LPCWSTR PLUGIN_DISABLED_ERROR_CODE = L"SNX_PLUGIN_DISABLED";
+    constexpr LPCWSTR PLUGIN_DISABLED_ERROR_MESSAGE = L"Plugin is disabled by profile.";
     constexpr int PLUGIN_HISTORY_EMPTY_COUNT = 0;
-
-    int JsonExtractIntValue(const CString& strJson, const CString& strKey)
-    {
-        std::string json = WideToUtf8(strJson);
-        std::string key = WideToUtf8(strKey);
-        std::string token = "\"" + key + "\"";
-
-        size_t nKeyPos = json.find(token);
-        if (nKeyPos == std::string::npos)
-            return PLUGIN_HISTORY_EMPTY_COUNT;
-
-        size_t nColon = json.find(':', nKeyPos + token.size());
-        if (nColon == std::string::npos)
-            return PLUGIN_HISTORY_EMPTY_COUNT;
-
-        size_t nStart = nColon + 1;
-        while (nStart < json.size() && json[nStart] == ' ')
-            ++nStart;
-
-        int nSign = 1;
-        if (nStart < json.size() && json[nStart] == '-')
-        {
-            nSign = -1;
-            ++nStart;
-        }
-
-        int nValue = 0;
-        BOOL bHasDigit = FALSE;
-        while (nStart < json.size() && json[nStart] >= '0' && json[nStart] <= '9')
-        {
-            nValue = (nValue * 10) + (json[nStart] - '0');
-            bHasDigit = TRUE;
-            ++nStart;
-        }
-
-        return bHasDigit ? nValue * nSign : PLUGIN_HISTORY_EMPTY_COUNT;
-    }
-
-    BOOL ResolveTaechangHistoryOperation(
-        const CString& strTarget,
-        const CString& strAction,
-        CString& outOperationType)
-    {
-        if (strTarget == TAECHANG_HISTORY_TARGET_PDF && strAction == TAECHANG_HISTORY_ACTION_RUN_COMPARE)
-        {
-            outOperationType = TAECHANG_HISTORY_OP_COVER_CORRECTION;
-            return TRUE;
-        }
-
-        if (strTarget == TAECHANG_HISTORY_TARGET_DELIVERY && strAction == TAECHANG_HISTORY_ACTION_GENERATE_DELIVERY)
-        {
-            outOperationType = TAECHANG_HISTORY_OP_DELIVERY;
-            return TRUE;
-        }
-
-        if (strTarget == TAECHANG_HISTORY_TARGET_ESTIMATE && strAction == TAECHANG_HISTORY_ACTION_GENERATE_ESTIMATE)
-        {
-            outOperationType = TAECHANG_HISTORY_OP_ESTIMATE;
-            return TRUE;
-        }
-
-        if (strTarget == TAECHANG_HISTORY_TARGET_RECEIVABLES && strAction == TAECHANG_HISTORY_ACTION_GENERATE_RECEIVABLES)
-        {
-            outOperationType = TAECHANG_HISTORY_OP_RECEIVABLES;
-            return TRUE;
-        }
-
-        return FALSE;
-    }
 }
 
 PluginManager::PluginManager()
@@ -110,6 +32,7 @@ void PluginManager::RegisterBuiltIn(const CString& strPluginId, const CString& s
 BOOL PluginManager::LoadPluginsFromDirectory(const CString& strDir, CString& strErrors)
 {
     m_arrPluginPages.clear();
+    m_arrHistoryEntries.clear();
 
     CString strPattern = strDir + L"\\*.dll";
     WIN32_FIND_DATAW findData = {};
@@ -140,6 +63,7 @@ BOOL PluginManager::LoadPluginsFromDirectory(const CString& strDir, CString& str
 
         m_arrDllPlugins.push_back(dllEntry);
         m_arrPlugins.push_back(entry);
+        RegisterHistoryEntries(entry.m_strPluginId, *dllEntry.m_pPlugin);
 
         int nPageCount = dllEntry.m_pPlugin->GetPageCount();
         for (int i = 0; i < nPageCount; ++i)
@@ -203,10 +127,23 @@ void PluginManager::RegisterPluginBridgeHandlers(BridgeDispatcher& dispatcher)
             strActionLower.MakeLower();
             BOOL bDeferred = (strActionLower.Find(L"dialog") >= 0 ||
                               strActionLower.Find(L"folder") >= 0);
+            CString strPluginId = pPlugin->GetPluginId();
 
             BridgeCommandHandler handler =
-                [this, pPlugin, strTarget, strAction](const BridgeMessage& msg) -> CString
+                [this, pPlugin, strPluginId, strTarget, strAction](const BridgeMessage& msg) -> CString
                 {
+                    if (!IsEnabled(strPluginId))
+                    {
+                        CString strJson;
+                        strJson.Format(
+                            L"{\"type\":\"response\",\"requestId\":\"%s\",\"success\":false,"
+                            L"\"error\":{\"code\":\"%s\",\"message\":\"%s\"}}",
+                            (LPCWSTR)msg.m_strRequestId,
+                            PLUGIN_DISABLED_ERROR_CODE,
+                            PLUGIN_DISABLED_ERROR_MESSAGE);
+                        return strJson;
+                    }
+
                     CString strResponseJson;
                     CString strError;
 
@@ -224,7 +161,7 @@ void PluginManager::RegisterPluginBridgeHandlers(BridgeDispatcher& dispatcher)
                             L"{\"type\":\"response\",\"requestId\":\"%s\",\"success\":false,"
                             L"\"error\":{\"code\":\"SNX_PLUGIN_001\",\"message\":\"%s\"}}",
                             (LPCWSTR)msg.m_strRequestId,
-                            (LPCWSTR)JsonEscapeString(strPluginError));
+                            (LPCWSTR)JsonUtils::EscapeString(strPluginError));
                         SavePluginExecutionRecord(strTarget, strAction, msg.m_strPayloadJson, strJson);
                         return strJson;
                     }
@@ -272,6 +209,12 @@ BOOL PluginManager::ResolvePluginWebFile(
     if (strBaseDir.IsEmpty())
     {
         strError = L"Plugin web root not found.";
+        return FALSE;
+    }
+
+    if (!IsEnabled(strPluginId))
+    {
+        strError = L"Plugin is disabled by profile.";
         return FALSE;
     }
 
@@ -337,6 +280,49 @@ void PluginManager::UnloadAllDll()
 
     m_arrDllPlugins.clear();
     m_arrPluginPages.clear();
+    m_arrHistoryEntries.clear();
+}
+
+void PluginManager::RegisterHistoryEntries(const CString& strPluginId, IPlugin& plugin)
+{
+    int nHistoryCount = plugin.GetHistoryInfoCount();
+    for (int i = 0; i < nHistoryCount; ++i)
+    {
+        PluginHistoryInfo info;
+        if (!plugin.GetHistoryInfo(i, info))
+            continue;
+
+        CString strTarget = info.m_pszTarget;
+        CString strAction = info.m_pszAction;
+        CString strOperationType = info.m_pszOperationType;
+        if (strTarget.IsEmpty() || strAction.IsEmpty() || strOperationType.IsEmpty())
+            continue;
+
+        PluginHistoryEntry entry;
+        entry.m_strPluginId = strPluginId;
+        entry.m_strTarget = strTarget;
+        entry.m_strAction = strAction;
+        entry.m_strOperationType = strOperationType;
+        m_arrHistoryEntries.push_back(entry);
+    }
+}
+
+BOOL PluginManager::ResolveHistoryOperation(
+    const CString& strTarget,
+    const CString& strAction,
+    CString& outOperationType) const
+{
+    for (int i = 0; i < static_cast<int>(m_arrHistoryEntries.size()); ++i)
+    {
+        if (m_arrHistoryEntries[i].m_strTarget == strTarget &&
+            m_arrHistoryEntries[i].m_strAction == strAction)
+        {
+            outOperationType = m_arrHistoryEntries[i].m_strOperationType;
+            return TRUE;
+        }
+    }
+
+    return FALSE;
 }
 
 void PluginManager::SavePluginExecutionRecord(
@@ -346,25 +332,25 @@ void PluginManager::SavePluginExecutionRecord(
     const CString& strResponseJson) const
 {
     CString strOperationType;
-    if (!ResolveTaechangHistoryOperation(strTarget, strAction, strOperationType))
+    if (!ResolveHistoryOperation(strTarget, strAction, strOperationType))
         return;
 
     ExecutionRecord record;
     record.m_strOperationType = strOperationType;
-    record.m_strSourceName = JsonExtractString(strPayloadJson, L"inputPath");
+    record.m_strSourceName = JsonUtils::ExtractString(strPayloadJson, L"inputPath");
     if (record.m_strSourceName.IsEmpty())
-        record.m_strSourceName = JsonExtractString(strPayloadJson, L"filePath");
+        record.m_strSourceName = JsonUtils::ExtractString(strPayloadJson, L"filePath");
     if (record.m_strSourceName.IsEmpty())
         record.m_strSourceName = strOperationType;
 
-    record.m_nRowCount = JsonExtractIntValue(strResponseJson, L"rowCount");
+    record.m_nRowCount = JsonUtils::ExtractInt(strResponseJson, L"rowCount", PLUGIN_HISTORY_EMPTY_COUNT);
     if (record.m_nRowCount <= PLUGIN_HISTORY_EMPTY_COUNT)
-        record.m_nRowCount = JsonExtractIntValue(strResponseJson, L"generatedCount");
+        record.m_nRowCount = JsonUtils::ExtractInt(strResponseJson, L"generatedCount", PLUGIN_HISTORY_EMPTY_COUNT);
     record.m_nColumnCount = PLUGIN_HISTORY_EMPTY_COUNT;
-    record.m_strOutputPath = JsonExtractString(strResponseJson, L"filePath");
-    record.m_bSuccess = JsonExtractBool(strResponseJson, L"success");
+    record.m_strOutputPath = JsonUtils::ExtractString(strResponseJson, L"filePath");
+    record.m_bSuccess = JsonUtils::ExtractBool(strResponseJson, L"success");
     if (!record.m_bSuccess)
-        record.m_strErrorMessage = JsonExtractString(strResponseJson, L"message");
+        record.m_strErrorMessage = JsonUtils::ExtractString(strResponseJson, L"message");
 
     ExecutionHistoryStore historyStore;
     CString strHistoryError;

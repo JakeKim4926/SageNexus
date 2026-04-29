@@ -1326,6 +1326,9 @@ function getColDisplayName(col) {
             navItem.className = 'nav-item plugin-nav-item';
             navItem.dataset.page = page.pageId;
             navItem.dataset.pluginId = page.pluginId || '';
+            if (page.enabled === false) {
+                navItem.classList.add('hidden');
+            }
             navItem.innerHTML =
                 '<span class="nav-icon">□</span>' +
                 '<span class="nav-label"></span>';
@@ -1346,6 +1349,9 @@ function getColDisplayName(col) {
             pageEl.className = 'page plugin-page-dynamic';
             pageEl.id = 'page-' + page.pageId;
             pageEl.dataset.pluginId = page.pluginId || '';
+            if (page.enabled === false) {
+                pageEl.classList.add('hidden');
+            }
             pageEl.innerHTML =
                 '<div class="page-header">' +
                     '<div class="page-title"></div>' +

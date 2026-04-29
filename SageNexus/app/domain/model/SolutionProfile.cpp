@@ -1,5 +1,39 @@
 #include "pch.h"
 #include "SolutionProfile.h"
+#include "app/common/JsonUtils.h"
+
+namespace
+{
+    constexpr LPCSTR PROFILE_KEY_MENUS = "menus";
+    constexpr LPCSTR PROFILE_KEY_PLUGINS = "plugins";
+    constexpr LPCSTR PROFILE_KEY_ID = "id";
+    constexpr LPCSTR PROFILE_KEY_ENABLED = "enabled";
+    constexpr LPCSTR PROFILE_MENU_DATA_VIEWER = "data-viewer";
+    constexpr LPCSTR PROFILE_MENU_TRANSFORM = "transform";
+    constexpr LPCSTR PROFILE_MENU_EXPORT = "export";
+    constexpr LPCSTR PROFILE_MENU_HISTORY = "history";
+    constexpr LPCSTR PROFILE_MENU_WORKFLOW = "workflow";
+    constexpr LPCSTR PROFILE_MENU_WEBEXTRACT = "webextract";
+    constexpr LPCSTR PROFILE_MENU_SETTINGS = "settings";
+
+    void SetMenuEnabled(MenuVisibility& visibility, const CString& strMenuId, BOOL bEnabled)
+    {
+        if (strMenuId == L"data-viewer")
+            visibility.m_bShowDataViewer = bEnabled;
+        else if (strMenuId == L"transform")
+            visibility.m_bShowTransform = bEnabled;
+        else if (strMenuId == L"export")
+            visibility.m_bShowExport = bEnabled;
+        else if (strMenuId == L"history")
+            visibility.m_bShowHistory = bEnabled;
+        else if (strMenuId == L"workflow")
+            visibility.m_bShowWorkflow = bEnabled;
+        else if (strMenuId == L"webextract")
+            visibility.m_bShowWebextract = bEnabled;
+        else if (strMenuId == L"settings")
+            visibility.m_bShowSettings = bEnabled;
+    }
+}
 
 SolutionProfile::SolutionProfile()
 {
@@ -82,26 +116,35 @@ std::string SolutionProfile::BuildJsonString() const
 {
     std::stringstream ss;
     ss << "{\n";
-    ss << "  \"profileId\": \"" << WideToUtf8(m_strProfileId) << "\",\n";
-    ss << "  \"profileName\": \"" << WideToUtf8(m_strProfileName) << "\",\n";
-    ss << "  \"defaultInterfaceLanguage\": \"" << WideToUtf8(m_strDefaultInterfaceLanguage) << "\",\n";
-    ss << "  \"defaultOutputLanguage\": \"" << WideToUtf8(m_strDefaultOutputLanguage) << "\",\n";
-    ss << "  \"showDataViewer\": " << (m_menuVisibility.m_bShowDataViewer ? "true" : "false") << ",\n";
-    ss << "  \"showTransform\": " << (m_menuVisibility.m_bShowTransform ? "true" : "false") << ",\n";
-    ss << "  \"showExport\": " << (m_menuVisibility.m_bShowExport ? "true" : "false") << ",\n";
-    ss << "  \"showHistory\": " << (m_menuVisibility.m_bShowHistory ? "true" : "false") << ",\n";
-    ss << "  \"showWorkflow\": " << (m_menuVisibility.m_bShowWorkflow ? "true" : "false") << ",\n";
-    ss << "  \"showWebextract\": " << (m_menuVisibility.m_bShowWebextract ? "true" : "false") << ",\n";
-    ss << "  \"showSettings\": " << (m_menuVisibility.m_bShowSettings ? "true" : "false");
+    ss << "  \"profileId\": \"" << JsonUtils::EscapeText(m_strProfileId) << "\",\n";
+    ss << "  \"profileName\": \"" << JsonUtils::EscapeText(m_strProfileName) << "\",\n";
+    ss << "  \"defaultInterfaceLanguage\": \"" << JsonUtils::EscapeText(m_strDefaultInterfaceLanguage) << "\",\n";
+    ss << "  \"defaultOutputLanguage\": \"" << JsonUtils::EscapeText(m_strDefaultOutputLanguage) << "\",\n";
+    ss << "  \"menus\": [\n";
+    ss << "    { \"id\": \"" << PROFILE_MENU_DATA_VIEWER << "\", \"enabled\": " << (m_menuVisibility.m_bShowDataViewer ? "true" : "false") << " },\n";
+    ss << "    { \"id\": \"" << PROFILE_MENU_TRANSFORM << "\", \"enabled\": " << (m_menuVisibility.m_bShowTransform ? "true" : "false") << " },\n";
+    ss << "    { \"id\": \"" << PROFILE_MENU_EXPORT << "\", \"enabled\": " << (m_menuVisibility.m_bShowExport ? "true" : "false") << " },\n";
+    ss << "    { \"id\": \"" << PROFILE_MENU_HISTORY << "\", \"enabled\": " << (m_menuVisibility.m_bShowHistory ? "true" : "false") << " },\n";
+    ss << "    { \"id\": \"" << PROFILE_MENU_WORKFLOW << "\", \"enabled\": " << (m_menuVisibility.m_bShowWorkflow ? "true" : "false") << " },\n";
+    ss << "    { \"id\": \"" << PROFILE_MENU_WEBEXTRACT << "\", \"enabled\": " << (m_menuVisibility.m_bShowWebextract ? "true" : "false") << " },\n";
+    ss << "    { \"id\": \"" << PROFILE_MENU_SETTINGS << "\", \"enabled\": " << (m_menuVisibility.m_bShowSettings ? "true" : "false") << " }\n";
+    ss << "  ],\n";
+    ss << "  \"plugins\": [";
+
+    if (!m_arrPlugins.empty())
+        ss << "\n";
 
     for (int i = 0; i < static_cast<int>(m_arrPlugins.size()); ++i)
     {
-        ss << ",\n";
-        ss << "  \"plugin_" << WideToUtf8(m_arrPlugins[i].m_strPluginId) << "\": "
-           << (m_arrPlugins[i].m_bEnabled ? "true" : "false");
+        ss << "    { \"id\": \"" << JsonUtils::EscapeText(m_arrPlugins[i].m_strPluginId) << "\", \"enabled\": "
+           << (m_arrPlugins[i].m_bEnabled ? "true" : "false") << " }";
+        if (i + 1 < static_cast<int>(m_arrPlugins.size()))
+            ss << ",";
+        ss << "\n";
     }
 
-    ss << "\n}";
+    ss << "  ]\n";
+    ss << "}";
     return ss.str();
 }
 
@@ -152,7 +195,59 @@ BOOL SolutionProfile::LoadFromJsonString(const std::string& strJson, CString& st
         }
     }
 
+    ParseMenuArray(strJson);
+    ParsePluginArray(strJson);
+
     return TRUE;
+}
+
+void SolutionProfile::ParseMenuArray(const std::string& strJson)
+{
+    if (!JsonUtils::HasArrayKey(strJson, PROFILE_KEY_MENUS))
+        return;
+
+    std::string strMenuArray = JsonUtils::ExtractArrayText(strJson, PROFILE_KEY_MENUS);
+
+    m_menuVisibility.m_bShowDataViewer = FALSE;
+    m_menuVisibility.m_bShowTransform = FALSE;
+    m_menuVisibility.m_bShowExport = FALSE;
+    m_menuVisibility.m_bShowHistory = FALSE;
+    m_menuVisibility.m_bShowWorkflow = FALSE;
+    m_menuVisibility.m_bShowWebextract = FALSE;
+    m_menuVisibility.m_bShowSettings = FALSE;
+
+    std::vector<std::string> arrObjects;
+    JsonUtils::ExtractObjects(strMenuArray, arrObjects);
+    for (int i = 0; i < static_cast<int>(arrObjects.size()); ++i)
+    {
+        CString strMenuId = JsonUtils::ExtractObjectString(arrObjects[i], Utf8ToWide(PROFILE_KEY_ID));
+        BOOL bEnabled = JsonUtils::ExtractObjectBool(arrObjects[i], Utf8ToWide(PROFILE_KEY_ENABLED));
+        SetMenuEnabled(m_menuVisibility, strMenuId, bEnabled);
+    }
+}
+
+void SolutionProfile::ParsePluginArray(const std::string& strJson)
+{
+    if (!JsonUtils::HasArrayKey(strJson, PROFILE_KEY_PLUGINS))
+        return;
+
+    std::string strPluginArray = JsonUtils::ExtractArrayText(strJson, PROFILE_KEY_PLUGINS);
+
+    m_arrPlugins.clear();
+
+    std::vector<std::string> arrObjects;
+    JsonUtils::ExtractObjects(strPluginArray, arrObjects);
+    for (int i = 0; i < static_cast<int>(arrObjects.size()); ++i)
+    {
+        CString strPluginId = JsonUtils::ExtractObjectString(arrObjects[i], Utf8ToWide(PROFILE_KEY_ID));
+        if (strPluginId.IsEmpty())
+            continue;
+
+        PluginConfig cfg;
+        cfg.m_strPluginId = strPluginId;
+        cfg.m_bEnabled = JsonUtils::ExtractObjectBool(arrObjects[i], Utf8ToWide(PROFILE_KEY_ENABLED));
+        m_arrPlugins.push_back(cfg);
+    }
 }
 
 void SolutionProfile::ParseProfileJson(

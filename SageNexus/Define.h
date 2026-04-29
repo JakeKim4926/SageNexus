@@ -83,7 +83,7 @@ constexpr const wchar_t* CONNECTORS_FILE_NAME = L"connectors.json";
 // ============================================================
 // Plugin
 // ============================================================
-constexpr int PLUGIN_ABI_VERSION             = 2;
+constexpr int PLUGIN_ABI_VERSION             = 3;
 constexpr const wchar_t* PLUGINS_DIR_NAME    = L"plugins";
 
 // ============================================================

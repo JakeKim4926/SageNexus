@@ -112,6 +112,12 @@
     <Filter Include="헤더 파일\app\infrastructure\security">
       <UniqueIdentifier>{C0000002-0004-000A-0000-000000000001}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\app\common">
+      <UniqueIdentifier>{C0000001-0005-0000-0000-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\app\common">
+      <UniqueIdentifier>{C0000002-0005-0000-0000-000000000001}</UniqueIdentifier>
+    </Filter>
     <Filter Include="리소스 파일">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
     </Filter>
@@ -275,6 +281,9 @@
     </ClCompile>
     <ClCompile Include="app\host\LoginDialog.cpp">
       <Filter>소스 파일\app\host</Filter>
+    </ClCompile>
+    <ClCompile Include="app\common\JsonUtils.cpp">
+      <Filter>소스 파일\app\common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -463,6 +472,9 @@
     </ClInclude>
     <ClInclude Include="app\host\LoginDialog.h">
       <Filter>헤더 파일\app\host</Filter>
+    </ClInclude>
+    <ClInclude Include="app\common\JsonUtils.h">
+      <Filter>헤더 파일\app\common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

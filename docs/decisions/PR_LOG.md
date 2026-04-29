@@ -2,6 +2,14 @@
 
 ---
 
+## [2026-04-29] refactor-package-boundaries
+- **Purpose**: Make `deploy/<profile>` the only runnable package output and define profile-controlled plugin runtime boundaries.
+- **Changes**: Reworked `scripts/package.ps1` to assemble core build output, profile JSON, Taechang plugin DLL, and plugin assets into `deploy/taechang`; ignored generated deploy archives; added ADR-004 for the core/plugin/deploy boundary; added ADR-005 and enforced disabled plugin blocking for plugin pages, web files, and bridge commands; bumped plugin ABI to v3 so plugins provide command history metadata instead of hardcoding customer mappings in core; changed profiles to explicit `menus` / `plugins` composition arrays while keeping legacy flat keys readable; extracted JSON/UTF helpers and JSON array/object scanning into `app/common/JsonUtils`, leaving `pch.h` as declarations only; moved plugin execution history parsing onto `JsonUtils`.
+- **PR Link**: https://github.com/JakeKim4926/SageNexus/pull/84
+- **Result**: merged
+
+---
+
 ## [2026-04-28] fix/dashboard-daily-logs
 - **Purpose**: Remove Dashboard success-rate KPI and add daily execution/error log files.
 - **Changes**: Dashboard KPI grid now shows total runs, processed files, and profile only. Execution history saves an additional daily text log under Logs/Moved or Logs/Error.
